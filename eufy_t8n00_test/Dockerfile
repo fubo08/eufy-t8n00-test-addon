@@ -1,0 +1,23 @@
+FROM node:24-bookworm-slim AS sdk
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl python3 make g++ cmake && rm -rf /var/lib/apt/lists/*
+WORKDIR /sdk
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/9f366ba15529611267ef5af95322a025205669c1 | tar -xz --strip-components=1
+RUN npm ci && npm run build && npm pack --pack-destination /tmp
+
+FROM node:24-bookworm-slim
+ARG TARGETARCH
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl jq ffmpeg python3 make g++ cmake && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/ac95e6d186135d20c956e0f2e16add34ca257cbb | tar -xz --strip-components=1
+COPY --from=sdk /tmp/mega-yfue-eufy-sdk-0.3.0.tgz /tmp/eufy-sdk.tgz
+RUN npm ci --omit=dev && npm install --no-save --omit=dev /tmp/eufy-sdk.tgz node-datachannel@0.33.4 \
+    && node --input-type=module -e "await import('@mega-yfue/eufy-sdk'); const m = await import('node-datachannel'); const p = new m.PeerConnection('build-smoke', {iceServers: []}); p.close(); m.cleanup();" \
+    && chmod +x bin/start.sh && ln -s /app/bin/start.sh /usr/local/bin/eufy-sdk-bridge
+RUN arch="${TARGETARCH:-$(dpkg --print-architecture)}"; case "$arch" in amd64|arm64) ;; *) exit 1;; esac; \
+    curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/download/v1.9.9/go2rtc_linux_${arch}" -o /usr/local/bin/go2rtc && chmod +x /usr/local/bin/go2rtc
+COPY run.sh /run.sh
+RUN chmod +x /run.sh && mkdir -p /data && sh -n /run.sh
+ENV BRIDGE_APP_DIR=/app BRIDGE_PORT=3000 BRIDGE_HOST=0.0.0.0 GO2RTC_CONFIG=/data/go2rtc.yaml EUFY_SESSION=/data/.eufy-session.json
+EXPOSE 3000 8554
+LABEL org.opencontainers.image.source="https://github.com/fubo08/eufy-t8n00-test-addon"
+CMD ["/run.sh"]
