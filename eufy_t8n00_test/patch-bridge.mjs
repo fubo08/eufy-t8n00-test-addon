@@ -37,7 +37,7 @@ streams = streams
     realtime,
     'logger: /^(1|true|yes|on)$/i.test(process.env.BRIDGE_DEBUG_P2P ?? "") ? new ConsoleLogger() : new ConsoleLogger("info"),\n    rtcVideoIcePolicy: process.env.EUFY_RTC_VIDEO_ICE_POLICY === "all" ? "all" : "relay",\n    autoRealtime: false,',
   );
-writeFileSync(streamsPath, streams);
+writeFileSync(streamsPath, 'import "./src/rtc-native.mjs";\n' + streams);
 
 patch(
   "src/http-routes.mjs",

@@ -57,3 +57,7 @@ This is ICE selection, not an automatic retry after a failed DTLS handshake. If 
 ## 0.3.7: diagnose direct handshake failures
 
 Adds `[rtc:ice]` state changes and `[rtc:path]` selection reports before DTLS completes and before closing a timed-out peer. A process-local peer number correlates simultaneous connections without device identifiers. `route=unselected` means no candidate pair is selected yet. ICE completed with a selected direct pair but no connected peer points beyond ICE; it does not by itself identify the DTLS cause. Media processing is unchanged.
+
+## 0.3.8: native handshake trace for all mode
+
+When rtc_video_ice_policy is all, enable a filtered native DTLS/SCTP trace. It records fixed handshake events, recognized error categories and message sizes only, with a 200-line limit. Raw native log text, SDP, addresses and credentials are not forwarded. Native logging is process-wide, so test one camera at a time. Relay mode does not enable verbose native tracing. This is a diagnostic release, not a confirmed connectivity or stutter fix; certificate verification remains enabled.
