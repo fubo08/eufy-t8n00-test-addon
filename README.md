@@ -53,3 +53,7 @@ The add-on option `rtc_video_ice_policy` defaults to `relay` (existing behavior)
 Look for `[rtc:path]`: `route=relay` means at least one selected endpoint uses TURN, `route=direct` means neither does. Direct is not proof of a LAN-only route. Addresses and credentials are omitted from this diagnostic. Cloud authentication/signaling remain required. Docker networking and NVR firmware may prevent direct connectivity.
 
 This is ICE selection, not an automatic retry after a failed DTLS handshake. If video no longer starts, return the option to `relay` and restart. Close camera views before restarting; test the same two views, then each view separately with sound. Ports and integration configuration are unchanged.
+
+## 0.3.7: diagnose direct handshake failures
+
+Adds `[rtc:ice]` state changes and `[rtc:path]` selection reports before DTLS completes and before closing a timed-out peer. A process-local peer number correlates simultaneous connections without device identifiers. `route=unselected` means no candidate pair is selected yet. ICE completed with a selected direct pair but no connected peer points beyond ICE; it does not by itself identify the DTLS cause. Media processing is unchanged.
