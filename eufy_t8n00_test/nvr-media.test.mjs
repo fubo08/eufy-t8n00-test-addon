@@ -10,6 +10,47 @@ import {
   muxArgs,
 } from "../src/nvr-media.mjs";
 
+test("a busy NVR is not retried by every lens and snapshot request", async () => {
+  let opens = 0;
+  const dev = {
+    describe: () => ({ model: "T8E00" }),
+    camera: () => ({
+      openReadable: async () => {
+        opens++;
+        throw new Error("RTC synthetic scall answered 486");
+      },
+    }),
+  };
+  const handler = createNvrHandler({
+    cfg: {},
+    eufy: { getDevice: async () => dev },
+    streamClientFor: async () => ({ getDevice: async () => dev }),
+  });
+  function response() {
+    const res = new EventEmitter();
+    res.writeHead = (status, headers) => {
+      res.status = status;
+      res.headers = headers;
+    };
+    res.end = () => {};
+    return res;
+  }
+  const first = response();
+  await handler({}, first, new URL("http://bridge/nvr-stream/CAM1/1"));
+  assert.equal(first.status, 502);
+  for (const path of [
+    "nvr-stream/CAM1/0",
+    "nvr-stream/CAM1/1",
+    "nvr-snapshot/CAM1/0",
+  ]) {
+    const res = response();
+    await handler({}, res, new URL(`http://bridge/${path}`));
+    assert.equal(res.status, 503);
+    assert.ok(Number(res.headers["retry-after"]) > 0);
+  }
+  assert.equal(opens, 1);
+});
+
 test(
   "Linux ffmpeg produces video and audible AAC from camera-like inputs",
   { skip: process.platform === "win32", timeout: 20000 },

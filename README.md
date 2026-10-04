@@ -1,4 +1,8 @@
-# Eufy T8N00 RTC test bridge — 0.3.0
+# Eufy T8N00 RTC test bridge — 0.3.1
+
+Version 0.3.1 fixes the RTSP handoff of AAC sound. The 0.3.0 hardware log confirmed video from both S4 sensors and incoming AAC-LC, but go2rtc's FFmpeg publisher rejected copied AAC with `AAC with no global headers is currently not supported`. The final RTSP publisher now encodes AAC to supply the required configuration; video remains copied. Busy/open failures also impose a per-camera retry pause shared across its lenses and snapshots (30 seconds for RTC 486, 10 seconds for other failures). A Linux test now exercises MPEG-TS through the actual bundled go2rtc into an RTSP client, in addition to the existing mux tests.
+
+Update only the bridge to 0.3.1; the companion HA integration remains 0.3.1b1. Close existing live viewers before restarting the bridge, then test one view first.
 
 Experimental Home Assistant add-on. Arming-mode changes and one T8E00 PoE S4 live view have been confirmed on the owner's T8N00. This update adds selection of the two optical sensors, PTZ detection and received audio support. These new features still require a hardware test.
 

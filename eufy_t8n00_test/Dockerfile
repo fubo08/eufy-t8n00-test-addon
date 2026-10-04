@@ -13,6 +13,7 @@ RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/a
 COPY patch-bridge.mjs /tmp/patch-bridge.mjs
 COPY nvr-media.mjs /app/src/nvr-media.mjs
 COPY nvr-media.test.mjs /app/test/nvr-media.test.mjs
+COPY nvr-rtsp.test.mjs /app/test/nvr-rtsp.test.mjs
 RUN node /tmp/patch-bridge.mjs && node --check src/http-routes.mjs
 COPY --from=sdk /tmp/mega-yfue-eufy-sdk-0.3.0.tgz /tmp/eufy-sdk.tgz
 RUN npm ci --omit=dev && npm install --no-save --omit=dev /tmp/eufy-sdk.tgz node-datachannel@0.33.4 \

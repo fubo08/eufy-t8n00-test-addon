@@ -73,6 +73,9 @@ export function muxArgs(audio) {
 
 export function createNvrHandler(ctx) {
   const viewers = new Map();
+  // A failed lens must not make go2rtc hammer its sibling's NVR session, too.
+  const retryAt = new Map();
+  const opening = new Set();
   const openClient =
     ctx.streamClientFor ??
     (async (...args) =>
@@ -88,6 +91,15 @@ export function createNvrHandler(ctx) {
     }
     const [, kind, sn, sensorText] = match;
     const sensor = Number(sensorText);
+    const pullKey = `${sn}/${sensor}`;
+    const remaining = (retryAt.get(sn) ?? 0) - Date.now();
+    if (remaining > 0 || (kind === "stream" && opening.has(pullKey))) {
+      res.writeHead(503, {
+        "retry-after": String(Math.max(1, Math.ceil(remaining / 1000))),
+      });
+      res.end("NVR stream cooling down; retry later");
+      return;
+    }
     const abort = new AbortController();
     let feed, mux, timer, outputTimer, audioPipe;
     let audioQueue = [],
@@ -96,11 +108,13 @@ export function createNvrHandler(ctx) {
       selecting = true,
       stopped = false;
     let registered = false;
+    let ownsOpening = false;
     const log = (message) =>
       ctx.eventLog?.(`[nvr:media] sensor ${sensor}: ${message}`);
     const cleanup = () => {
       if (stopped) return;
       stopped = true;
+      if (ownsOpening) opening.delete(pullKey);
       clearTimeout(timer);
       clearTimeout(outputTimer);
       abort.abort();
@@ -124,6 +138,12 @@ export function createNvrHandler(ctx) {
     };
     res.once("close", cleanup);
     const fail = (error) => {
+      if (stopped) return;
+      // Abort is normal teardown. Real open/mux failures get a bounded retry pause.
+      retryAt.set(
+        sn,
+        Date.now() + (/scall answered 486/.test(error.message) ? 30000 : 10000),
+      );
       log(`stream ended: ${error.message}`);
       if (!res.headersSent) {
         res.writeHead(502);
@@ -160,6 +180,14 @@ export function createNvrHandler(ctx) {
         cleanup();
         return;
       }
+      if (opening.has(pullKey)) {
+        res.writeHead(503, { "retry-after": "1" });
+        res.end("NVR stream is already opening");
+        cleanup();
+        return;
+      }
+      opening.add(pullKey);
+      ownsOpening = true;
       const client = await openClient(sn, ctx.cfg);
       if (stopped) return;
       const dev = await client.getDevice(sn);
@@ -189,6 +217,8 @@ export function createNvrHandler(ctx) {
         return;
       }
       registered = true;
+      opening.delete(pullKey);
+      ownsOpening = false;
       const previous = viewers.get(sn) ?? 0;
       viewers.set(sn, previous + 1);
       ctx.state?.streaming?.add(sn);
