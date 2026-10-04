@@ -195,6 +195,12 @@ export function createNvrHandler(ctx) {
       if (!previous)
         ctx.broadcast?.({ event: "streamState", deviceSn: sn, active: true });
       feed.on("error", fail);
+      feed.once("close", () => {
+        if (!stopped) {
+          res.destroy();
+          cleanup();
+        }
+      });
       feed.on("end", () => {
         res.end();
         cleanup();
