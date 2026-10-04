@@ -103,7 +103,7 @@ export function createNvrHandler(ctx) {
       return;
     }
     const abort = new AbortController();
-    let feed, mux, timer, outputTimer, audioPipe;
+    let feed, sourceFeed, mux, timer, outputTimer, audioPipe, timedMux, emitFragment;
     let audioQueue = [],
       audioBytes = 0,
       firstAudio,
@@ -121,6 +121,7 @@ export function createNvrHandler(ctx) {
       clearTimeout(outputTimer);
       abort.abort();
       feed?.destroy();
+      sourceFeed?.destroy();
       if (registered) {
         const remaining = (viewers.get(sn) ?? 1) - 1;
         if (remaining) viewers.set(sn, remaining);
@@ -208,15 +209,21 @@ export function createNvrHandler(ctx) {
       if (stopped) return;
       feed = await dev.camera().openReadable({
         sensor,
+        objectMode: true,
         signal: abort.signal,
         onAudio(frame) {
           if (stopped) return;
           if (selecting) {
             firstAudio ??= frame;
             if (audioBytes + frame.data.length <= 512 * 1024) {
-              audioQueue.push(frame.data);
+              audioQueue.push(frame);
               audioBytes += frame.data.length;
             }
+          } else if (timedMux) {
+            try {
+              if (!Number.isSafeInteger(frame.timestampMs)) throw new Error("missing audio source timestamp");
+              emitFragment(timedMux.pushAudio(frame, frame.timestampMs));
+            } catch (error) { fail(error); }
           } else if (audioPipe && frame.codec === firstAudio.codec) {
             if (audioPipe.writableLength + frame.data.length > 512 * 1024) {
               fail(new Error("audio consumer too slow"));
@@ -250,8 +257,50 @@ export function createNvrHandler(ctx) {
         cleanup();
       });
       // A missing microphone must not hold up video indefinitely.
-      timer = setTimeout(() => {
+      sourceFeed = feed;
+      timer = setTimeout(async () => {
+        // Use the SDK's existing muxer for the NVR's ADTS AAC. It retains
+        // source timing instead of stamping buffered video at FFmpeg read time.
+        if (firstAudio?.codec === "aac-lc" && audioInput(firstAudio) && Number.isSafeInteger(firstAudio.timestampMs)) {
+          try {
+            const { Fmp4Muxer } = await (ctx.loadMediaMuxer?.() ?? import("@mega-yfue/eufy-sdk"));
+            if (stopped) return;
+            timedMux = new Fmp4Muxer({ audio: true, fragmentSeconds: 0.25 });
+            let fragmentBytes = 0;
+            emitFragment = (fragment) => {
+              if (!fragment || stopped) return;
+              for (const data of [fragment.init, fragment.data]) {
+                if (!data?.length) continue;
+                if (res.writableLength + data.length > 8 * 1024 * 1024) throw new Error("timed media consumer too slow");
+                res.write(data);
+              }
+              if (fragment.data.length) {
+                fragmentBytes = 0;
+                clearTimeout(outputTimer);
+                outputTimer = setTimeout(() => fail(new Error("no timestamped media fragment for 10 seconds")), 10000);
+              }
+            };
+            res.writeHead(200, { "content-type": "video/mp4", "cache-control": "no-store" });
+            for (const frame of audioQueue) emitFragment(timedMux.pushAudio(frame, frame.timestampMs));
+            audioQueue = [];
+            selecting = false;
+            log("source-timestamped video + AAC (fMP4)");
+            outputTimer = setTimeout(() => fail(new Error("no timestamped media fragment for 10 seconds")), 10000);
+            feed.on("data", (frame) => {
+              try {
+                if (!Number.isSafeInteger(frame.timestampMs)) throw new Error("missing video source timestamp");
+                fragmentBytes += frame.data.length;
+                if (fragmentBytes > 8 * 1024 * 1024) throw new Error("timestamped fragment exceeds 8 MiB; missing keyframe");
+                emitFragment(timedMux.push(frame, frame.timestampMs));
+              } catch (error) { fail(error); }
+            });
+          } catch (error) { fail(error); }
+          return;
+        }
         selecting = false;
+        // Preserve the existing G.711 / video-only fallback.
+        feed = feed.map((frame) => Buffer.isBuffer(frame) ? frame : frame.data);
+        feed.on("error", fail);
         const input = audioInput(firstAudio);
         if (!input) {
           log(
@@ -284,7 +333,7 @@ export function createNvrHandler(ctx) {
         audioPipe = mux.stdio[4];
         audioPipe.on("error", fail);
         mux.stdio[3].on("error", fail);
-        for (const data of audioQueue) audioPipe.write(data);
+        for (const frame of audioQueue) audioPipe.write(frame.data);
         audioQueue = [];
         feed.pipe(mux.stdio[3]);
         outputTimer = setTimeout(

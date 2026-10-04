@@ -319,3 +319,71 @@ test("simultaneous lenses hydrate one client while retaining separate RTC pulls"
   await Promise.all(pulls);
   assert.deepEqual(sensors.sort(), [0, 1]);
 });
+
+test("timestamped AAC path preserves source spacing despite burst delivery", async (t) => {
+  const calls = [];
+  class Mux {
+    pushAudio(frame, time) { calls.push(["audio", time]); }
+    push(frame, time) { calls.push(["video", time]); return { data: Buffer.from("fragment") }; }
+  }
+  let opts;
+  const feed = new PassThrough({ objectMode: true });
+  const audio = (timestampMs) => ({ codec: "aac-lc", timestampMs, data: Buffer.from([255,241,0,0,0,0,0,0]) });
+  const dev = { describe: () => ({ model: "T8E00" }), camera: () => ({ openReadable: async (o) => {
+    opts = o; o.onAudio(audio(1000)); return feed;
+  } }) };
+  const handler = createNvrHandler({ cfg: {}, eufy: { getDevice: async () => dev },
+    streamClientFor: async () => ({ getDevice: async () => dev }), loadMediaMuxer: async () => ({ Fmp4Muxer: Mux }) });
+  const res = new PassThrough();
+  res.writeHead = (status, headers) => { res.status = status; res.headers = headers; };
+  res.resume();
+  t.after(() => res.destroy());
+  await handler({}, res, new URL("http://bridge/nvr-stream/CAM1/0"));
+  await new Promise((r) => setTimeout(r, 1300));
+  feed.write({ data: Buffer.from([1]), timestampMs: 1000 });
+  feed.write({ data: Buffer.from([2]), timestampMs: 1067 });
+  opts.onAudio(audio(1064));
+  assert.equal(opts.objectMode, true);
+  assert.equal(res.headers["content-type"], "video/mp4");
+  assert.deepEqual(calls, [["audio",1000],["video",1000],["video",1067],["audio",1064]]);
+});
+
+test("Linux HEVC/AAC burst input retains source timing through the HTTP handler", { skip: process.platform === "win32", timeout: 20000 }, async (t) => {
+  const run = (bin, args, input) => {
+    const r = spawnSync(bin, args, { input, maxBuffer: 16 * 1024 * 1024 });
+    assert.equal(r.status, 0, r.stderr?.toString());
+    return r.stdout;
+  };
+  const video = run("ffmpeg", ["-v","error","-f","lavfi","-i","testsrc2=size=128x96:rate=15","-t","3","-c:v","libx265","-preset","ultrafast","-x265-params","keyint=15:min-keyint=15:bframes=0:scenecut=0:repeat-headers=1:log-level=error","-f","hevc","pipe:1"]);
+  const packets = JSON.parse(run("ffprobe", ["-v","error","-f","hevc","-show_packets","-show_entries","packet=pos,size,flags","-of","json","pipe:0"], video)).packets;
+  const audio = run("ffmpeg", ["-v","error","-f","lavfi","-i","sine=frequency=440:sample_rate=16000","-t","3","-ac","1","-c:a","aac","-f","adts","pipe:1"]);
+  const frames = packets.map((p, i) => ({ kind:"video", codec:"h265", width:128, height:96, keyframe:p.flags.includes("K"), timestampMs:100000+Math.round(i*1000/15), data:video.subarray(Number(p.pos),Number(p.pos)+Number(p.size)) }));
+  for (let pos=0, i=0; pos<audio.length; i++) {
+    const size=((audio[pos+3]&3)<<11)|(audio[pos+4]<<3)|(audio[pos+5]>>5);
+    assert.ok(size>=7);
+    frames.push({ kind:"audio", codec:"aac-lc", timestampMs:100000+i*64, data:audio.subarray(pos,pos+size) });
+    pos+=size;
+  }
+  frames.sort((a,b)=>a.timestampMs-b.timestampMs);
+  const firstAudio=frames.find((f)=>f.kind==="audio");
+  let options;
+  const feed=new PassThrough({objectMode:true});
+  const dev={describe:()=>({model:"T8E00"}),camera:()=>({openReadable:async(o)=>{options=o;o.onAudio(firstAudio);return feed;}})};
+  const handler=createNvrHandler({cfg:{},eufy:{getDevice:async()=>dev},streamClientFor:async()=>({getDevice:async()=>dev})});
+  const res=new PassThrough();const chunks=[];
+  res.writeHead=(status,headers)=>{res.status=status;res.headers=headers;};
+  res.on("data",(b)=>chunks.push(b));
+  t.after(()=>res.destroy());
+  await handler({},res,new URL("http://bridge/nvr-stream/CAM1/1"));
+  await new Promise((r)=>setTimeout(r,1300));
+  assert.equal(res.headers["content-type"],"video/mp4");
+  // Deliver three seconds of source data in one burst, unlike real-time arrival.
+  for(const frame of frames) if(frame.kind==="video") feed.write(frame); else if(frame!==firstAudio) options.onAudio(frame);
+  const result=JSON.parse(run("ffprobe",["-v","error","-show_streams","-show_packets","-of","json","pipe:0"],Buffer.concat(chunks)));
+  assert.ok(result.streams.some((s)=>s.codec_name==="hevc"));
+  assert.ok(result.streams.some((s)=>s.codec_name==="aac"));
+  const v=result.packets.filter((p)=>p.codec_type==="video");
+  assert.ok(v.length>=20);
+  for(let i=1;i<v.length;i++) assert.ok(Math.abs(Number(v[i].pts_time)-Number(v[i-1].pts_time)-1/15)<0.003,"source video spacing must survive burst delivery");
+  assert.ok(Number(v.at(-1).pts_time)-Number(v[0].pts_time)>1.5);
+});

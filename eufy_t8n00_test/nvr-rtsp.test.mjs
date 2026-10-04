@@ -8,8 +8,8 @@ import { join } from "node:path";
 import { writeGo2rtcConfig } from "../go2rtc-config.mjs";
 import { nvrStreams } from "../src/nvr-media.mjs";
 
-test(
-  "NVR MPEG-TS audio survives the actual go2rtc RTSP publication",
+for (const format of ["mpegts", "mp4"]) test(
+  `NVR ${format} audio survives the actual go2rtc RTSP publication`,
   { skip: process.platform === "win32", timeout: 45000 },
   async () => {
     const dir = await mkdtemp(join(tmpdir(), "nvr-rtsp-"));
@@ -21,7 +21,7 @@ test(
       return child;
     };
     const server = createServer((_req, res) => {
-      res.writeHead(200, { "content-type": "video/mp2t" });
+      res.writeHead(200, { "content-type": format === "mp4" ? "video/mp4" : "video/mp2t" });
       const generator = start("ffmpeg", [
         "-hide_banner",
         "-loglevel",
@@ -50,7 +50,8 @@ test(
         "-ac",
         "1",
         "-f",
-        "mpegts",
+        format,
+        ...(format === "mp4" ? ["-movflags", "frag_keyframe+empty_moov+default_base_moof"] : []),
         "pipe:1",
       ]);
       generator.stderr.resume();

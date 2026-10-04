@@ -1,4 +1,6 @@
-# Eufy T8N00 RTC test bridge — 0.3.2
+# Eufy T8N00 RTC test bridge — 0.3.3
+
+Version 0.3.3 preserves RTC source timestamps for S4 AAC-LC streams and uses the SDK's existing fMP4 muxer instead of passing untimed video/audio through separate FFmpeg pipes. Raw video-only and G.711 fallbacks remain available. The RTSP publisher retains AAC encoding. Source timestamps and keyframe-based fragments require hardware validation; this does not claim to fix every signaling or HA startup error. Integration 0.3.1b1 and ports 3000/8554 stay unchanged.
 
 Version 0.3.2 isolates snapshot failures from live-stream retry pauses and coalesces concurrent SDK client hydration for the two lenses. Actual stream failures retain their bounded retry pause. Both S4 views, received audio and PTZ were confirmed in Home Assistant with 0.3.1, but startup delays and intermittent session failures remain under investigation. These changes do not guarantee elimination of the NVR first-frame timeout.
 
