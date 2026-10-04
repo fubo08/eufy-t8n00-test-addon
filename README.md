@@ -3,7 +3,7 @@
 Experimental Home Assistant add-on for testing T8N00 commands through the existing T9000 WebRTC implementation. RTC arming control has been confirmed on a real T8N00. Version 0.2.0 adds experimental video-only RTC pulls; live video still needs hardware verification.
 
 Pinned sources:
-- SDK: fubo08/eufy-sdk `5af282fd7cabdc0601354706812e2e9269ede409` (complete T9000 RTC implementation plus exact-model T8N00 routing and experimental video pulls).
+- SDK: fubo08/eufy-sdk `c632eb8df475e24bc2e56eb09fe742e4e5e5813d` (complete T9000 RTC implementation plus exact-model T8N00 routing and experimental video pulls).
 - Bridge: mega-yfue/ha-eufy-sdk-bridge `ac95e6d186135d20c956e0f2e16add34ca257cbb`.
 - Add-on launcher adapted from mega-yfue/ha-eufy-sdk-addon `3129d2a0b08f8b3c5e6f528de984687d6b7ea459`.
 - Native WebRTC runtime: node-datachannel 0.33.4; go2rtc 1.9.9.
@@ -27,3 +27,5 @@ For an existing 0.1.0 installation, set the host ports in the add-on Network set
 ## Version 0.2.0 video test
 
 Update and restart the add-on, keeping ports 3000 and 8554. Keep debug_p2p enabled during the first test to expose RTC diagnostics. Open ONE camera first for about 30 seconds. Look for [rtc:video] connected and [rtc:video] first frame. Close it and verify arming mode still works. Then try a second camera. A command channel opening alone is not proof of video. First-frame and stalled-video timeouts close the pull; output buffering is bounded. The existing PTCS reassembler is retained; firmware-specific video fragmentation/FEC differences may require further work based on the test logs. Do not upload unredacted logs to public issues.
+
+Version 0.2.1 fixes T8E00 PoE camera classification (previously rejected as no camera before opening video), enables RTC diagnostics on stream clients when debug_p2p is true, and prints the build version at startup. The stored-event image can still be absent until a matching event supplies one; it is separate from live viewing.

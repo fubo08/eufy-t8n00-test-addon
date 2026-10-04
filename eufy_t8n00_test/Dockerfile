@@ -1,8 +1,8 @@
 FROM node:24-bookworm-slim AS sdk
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl python3 make g++ cmake && rm -rf /var/lib/apt/lists/*
 WORKDIR /sdk
-RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/5af282fd7cabdc0601354706812e2e9269ede409 | tar -xz --strip-components=1
-RUN npm ci && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/client/__tests__/rtc-command-routing.spec.ts src/client/__tests__/rtc-video-routing.spec.ts \
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/c632eb8df475e24bc2e56eb09fe742e4e5e5813d | tar -xz --strip-components=1
+RUN npm ci && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/client/__tests__/rtc-command-routing.spec.ts src/client/__tests__/rtc-video-routing.spec.ts src/model/__tests__/nvr-camera-classification.spec.ts \
     && npm run build && npm pack --pack-destination /tmp
 
 FROM node:24-bookworm-slim
@@ -16,6 +16,7 @@ COPY --from=sdk /tmp/mega-yfue-eufy-sdk-0.3.0.tgz /tmp/eufy-sdk.tgz
 RUN npm ci --omit=dev && npm install --no-save --omit=dev /tmp/eufy-sdk.tgz node-datachannel@0.33.4 \
     && node --input-type=module -e "await import('@mega-yfue/eufy-sdk'); const m = await import('node-datachannel'); const p = new m.PeerConnection('build-smoke', {iceServers: []}); p.close(); m.cleanup();" \
     && chmod +x bin/start.sh && ln -s /app/bin/start.sh /usr/local/bin/eufy-sdk-bridge
+RUN BRIDGE_DEBUG_P2P=true node --input-type=module -e "import {strict as a} from 'node:assert'; import {streamClientOptions} from './streams.mjs'; const o = streamClientOptions({session:'/tmp/synthetic-session.json'}); a.ok(o.logger); a.equal(o.autoRealtime, false);"
 RUN arch="${TARGETARCH:-$(dpkg --print-architecture)}"; case "$arch" in amd64|arm64) ;; *) exit 1;; esac; \
     curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/download/v1.9.9/go2rtc_linux_${arch}" -o /usr/local/bin/go2rtc && chmod +x /usr/local/bin/go2rtc
 COPY run.sh /run.sh
