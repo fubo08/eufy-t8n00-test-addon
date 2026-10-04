@@ -348,13 +348,13 @@ test("timestamped AAC path preserves source spacing despite burst delivery", asy
   assert.deepEqual(calls, [["audio",1000],["video",1000],["video",1067],["audio",1064]]);
 });
 
-test("Linux HEVC/AAC burst input retains source timing through the HTTP handler", { skip: process.platform === "win32", timeout: 20000 }, async (t) => {
+test("Linux HEVC/AAC with a ten-second GOP emits before the second keyframe", { skip: process.platform === "win32", timeout: 20000 }, async (t) => {
   const run = (bin, args, input) => {
     const r = spawnSync(bin, args, { input, maxBuffer: 16 * 1024 * 1024 });
     assert.equal(r.status, 0, r.stderr?.toString());
     return r.stdout;
   };
-  const video = run("ffmpeg", ["-v","error","-f","lavfi","-i","testsrc2=size=128x96:rate=15","-t","3","-c:v","libx265","-preset","ultrafast","-x265-params","keyint=15:min-keyint=15:bframes=0:scenecut=0:repeat-headers=1:log-level=error","-f","hevc","pipe:1"]);
+  const video = run("ffmpeg", ["-v","error","-f","lavfi","-i","testsrc2=size=128x96:rate=15","-t","3","-c:v","libx265","-preset","ultrafast","-x265-params","keyint=150:min-keyint=150:bframes=0:scenecut=0:repeat-headers=1:log-level=error","-f","hevc","pipe:1"]);
   const packets = JSON.parse(run("ffprobe", ["-v","error","-f","hevc","-show_packets","-show_entries","packet=pos,size,flags","-of","json","pipe:0"], video)).packets;
   const audio = run("ffmpeg", ["-v","error","-f","lavfi","-i","sine=frequency=440:sample_rate=16000","-t","3","-ac","1","-c:a","aac","-f","adts","pipe:1"]);
   const frames = packets.map((p, i) => ({ kind:"video", codec:"h265", width:128, height:96, keyframe:p.flags.includes("K"), timestampMs:100000+Math.round(i*1000/15), data:video.subarray(Number(p.pos),Number(p.pos)+Number(p.size)) }));
@@ -380,6 +380,7 @@ test("Linux HEVC/AAC burst input retains source timing through the HTTP handler"
   // Deliver three seconds of source data in one burst, unlike real-time arrival.
   for(const frame of frames) if(frame.kind==="video") feed.write(frame); else if(frame!==firstAudio) options.onAudio(frame);
   const result=JSON.parse(run("ffprobe",["-v","error","-show_streams","-show_packets","-of","json","pipe:0"],Buffer.concat(chunks)));
+  run("ffmpeg", ["-v","error","-xerror","-i","pipe:0","-f","null","-"], Buffer.concat(chunks));
   assert.ok(result.streams.some((s)=>s.codec_name==="hevc"));
   assert.ok(result.streams.some((s)=>s.codec_name==="aac"));
   const v=result.packets.filter((p)=>p.codec_type==="video");

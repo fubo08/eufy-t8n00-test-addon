@@ -1,8 +1,8 @@
 FROM node:24-bookworm-slim AS sdk
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl python3 make g++ cmake && rm -rf /var/lib/apt/lists/*
 WORKDIR /sdk
-RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/f644578aecfc3a996419ed8365a81d0490c9c08c | tar -xz --strip-components=1
-RUN npm ci && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/client/__tests__/rtc-command-routing.spec.ts src/client/__tests__/rtc-video-routing.spec.ts src/model \
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/713c6eb935dad8daa0499147274b60597357c781 | tar -xz --strip-components=1
+RUN npm ci && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/transport/p2p/__tests__/fmp4.spec.ts src/transport/p2p/__tests__/fmp4-geometry.spec.ts src/client/__tests__/rtc-command-routing.spec.ts src/client/__tests__/rtc-video-routing.spec.ts src/model \
     && npm run build && npm pack --pack-destination /tmp
 
 FROM node:24-bookworm-slim

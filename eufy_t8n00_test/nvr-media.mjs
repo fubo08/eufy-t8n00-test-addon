@@ -265,7 +265,7 @@ export function createNvrHandler(ctx) {
           try {
             const { Fmp4Muxer } = await (ctx.loadMediaMuxer?.() ?? import("@mega-yfue/eufy-sdk"));
             if (stopped) return;
-            timedMux = new Fmp4Muxer({ audio: true, fragmentSeconds: 0.25 });
+            timedMux = new Fmp4Muxer({ audio: true, fragmentSeconds: 0.25, keyframeAligned: false });
             let fragmentBytes = 0;
             emitFragment = (fragment) => {
               if (!fragment || stopped) return;
@@ -284,7 +284,7 @@ export function createNvrHandler(ctx) {
             for (const frame of audioQueue) emitFragment(timedMux.pushAudio(frame, frame.timestampMs));
             audioQueue = [];
             selecting = false;
-            log("source-timestamped video + AAC (fMP4)");
+            log("source-timestamped video + AAC (fMP4, 250 ms fragments)");
             outputTimer = setTimeout(() => fail(new Error("no timestamped media fragment for 10 seconds")), 10000);
             feed.on("data", (frame) => {
               try {

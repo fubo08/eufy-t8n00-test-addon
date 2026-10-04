@@ -1,4 +1,6 @@
-# Eufy T8N00 RTC test bridge — 0.3.3
+# Eufy T8N00 RTC test bridge — 0.3.4
+
+Version 0.3.4 emits continuous fMP4 fragments at approximately 250 ms source-time intervals without waiting for another keyframe. This reduces bridge-induced burst delivery of audio and video. An established media peer may also survive a lost signaling socket; peer/channel failure or the existing 15-second media stall deadline still terminates it. Ordinary command sessions keep their existing lifecycle. Linux tests use a ten-second HEVC GOP and decode the resulting short fragments. Hardware validation remains necessary. Integration stays 0.3.1b1, ports 3000/8554.
 
 Version 0.3.3 preserves RTC source timestamps for S4 AAC-LC streams and uses the SDK's existing fMP4 muxer instead of passing untimed video/audio through separate FFmpeg pipes. Raw video-only and G.711 fallbacks remain available. The RTSP publisher retains AAC encoding. Source timestamps and keyframe-based fragments require hardware validation; this does not claim to fix every signaling or HA startup error. Integration 0.3.1b1 and ports 3000/8554 stay unchanged.
 
