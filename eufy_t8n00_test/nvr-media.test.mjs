@@ -184,3 +184,40 @@ test("disconnect during camera lookup does not start a stream", async () => {
   await pending;
   assert.equal(opened, false);
 });
+
+test("closing one lens keeps the other lens registered as streaming", async () => {
+  const feeds = [];
+  const state = { streaming: new Set() };
+  const events = [];
+  const dev = {
+    describe: () => ({ model: "T8E00" }),
+    camera: () => ({
+      openReadable: async () => {
+        const feed = new PassThrough();
+        feeds.push(feed);
+        return feed;
+      },
+    }),
+  };
+  const handler = createNvrHandler({
+    cfg: {},
+    state,
+    broadcast: (e) => events.push(e),
+    eufy: { getDevice: async () => dev },
+    streamClientFor: async () => ({ getDevice: async () => dev }),
+  });
+  const a = new EventEmitter(),
+    b = new EventEmitter();
+  await handler({}, a, new URL("http://bridge/nvr-stream/CAM1/0"));
+  await handler({}, b, new URL("http://bridge/nvr-stream/CAM1/1"));
+  a.emit("close");
+  assert.equal(state.streaming.has("CAM1"), true);
+  assert.equal(feeds[0].destroyed, true);
+  assert.equal(feeds[1].destroyed, false);
+  b.emit("close");
+  assert.equal(state.streaming.has("CAM1"), false);
+  assert.deepEqual(
+    events.map((e) => e.active),
+    [true, false],
+  );
+});

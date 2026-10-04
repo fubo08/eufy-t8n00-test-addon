@@ -72,6 +72,7 @@ export function muxArgs(audio) {
 }
 
 export function createNvrHandler(ctx) {
+  const viewers = new Map();
   const openClient =
     ctx.streamClientFor ??
     (async (...args) =>
@@ -94,6 +95,7 @@ export function createNvrHandler(ctx) {
       firstAudio,
       selecting = true,
       stopped = false;
+    let registered = false;
     const log = (message) =>
       ctx.eventLog?.(`[nvr:media] sensor ${sensor}: ${message}`);
     const cleanup = () => {
@@ -103,6 +105,19 @@ export function createNvrHandler(ctx) {
       clearTimeout(outputTimer);
       abort.abort();
       feed?.destroy();
+      if (registered) {
+        const remaining = (viewers.get(sn) ?? 1) - 1;
+        if (remaining) viewers.set(sn, remaining);
+        else {
+          viewers.delete(sn);
+          ctx.state?.streaming?.delete(sn);
+          ctx.broadcast?.({
+            event: "streamState",
+            deviceSn: sn,
+            active: false,
+          });
+        }
+      }
       audioQueue = [];
       audioPipe?.destroy();
       mux?.kill("SIGKILL");
@@ -173,6 +188,12 @@ export function createNvrHandler(ctx) {
         feed.destroy();
         return;
       }
+      registered = true;
+      const previous = viewers.get(sn) ?? 0;
+      viewers.set(sn, previous + 1);
+      ctx.state?.streaming?.add(sn);
+      if (!previous)
+        ctx.broadcast?.({ event: "streamState", deviceSn: sn, active: true });
       feed.on("error", fail);
       feed.on("end", () => {
         res.end();

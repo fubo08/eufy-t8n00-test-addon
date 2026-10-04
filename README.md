@@ -20,7 +20,7 @@ Both optical views currently use separate RTC pulls; the NVR's simultaneous-sess
 
 ## Pinned sources and protocol evidence
 
-- SDK: fubo08/eufy-sdk `a51dd09360ef2c619af9b6dda1f24afb13bc6bb7` — complete upstream T9000 RTC implementation plus T8N00 routing/video and S4 sensor/audio support.
+- SDK: fubo08/eufy-sdk `46a7ae12243ad2991e53e08664afaaa89bbc54fb` — complete upstream T9000 RTC implementation plus T8N00 routing/video and S4 sensor/audio support.
 - Bridge: mega-yfue/ha-eufy-sdk-bridge `ac95e6d186135d20c956e0f2e16add34ca257cbb`, with the patches in this repository.
 - Launcher: adapted from mega-yfue/ha-eufy-sdk-addon `3129d2a0b08f8b3c5e6f528de984687d6b7ea459`.
 - Runtime: node-datachannel 0.33.4, go2rtc 1.9.9.
