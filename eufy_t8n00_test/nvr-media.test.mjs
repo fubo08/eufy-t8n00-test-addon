@@ -262,3 +262,60 @@ test("closing one lens keeps the other lens registered as streaming", async () =
     [true, false],
   );
 });
+
+test("snapshot failure does not delay either live lens", async (t) => {
+  t.mock.method(globalThis, "fetch", async () => new Response("unavailable", { status: 500 }));
+  const sensors = [];
+  const messages = [];
+  const dev = {
+    describe: () => ({ model: "T8E00" }),
+    camera: () => ({ openReadable: async ({ sensor }) => {
+      sensors.push(sensor);
+      return new PassThrough();
+    } }),
+  };
+  const handler = createNvrHandler({
+    cfg: {}, eufy: { getDevice: async () => dev },
+    streamClientFor: async () => ({ getDevice: async () => dev }),
+    eventLog: (message) => messages.push(message),
+  });
+  const snapshot = new EventEmitter();
+  snapshot.writeHead = (status) => { snapshot.status = status; };
+  snapshot.end = () => {};
+  await handler({}, snapshot, new URL("http://bridge/nvr-snapshot/CAM1/0"));
+  assert.equal(snapshot.status, 502);
+  assert.ok(messages.some((m) => m.includes("snapshot failed: snapshot HTTP 500")));
+  for (const sensor of [0, 1]) {
+    const res = new EventEmitter();
+    t.after(() => res.emit("close"));
+    await handler({}, res, new URL(`http://bridge/nvr-stream/CAM1/${sensor}`));
+    res.emit("close");
+  }
+  assert.deepEqual(sensors, [0, 1]);
+});
+
+test("simultaneous lenses hydrate one client while retaining separate RTC pulls", async (t) => {
+  let opens = 0;
+  let release;
+  const hydrated = new Promise((resolve) => { release = resolve; });
+  const sensors = [];
+  const dev = {
+    describe: () => ({ model: "T8E00" }),
+    camera: () => ({ openReadable: async ({ sensor }) => {
+      sensors.push(sensor);
+      return new PassThrough();
+    } }),
+  };
+  const handler = createNvrHandler({
+    cfg: {}, eufy: { getDevice: async () => dev },
+    streamClientFor: async () => { opens++; await hydrated; return { getDevice: async () => dev }; },
+  });
+  const responses = [new EventEmitter(), new EventEmitter()];
+  t.after(() => responses.forEach((res) => res.emit("close")));
+  const pulls = responses.map((res, sensor) => handler({}, res, new URL(`http://bridge/nvr-stream/CAM1/${sensor}`)));
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(opens, 1);
+  release();
+  await Promise.all(pulls);
+  assert.deepEqual(sensors.sort(), [0, 1]);
+});

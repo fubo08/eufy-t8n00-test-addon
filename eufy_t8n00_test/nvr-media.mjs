@@ -76,6 +76,8 @@ export function createNvrHandler(ctx) {
   // A failed lens must not make go2rtc hammer its sibling's NVR session, too.
   const retryAt = new Map();
   const opening = new Set();
+  // Both lenses share the stream client. Coalesce hydration, not RTC pulls.
+  const pendingClients = new Map();
   const openClient =
     ctx.streamClientFor ??
     (async (...args) =>
@@ -140,11 +142,13 @@ export function createNvrHandler(ctx) {
     const fail = (error) => {
       if (stopped) return;
       // Abort is normal teardown. Real open/mux failures get a bounded retry pause.
-      retryAt.set(
-        sn,
-        Date.now() + (/scall answered 486/.test(error.message) ? 30000 : 10000),
-      );
-      log(`stream ended: ${error.message}`);
+      if (kind === "stream") {
+        retryAt.set(
+          sn,
+          Date.now() + (/scall answered 486/.test(error.message) ? 30000 : 10000),
+        );
+      }
+      log(`${kind} failed: ${error.message}`);
       if (!res.headersSent) {
         res.writeHead(502);
         res.end("NVR media unavailable");
@@ -188,7 +192,17 @@ export function createNvrHandler(ctx) {
       }
       opening.add(pullKey);
       ownsOpening = true;
-      const client = await openClient(sn, ctx.cfg);
+      let pending = pendingClients.get(sn);
+      if (!pending) {
+        pending = Promise.resolve().then(() => openClient(sn, ctx.cfg));
+        pendingClients.set(sn, pending);
+      }
+      let client;
+      try {
+        client = await pending;
+      } finally {
+        if (pendingClients.get(sn) === pending) pendingClients.delete(sn);
+      }
       if (stopped) return;
       const dev = await client.getDevice(sn);
       if (stopped) return;
