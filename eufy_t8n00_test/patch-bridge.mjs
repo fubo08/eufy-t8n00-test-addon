@@ -35,7 +35,7 @@ streams = streams
   .replace(sdkImport, `${sdkImport}, ConsoleLogger`)
   .replace(
     realtime,
-    'logger: /^(1|true|yes|on)$/i.test(process.env.BRIDGE_DEBUG_P2P ?? "") ? new ConsoleLogger() : undefined,\n    autoRealtime: false,',
+    'logger: /^(1|true|yes|on)$/i.test(process.env.BRIDGE_DEBUG_P2P ?? "") ? new ConsoleLogger() : new ConsoleLogger("info"),\n    rtcVideoIcePolicy: process.env.EUFY_RTC_VIDEO_ICE_POLICY === "all" ? "all" : "relay",\n    autoRealtime: false,',
   );
 writeFileSync(streamsPath, streams);
 

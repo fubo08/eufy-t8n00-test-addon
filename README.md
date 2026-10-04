@@ -45,3 +45,11 @@ GitHub Actions builds amd64 and arm64, runs the focused SDK tests, the bridge re
 ## Rollback
 
 Keep the previous add-on/integration backup. Stop this bridge before switching to another one; simultaneous account sessions can displace each other. Restore the previous integration folder and restart HA, or select the previous bridge revision. Credentials and session files belong only in Home Assistant's add-on configuration/data directory.
+
+## 0.3.6: optional direct-video experiment
+
+The add-on option `rtc_video_ice_policy` defaults to `relay` (existing behavior). Set it to `all` to allow direct ICE candidates alongside the existing TURN servers for video only. Restart the add-on after changing the option. Control/PTZ sessions remain relay-only.
+
+Look for `[rtc:path]`: `route=relay` means at least one selected endpoint uses TURN, `route=direct` means neither does. Direct is not proof of a LAN-only route. Addresses and credentials are omitted from this diagnostic. Cloud authentication/signaling remain required. Docker networking and NVR firmware may prevent direct connectivity.
+
+This is ICE selection, not an automatic retry after a failed DTLS handshake. If video no longer starts, return the option to `relay` and restart. Close camera views before restarting; test the same two views, then each view separately with sound. Ports and integration configuration are unchanged.
