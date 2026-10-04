@@ -8,6 +8,7 @@ import {
   audioInput,
   createNvrHandler,
   muxArgs,
+  fragmentClocks,
 } from "../src/nvr-media.mjs";
 
 test("a busy NVR is not retried by every lens and snapshot request", async () => {
@@ -387,4 +388,19 @@ test("Linux HEVC/AAC with a ten-second GOP emits before the second keyframe", { 
   assert.ok(v.length>=20);
   for(let i=1;i<v.length;i++) assert.ok(Math.abs(Number(v[i].pts_time)-Number(v[i-1].pts_time)-1/15)<0.003,"source video spacing must survive burst delivery");
   assert.ok(Number(v.at(-1).pts_time)-Number(v[0].pts_time)>1.5);
+});
+
+test("output clock diagnostics parse both tracks without reading media payload", () => {
+  const box = (type, ...parts) => {
+    const body=Buffer.concat(parts); const header=Buffer.alloc(8);
+    header.writeUInt32BE(body.length+8); header.write(type,4); return Buffer.concat([header,body]);
+  };
+  const track=(id,time)=>{
+    const tfhd=Buffer.alloc(8);tfhd.writeUInt32BE(id,4);
+    const tfdt=Buffer.alloc(12);tfdt[0]=1;tfdt.writeBigUInt64BE(BigInt(time),4);
+    return box("traf",box("tfhd",tfhd),box("tfdt",tfdt));
+  };
+  const data=Buffer.concat([box("moof",track(1,90000),track(2,16000)),box("mdat",Buffer.from("tfdt media bytes"))]);
+  assert.deepEqual(fragmentClocks(data),[[1,90000],[2,16000]]);
+  assert.deepEqual(fragmentClocks(Buffer.from([1,2,3])),[]);
 });

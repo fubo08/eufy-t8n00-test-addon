@@ -1,4 +1,6 @@
-# Eufy T8N00 RTC test bridge — 0.3.4
+# Eufy T8N00 RTC test bridge — 0.3.5
+
+Version 0.3.5 adds targeted timing diagnostics for backwards jumps during otherwise continuous playback. Per-sensor RTC summaries report source timestamp regressions, repeated timestamps, arrival gaps and relative lag growth for audio/video. Bridge output summaries inspect fMP4 track decode clocks, emission gaps and queued bytes. Encoded media is neither logged nor reordered. This is a diagnostic release, not a confirmed fix for the remaining jumps. Keep debug_p2p enabled and capture 60–90 seconds with the same two views. Integration remains 0.3.1b1.
 
 Version 0.3.4 emits continuous fMP4 fragments at approximately 250 ms source-time intervals without waiting for another keyframe. This reduces bridge-induced burst delivery of audio and video. An established media peer may also survive a lost signaling socket; peer/channel failure or the existing 15-second media stall deadline still terminates it. Ordinary command sessions keep their existing lifecycle. Linux tests use a ten-second HEVC GOP and decode the resulting short fragments. Hardware validation remains necessary. Integration stays 0.3.1b1, ports 3000/8554.
 

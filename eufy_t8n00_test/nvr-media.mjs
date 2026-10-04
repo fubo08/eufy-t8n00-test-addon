@@ -1,5 +1,26 @@
 import { spawn } from "node:child_process";
 
+// Read only MP4 container headers; never inspect or log encoded media bytes.
+export function fragmentClocks(data) {
+  const clocks = [];
+  const walk = (start, end, track = 0) => {
+    for (let pos = start; pos + 8 <= end;) {
+      const size = data.readUInt32BE(pos);
+      if (size < 8 || pos + size > end) return;
+      const type = data.toString("ascii", pos + 4, pos + 8);
+      if (type === "moof" || type === "traf") walk(pos + 8, pos + size);
+      if (type === "tfhd" && size >= 16) track = data.readUInt32BE(pos + 12);
+      if (type === "tfdt" && track && size >= 16) {
+        if (data[pos + 8] === 0) clocks.push([track, data.readUInt32BE(pos + 12)]);
+        else if (data[pos + 8] === 1 && size >= 20) clocks.push([track, Number(data.readBigUInt64BE(pos + 12))]);
+      }
+      pos += size;
+    }
+  };
+  walk(0, data.length);
+  return clocks;
+}
+
 export function nvrStreams(sn, model) {
   return model === "T8E00"
     ? [
@@ -267,6 +288,8 @@ export function createNvrHandler(ctx) {
             if (stopped) return;
             timedMux = new Fmp4Muxer({ audio: true, fragmentSeconds: 0.25, keyframeAligned: false });
             let fragmentBytes = 0;
+            let fragments = 0, lastOutput, maxOutputGapMs = 0, backwards = 0;
+            const decodeHigh = new Map();
             emitFragment = (fragment) => {
               if (!fragment || stopped) return;
               for (const data of [fragment.init, fragment.data]) {
@@ -275,6 +298,14 @@ export function createNvrHandler(ctx) {
                 res.write(data);
               }
               if (fragment.data.length) {
+                const now = performance.now();
+                if (lastOutput !== undefined) maxOutputGapMs = Math.max(maxOutputGapMs, now - lastOutput);
+                lastOutput = now;
+                for (const [track, ticks] of fragmentClocks(fragment.data)) {
+                  if (ticks < (decodeHigh.get(track) ?? ticks)) backwards++;
+                  decodeHigh.set(track, Math.max(ticks, decodeHigh.get(track) ?? ticks));
+                }
+                if (++fragments % 60 === 0) log(`output timing: fragments=${fragments}, maxGapMs=${Math.round(maxOutputGapMs)}, backwards=${backwards}, queuedBytes=${res.writableLength}, decodeTicks=${JSON.stringify([...decodeHigh])}`);
                 fragmentBytes = 0;
                 clearTimeout(outputTimer);
                 outputTimer = setTimeout(() => fail(new Error("no timestamped media fragment for 10 seconds")), 10000);
