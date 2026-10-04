@@ -1,5 +1,5 @@
 name: eufy T8N00 RTC Test Bridge
-version: "0.1.0"
+version: "0.1.1"
 slug: eufy_t8n00_test
 stage: experimental
 description: Experimental T8N00 WebRTC command bridge. Run only one bridge per eufy account.
@@ -15,8 +15,8 @@ ingress: true
 ingress_port: 3000
 panel_icon: mdi:cctv
 ports:
-  3000/tcp: 3001
-  8554/tcp: 8556
+  3000/tcp: 3000
+  8554/tcp: 8554
 ports_description:
   3000/tcp: Bridge WS + HTTP control (point the eufy-sdk integration here)
   8554/tcp: RTSP
