@@ -1,7 +1,7 @@
 FROM node:24-bookworm-slim AS sdk
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl python3 make g++ cmake && rm -rf /var/lib/apt/lists/*
 WORKDIR /sdk
-RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/c632eb8df475e24bc2e56eb09fe742e4e5e5813d | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/a51dd09360ef2c619af9b6dda1f24afb13bc6bb7 | tar -xz --strip-components=1
 RUN npm ci && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/client/__tests__/rtc-command-routing.spec.ts src/client/__tests__/rtc-video-routing.spec.ts src/model/__tests__/nvr-camera-classification.spec.ts \
     && npm run build && npm pack --pack-destination /tmp
 
@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 WORKDIR /app
 RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/ac95e6d186135d20c956e0f2e16add34ca257cbb | tar -xz --strip-components=1
 COPY patch-bridge.mjs /tmp/patch-bridge.mjs
+COPY nvr-media.mjs /app/src/nvr-media.mjs
+COPY nvr-media.test.mjs /app/test/nvr-media.test.mjs
 RUN node /tmp/patch-bridge.mjs && node --check src/http-routes.mjs
 COPY --from=sdk /tmp/mega-yfue-eufy-sdk-0.3.0.tgz /tmp/eufy-sdk.tgz
 RUN npm ci --omit=dev && npm install --no-save --omit=dev /tmp/eufy-sdk.tgz node-datachannel@0.33.4 \

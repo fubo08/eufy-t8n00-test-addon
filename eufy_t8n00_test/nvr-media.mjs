@@ -1,0 +1,237 @@
+import { spawn } from "node:child_process";
+
+export function nvrStreams(sn, model) {
+  return model === "T8E00"
+    ? [
+        {
+          id: sn,
+          sensor: 1,
+          name: "Movable",
+          snapshot: `/nvr-snapshot/${sn}/1`,
+        },
+        {
+          id: `${sn}_fixed`,
+          sensor: 0,
+          name: "Fixed",
+          snapshot: `/nvr-snapshot/${sn}/0`,
+        },
+      ]
+    : undefined;
+}
+
+// Never guess AAC framing/configuration: raw AAC-ELD needs additional decoder metadata.
+export function audioInput(frame) {
+  if (frame?.codec === "g711a")
+    return ["-f", "alaw", "-ar", "16000", "-ac", "1"];
+  if (
+    frame?.codec === "aac-lc" &&
+    frame.data.length > 7 &&
+    frame.data[0] === 255 &&
+    (frame.data[1] & 0xf6) === 0xf0
+  )
+    return ["-f", "aac"];
+  return undefined;
+}
+
+export function muxArgs(audio) {
+  return [
+    "-hide_banner",
+    "-loglevel",
+    "warning",
+    "-fflags",
+    "+genpts",
+    "-use_wallclock_as_timestamps",
+    "1",
+    "-analyzeduration",
+    "1000000",
+    "-probesize",
+    "262144",
+    "-i",
+    "pipe:3",
+    ...audio,
+    "-i",
+    "pipe:4",
+    "-map",
+    "0:v:0",
+    "-map",
+    "1:a:0",
+    "-c:v",
+    "copy",
+    "-c:a",
+    "aac",
+    "-ar",
+    "16000",
+    "-ac",
+    "1",
+    "-flush_packets",
+    "1",
+    "-f",
+    "mpegts",
+    "pipe:1",
+  ];
+}
+
+export function createNvrHandler(ctx) {
+  const openClient =
+    ctx.streamClientFor ??
+    (async (...args) =>
+      (await import("../streams.mjs")).streamClientFor(...args));
+  return async function handleNvr(req, res, url) {
+    const match = /^\/nvr-(stream|snapshot)\/([A-Za-z0-9_-]+)\/([01])$/.exec(
+      url.pathname,
+    );
+    if (!match) {
+      res.writeHead(400);
+      res.end("Invalid NVR media path");
+      return;
+    }
+    const [, kind, sn, sensorText] = match;
+    const sensor = Number(sensorText);
+    const abort = new AbortController();
+    let feed, mux, timer, outputTimer, audioPipe;
+    let audioQueue = [],
+      audioBytes = 0,
+      firstAudio,
+      selecting = true,
+      stopped = false;
+    const log = (message) =>
+      ctx.eventLog?.(`[nvr:media] sensor ${sensor}: ${message}`);
+    const cleanup = () => {
+      if (stopped) return;
+      stopped = true;
+      clearTimeout(timer);
+      clearTimeout(outputTimer);
+      abort.abort();
+      feed?.destroy();
+      audioQueue = [];
+      audioPipe?.destroy();
+      mux?.kill("SIGKILL");
+    };
+    res.once("close", cleanup);
+    const fail = (error) => {
+      log(`stream ended: ${error.message}`);
+      if (!res.headersSent) {
+        res.writeHead(502);
+        res.end("NVR media unavailable");
+      } else res.destroy();
+      cleanup();
+    };
+    try {
+      const device = await ctx.eufy.getDevice(sn);
+      if (!nvrStreams(sn, device.describe().model)) {
+        res.writeHead(404);
+        res.end();
+        cleanup();
+        return;
+      }
+      if (stopped) return;
+      if (kind === "snapshot") {
+        const id = sensor === 1 ? sn : `${sn}_fixed`;
+        const response = await fetch(
+          `http://127.0.0.1:1984/api/frame.jpeg?src=${encodeURIComponent(id)}`,
+          {
+            signal: AbortSignal.any([abort.signal, AbortSignal.timeout(18000)]),
+          },
+        );
+        if (!response.ok) throw new Error(`snapshot HTTP ${response.status}`);
+        const data = Buffer.from(await response.arrayBuffer());
+        if (!stopped) {
+          res.writeHead(200, {
+            "content-type": "image/jpeg",
+            "cache-control": "no-store",
+          });
+          res.end(data);
+        }
+        cleanup();
+        return;
+      }
+      const client = await openClient(sn, ctx.cfg);
+      if (stopped) return;
+      const dev = await client.getDevice(sn);
+      if (stopped) return;
+      feed = await dev.camera().openReadable({
+        sensor,
+        signal: abort.signal,
+        onAudio(frame) {
+          if (stopped) return;
+          if (selecting) {
+            firstAudio ??= frame;
+            if (audioBytes + frame.data.length <= 512 * 1024) {
+              audioQueue.push(frame.data);
+              audioBytes += frame.data.length;
+            }
+          } else if (audioPipe && frame.codec === firstAudio.codec) {
+            if (audioPipe.writableLength + frame.data.length > 512 * 1024) {
+              fail(new Error("audio consumer too slow"));
+              return;
+            }
+            audioPipe.write(frame.data);
+          }
+        },
+      });
+      if (stopped) {
+        feed.destroy();
+        return;
+      }
+      feed.on("error", fail);
+      feed.on("end", () => {
+        res.end();
+        cleanup();
+      });
+      // A missing microphone must not hold up video indefinitely.
+      timer = setTimeout(() => {
+        selecting = false;
+        const input = audioInput(firstAudio);
+        if (!input) {
+          log(
+            firstAudio
+              ? `video only; unsupported audio framing (${firstAudio.codec}, ${firstAudio.data.length} bytes)`
+              : "video only; no audio received within 1200 ms",
+          );
+          audioQueue = [];
+          res.writeHead(200, {
+            "content-type": "application/octet-stream",
+            "cache-control": "no-store",
+          });
+          feed.pipe(res);
+          return;
+        }
+        log(`muxing video + ${firstAudio.codec} audio`);
+        mux = spawn("ffmpeg", muxArgs(input), {
+          stdio: ["ignore", "pipe", "pipe", "pipe", "pipe"],
+        });
+        mux.on("error", fail);
+        mux.on("exit", (code) => {
+          if (!stopped) fail(new Error(`audio/video mux exited (${code})`));
+        });
+        // Bound diagnostics; never emit audio/video bytes or credentials.
+        let diagnosticBytes = 0;
+        mux.stderr.on("data", (data) => {
+          if (diagnosticBytes < 2048) log(data.toString().slice(0, 512).trim());
+          diagnosticBytes += data.length;
+        });
+        audioPipe = mux.stdio[4];
+        audioPipe.on("error", fail);
+        mux.stdio[3].on("error", fail);
+        for (const data of audioQueue) audioPipe.write(data);
+        audioQueue = [];
+        feed.pipe(mux.stdio[3]);
+        outputTimer = setTimeout(
+          () =>
+            fail(
+              new Error("audio/video mux produced no output within 10 seconds"),
+            ),
+          10000,
+        );
+        mux.stdout.once("data", () => clearTimeout(outputTimer));
+        res.writeHead(200, {
+          "content-type": "video/mp2t",
+          "cache-control": "no-store",
+        });
+        mux.stdout.pipe(res);
+      }, 1200);
+    } catch (error) {
+      if (!stopped) fail(error);
+    }
+  };
+}

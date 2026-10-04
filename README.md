@@ -1,31 +1,33 @@
-# Eufy T8N00 RTC test bridge
+# Eufy T8N00 RTC test bridge — 0.3.0
 
-Experimental Home Assistant add-on for testing T8N00 commands through the existing T9000 WebRTC implementation. RTC arming control has been confirmed on a real T8N00. Version 0.2.0 adds experimental video-only RTC pulls; live video still needs hardware verification.
+Experimental Home Assistant add-on. Arming-mode changes and one T8E00 PoE S4 live view have been confirmed on the owner's T8N00. This update adds selection of the two optical sensors, PTZ detection and received audio support. These new features still require a hardware test.
 
-Pinned sources:
-- SDK: fubo08/eufy-sdk `c632eb8df475e24bc2e56eb09fe742e4e5e5813d` (complete T9000 RTC implementation plus exact-model T8N00 routing and experimental video pulls).
-- Bridge: mega-yfue/ha-eufy-sdk-bridge `ac95e6d186135d20c956e0f2e16add34ca257cbb`.
-- Add-on launcher adapted from mega-yfue/ha-eufy-sdk-addon `3129d2a0b08f8b3c5e6f528de984687d6b7ea459`.
-- Native WebRTC runtime: node-datachannel 0.33.4; go2rtc 1.9.9.
+## Update and view both cameras
 
-## Installation and rollback
+Update this add-on and restart it. Keep the original bridge stopped and keep ports **3000** (bridge) and **8554** (RTSP). The repository is `https://github.com/fubo08/eufy-t8n00-test-addon`; Supervisor builds the image locally on amd64 or aarch64. Existing saved port mappings are retained by HA.
 
-Add this repository URL to the add-on store repositories, then install **eufy T8N00 RTC Test Bridge**. Supervisor builds the image locally; the initial build can take several minutes. Supported architectures: amd64 and aarch64. GitHub Actions separately checks both container architectures and runs bridge regression tests without account credentials.
+For separate **Fixed / Movable** camera entities under the same S4 device, install the [test integration 0.3.1b1](https://github.com/fubo08/ha-eufy-sdk/blob/dev/T8N00-TEST.md). The original camera unique ID remains the movable view; no device or integration-entry deletion is needed. The four direction buttons control the movable camera. Presets are not exposed for this model because their wire format has not been verified.
 
-Stop the existing bridge before starting this one: simultaneous sessions on the same eufy account can displace each other. Keep the previous add-on installed. Configure email, password and account country through Home Assistant only; never commit credentials or session files. This add-on has its own persistent data directory. Defaults use host ports 3000 (bridge) and 8554 (RTSP); discovery reads the actual mappings.
+Open each view separately before trying both together. Enable sound manually in the player. Keep `debug_p2p` enabled for the first test: `[rtc:video]` names the sensor, `[rtc:audio]` reports the first received audio codec and `[nvr:media]` reports whether audio is included. Logs contain account/device information; do not post unredacted logs publicly.
 
-Test login and device discovery first, then incoming notifications. Only then manually test an arming mode change while present, verify the result in the official app, and restore the original mode. Do not use this experimental bridge as your only alarm control. To roll back, stop this add-on, restart the previous bridge and restore the integration endpoint if changed.
+## Audio and limits
 
-## What WebRTC means here
+Audio is requested with the camera channel in `audio_chn`, then separated from video command 1300 into audio command 1301. Supported bridge inputs are AAC-LC in ADTS and G.711 A-law at 16 kHz mono. FFmpeg copies video and encodes sound to AAC in MPEG-TS for go2rtc/HA. With no supported audio in the first 1200 ms after video arrives, the route continues video-only and explains why in the log. Raw AAC/AAC-ELD is not decoded in this version; it requires further framing/decoder work if the device emits it. This is listening, not two-way talk.
 
-The inherited RTC implementation forces TURN relay candidates. Command and experimental video data therefore travel via an internet relay, with DTLS encryption, rather than directly across the LAN. Cloud signaling is also required. Direct LAN mode is not implemented or validated here. NVR-attached cameras now use dedicated RTC video sessions through openReadable; other SDK media APIs retain their existing paths. Video is forwarded as Annex-B through ffmpeg/go2rtc. Audio is not yet included. H.265 playback depends on the viewing client; transcoding is not enabled in this version.
+The inherited RTC implementation still forces TURN relays for commands and video, encrypted with DTLS. Cloud signaling and internet access are required; direct LAN mode has not been implemented. H.265 playback depends on the viewer. Video transcoding is not enabled.
 
-The Python/aiortc certificate parsing fix discussed in HallyAus/Eufy-Home-Assistant issue 20 is not copied: this SDK uses native libdatachannel. Whether this stack encounters a corresponding T8N00 certificate problem requires an actual device test. Certificate verification has not been disabled.
+Both optical views currently use separate RTC pulls; the NVR's simultaneous-session limits need hardware confirmation. Lens-specific snapshots use the same go2rtc source as that lens's live view. Other models retain the original bridge path.
 
-For an existing 0.1.0 installation, set the host ports in the add-on Network settings to 3000 and 8554, save and restart. Home Assistant may retain previously saved port mappings after an update. Keep the previous bridge stopped. No integration or device recreation is needed.
+## Pinned sources and protocol evidence
 
-## Version 0.2.0 video test
+- SDK: fubo08/eufy-sdk `a51dd09360ef2c619af9b6dda1f24afb13bc6bb7` — complete upstream T9000 RTC implementation plus T8N00 routing/video and S4 sensor/audio support.
+- Bridge: mega-yfue/ha-eufy-sdk-bridge `ac95e6d186135d20c956e0f2e16add34ca257cbb`, with the patches in this repository.
+- Launcher: adapted from mega-yfue/ha-eufy-sdk-addon `3129d2a0b08f8b3c5e6f528de984687d6b7ea459`.
+- Runtime: node-datachannel 0.33.4, go2rtc 1.9.9.
+- Eufy's public web player (security.eufy.com, inspected 2026-10-04) selects sensor 0 for the fixed and sensor 1 for the movable S4 view, and uses command 6030 for direction steps. Its media worker distinguishes video 1300 and audio 1301. The audio header parser also follows the existing SDK audio contract. No vendor WASM is shipped.
 
-Update and restart the add-on, keeping ports 3000 and 8554. Keep debug_p2p enabled during the first test to expose RTC diagnostics. Open ONE camera first for about 30 seconds. Look for [rtc:video] connected and [rtc:video] first frame. Close it and verify arming mode still works. Then try a second camera. A command channel opening alone is not proof of video. First-frame and stalled-video timeouts close the pull; output buffering is bounded. The existing PTCS reassembler is retained; firmware-specific video fragmentation/FEC differences may require further work based on the test logs. Do not upload unredacted logs to public issues.
+GitHub Actions builds amd64 and arm64, runs the focused SDK tests, the bridge regression suite and a synthetic FFmpeg audio/video mux test. These do not replace a real NVR test.
 
-Version 0.2.1 fixes T8E00 PoE camera classification (previously rejected as no camera before opening video), enables RTC diagnostics on stream clients when debug_p2p is true, and prints the build version at startup. The stored-event image can still be absent until a matching event supplies one; it is separate from live viewing.
+## Rollback
+
+Keep the previous add-on/integration backup. Stop this bridge before switching to another one; simultaneous account sessions can displace each other. Restore the previous integration folder and restart HA, or select the previous bridge revision. Credentials and session files belong only in Home Assistant's add-on configuration/data directory.

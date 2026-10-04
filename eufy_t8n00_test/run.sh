@@ -5,7 +5,7 @@
 # wrapper adds on top of the bridge image. /data is the add-on's persistent volume, so the login token
 # survives restarts (eufy allows ONE session per account — re-auth escalates to 2FA).
 set -e
-echo '[addon] T8N00 RTC Test Bridge 0.2.1, SDK c632eb8; RTC video enabled'
+echo '[addon] T8N00 RTC Test Bridge 0.3.0, SDK a51dd09; dual sensor + audio test'
 
 OPTS=/data/options.json
 SUPERVISOR_API="${SUPERVISOR:-http://supervisor}"

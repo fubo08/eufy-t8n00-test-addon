@@ -1,0 +1,186 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { EventEmitter } from "node:events";
+import { PassThrough } from "node:stream";
+import { spawn, spawnSync } from "node:child_process";
+import {
+  nvrStreams,
+  audioInput,
+  createNvrHandler,
+  muxArgs,
+} from "../src/nvr-media.mjs";
+
+test(
+  "Linux ffmpeg produces video and audible AAC from camera-like inputs",
+  { skip: process.platform === "win32", timeout: 20000 },
+  async () => {
+    const generate = (args) => {
+      const r = spawnSync(
+        "ffmpeg",
+        ["-hide_banner", "-loglevel", "error", ...args, "pipe:1"],
+        { maxBuffer: 8 * 1024 * 1024 },
+      );
+      assert.equal(r.status, 0, r.stderr?.toString());
+      return r.stdout;
+    };
+    const video = generate([
+      "-f",
+      "lavfi",
+      "-i",
+      "testsrc2=size=128x96:rate=15",
+      "-t",
+      "3",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "ultrafast",
+      "-f",
+      "h264",
+    ]);
+    const audio = generate([
+      "-f",
+      "lavfi",
+      "-i",
+      "sine=frequency=440:sample_rate=16000",
+      "-t",
+      "3",
+      "-ac",
+      "1",
+      "-f",
+      "alaw",
+    ]);
+    const proc = spawn("ffmpeg", muxArgs(audioInput({ codec: "g711a" })), {
+      stdio: ["ignore", "pipe", "pipe", "pipe", "pipe"],
+    });
+    const output = [],
+      errors = [];
+    proc.stdout.on("data", (b) => output.push(b));
+    proc.stderr.on("data", (b) => errors.push(b));
+    const ended = new Promise((resolve, reject) => {
+      proc.on("error", reject);
+      proc.on("close", resolve);
+    });
+    proc.stdio[3].end(video);
+    proc.stdio[4].end(audio);
+    assert.equal(await ended, 0, Buffer.concat(errors).toString());
+    const probe = spawnSync(
+      "ffprobe",
+      [
+        "-v",
+        "error",
+        "-show_entries",
+        "stream=codec_type,codec_name",
+        "-of",
+        "json",
+        "pipe:0",
+      ],
+      { input: Buffer.concat(output) },
+    );
+    assert.equal(probe.status, 0, probe.stderr?.toString());
+    const streams = JSON.parse(probe.stdout).streams;
+    assert.ok(streams.some((s) => s.codec_type === "video"));
+    assert.ok(streams.some((s) => s.codec_name === "aac"));
+  },
+);
+
+test("S4 streams retain the primary ID and isolate the fixed lens", () => {
+  assert.deepEqual(
+    nvrStreams("CAM1", "T8E00").map((s) => [s.id, s.sensor]),
+    [
+      ["CAM1", 1],
+      ["CAM1_fixed", 0],
+    ],
+  );
+  assert.equal(nvrStreams("CAM1", "T8P00"), undefined);
+  assert.deepEqual(audioInput({ codec: "g711a" }), [
+    "-f",
+    "alaw",
+    "-ar",
+    "16000",
+    "-ac",
+    "1",
+  ]);
+  assert.equal(
+    audioInput({ codec: "aac-eld", data: Buffer.alloc(8) }),
+    undefined,
+  );
+  assert.equal(
+    audioInput({ codec: "aac-lc", data: Buffer.alloc(8) }),
+    undefined,
+  );
+  assert.deepEqual(
+    audioInput({
+      codec: "aac-lc",
+      data: Buffer.from([255, 241, 0, 0, 0, 0, 0, 0]),
+    }),
+    ["-f", "aac"],
+  );
+});
+
+test("silent camera starts video and disconnect stops the RTC pull", async () => {
+  const feed = new PassThrough();
+  let options;
+  const dev = {
+    describe: () => ({ model: "T8E00" }),
+    camera: () => ({
+      openReadable: async (o) => {
+        options = o;
+        return feed;
+      },
+    }),
+  };
+  const handler = createNvrHandler({
+    cfg: {},
+    eufy: { getDevice: async () => dev },
+    streamClientFor: async () => ({ getDevice: async () => dev }),
+  });
+  const response = new PassThrough();
+  response.writeHead = (code, headers) => {
+    response.status = code;
+    response.headers = headers;
+  };
+  const chunks = [];
+  response.on("data", (data) => chunks.push(data));
+  await handler(
+    new EventEmitter(),
+    response,
+    new URL("http://bridge/nvr-stream/CAM1/0"),
+  );
+  assert.equal(options.sensor, 0);
+  feed.write(Buffer.from([0, 0, 0, 1, 0x40]));
+  await new Promise((resolve) => setTimeout(resolve, 1300));
+  assert.equal(response.status, 200);
+  assert.equal(response.headers["content-type"], "application/octet-stream");
+  assert.deepEqual(Buffer.concat(chunks), Buffer.from([0, 0, 0, 1, 0x40]));
+  response.destroy();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(options.signal.aborted, true);
+  assert.equal(feed.destroyed, true);
+});
+
+test("disconnect during camera lookup does not start a stream", async () => {
+  let release;
+  let opened = false;
+  const handler = createNvrHandler({
+    cfg: {},
+    eufy: {
+      getDevice: () =>
+        new Promise((r) => {
+          release = r;
+        }),
+    },
+    streamClientFor: async () => {
+      opened = true;
+    },
+  });
+  const response = new EventEmitter();
+  const pending = handler(
+    new EventEmitter(),
+    response,
+    new URL("http://bridge/nvr-stream/CAM1/1"),
+  );
+  response.emit("close");
+  release({ describe: () => ({ model: "T8E00" }) });
+  await pending;
+  assert.equal(opened, false);
+});
