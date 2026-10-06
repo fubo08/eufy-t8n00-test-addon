@@ -22,6 +22,9 @@ test("concurrent snapshots share a decoder but lenses stay separate", async () =
   assert.equal(children.length, 2);
   for (const { child, args } of children) {
     assert.ok(args.some(x => x.startsWith("rtsp://127.0.0.1:8554/")));
+    assert.equal(args[args.indexOf("-skip_frame") + 1], "nokey");
+    assert.equal(args[args.indexOf("-err_detect") + 1], "explode");
+    assert.ok(args.indexOf("-skip_frame") < args.indexOf("-i"));
     child.stdout.write(Buffer.from([255, 216, 1, 2, 255, 217]));
     child.emit("close", 0);
   }
