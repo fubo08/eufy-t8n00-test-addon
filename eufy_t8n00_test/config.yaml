@@ -1,5 +1,5 @@
 name: eufy T8N00 RTC Test Bridge
-version: "0.3.10"
+version: "0.3.11"
 slug: eufy_t8n00_test
 stage: experimental
 description: Experimental T8N00 WebRTC command bridge. Run only one bridge per eufy account.
@@ -34,6 +34,7 @@ options:
   go2rtc_enable: true
   rtc_video_ice_policy: relay
   rtc_video_signaling_mode: scall
+  media_buffer_ms: 1500
   solix_email: ""
   solix_password: ""
   solix_country: ""
@@ -55,6 +56,7 @@ schema:
   go2rtc_enable: bool
   rtc_video_ice_policy: list(relay|all)
   rtc_video_signaling_mode: list(scall|call)
+  media_buffer_ms: int(0,3000)
   solix_email: "str?"
   solix_password: "password?"
   solix_country: "str?"

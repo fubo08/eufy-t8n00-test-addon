@@ -71,3 +71,7 @@ Restart the bridge after changing this option. Keep the existing ICE policy for 
 ## 0.3.10: coordinate native video starts
 
 In `call` mode the bridge queues new video negotiations. The next start waits until the previous pull has produced its first video frame (or failed), with at least eight seconds between start attempts. Running streams continue concurrently. Abandoned queued HTTP requests are cancelled before they open a session. `scall` is unchanged. This targets the observed simultaneous-start timeout; it does not claim to fix remaining audio timing irregularities.
+
+## 0.3.11: optional shared AV pacing buffer
+
+`media_buffer_ms` defaults to 1500 (range 0–3000). Complete video/AAC fragments are paced together on their source video clock; encoded contents and media timestamps are unchanged. This trades additional latency for a reserve against uneven arrival. Set 0 to disable the reserve for comparison. A gap exceeding the reserve triggers rebuffering, logged explicitly; missing media cannot be restored. Pending output is cancelled on disconnect and the pacing queue is capped at 8 MiB. Video-only/G.711 fallback is unchanged.

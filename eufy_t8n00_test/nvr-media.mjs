@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { createMediaPacer } from "./media-pacer.mjs";
 import { createStartQueue } from "./nvr-start-queue.mjs";
 
 // Read only MP4 container headers; never inspect or log encoded media bytes.
@@ -126,7 +127,7 @@ export function createNvrHandler(ctx) {
       return;
     }
     const abort = new AbortController();
-    let feed, sourceFeed, mux, timer, outputTimer, audioPipe, timedMux, emitFragment;
+    let feed, sourceFeed, mux, timer, outputTimer, audioPipe, timedMux, emitFragment, pacer;
     let audioQueue = [],
       audioBytes = 0,
       firstAudio,
@@ -143,6 +144,7 @@ export function createNvrHandler(ctx) {
       clearTimeout(timer);
       clearTimeout(outputTimer);
       abort.abort();
+      pacer?.close();
       feed?.destroy();
       sourceFeed?.destroy();
       if (registered) {
@@ -299,13 +301,29 @@ export function createNvrHandler(ctx) {
             let fragmentBytes = 0;
             let fragments = 0, lastOutput, maxOutputGapMs = 0, backwards = 0;
             const decodeHigh = new Map();
-            emitFragment = (fragment) => {
-              if (!fragment || stopped) return;
-              for (const data of [fragment.init, fragment.data]) {
-                if (!data?.length) continue;
+            const configuredDelay = Number(process.env.EUFY_MEDIA_BUFFER_MS ?? 1500);
+            const delayMs = Number.isFinite(configuredDelay) ? Math.max(0, Math.min(3000, configuredDelay)) : 1500;
+            let pacedCount = 0, lastPaced, maxPacedGap = 0;
+            pacer = createMediaPacer({ delayMs, onError: fail,
+              onRebuffer: () => log("media buffer depleted; rebuilding reserve"),
+              write(data) {
+                if (stopped) return;
                 if (res.writableLength + data.length > 8 * 1024 * 1024) throw new Error("timed media consumer too slow");
                 res.write(data);
-              }
+                const now = performance.now();
+                if (lastPaced !== undefined) maxPacedGap = Math.max(maxPacedGap, now - lastPaced);
+                lastPaced = now;
+                if (++pacedCount % 60 === 0) log(`paced output: fragments=${pacedCount}, maxGapMs=${Math.round(maxPacedGap)}, queuedBytes=${res.writableLength}`);
+              },
+            });
+            log(`AV pacing buffer: ${delayMs} ms`);
+            emitFragment = (fragment) => {
+              if (!fragment || stopped) return;
+              if (fragment.data.length) {
+                const videoClock = fragmentClocks(fragment.data).find(([track]) => track === 1)?.[1];
+                const data = fragment.init?.length ? Buffer.concat([fragment.init, fragment.data]) : fragment.data;
+                pacer.push(data, videoClock / 90);
+              } else if (fragment.init?.length) res.write(fragment.init);
               if (fragment.data.length) {
                 const now = performance.now();
                 if (lastOutput !== undefined) maxOutputGapMs = Math.max(maxOutputGapMs, now - lastOutput);

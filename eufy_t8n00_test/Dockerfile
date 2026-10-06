@@ -13,6 +13,8 @@ RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/a
 COPY patch-bridge.mjs /tmp/patch-bridge.mjs
 COPY rtc-native.mjs rtc-native-summary.mjs /app/src/
 COPY rtc-native.test.mjs /app/test/rtc-native.test.mjs
+COPY media-pacer.mjs /app/src/media-pacer.mjs
+COPY media-pacer.test.mjs /app/test/media-pacer.test.mjs
 COPY nvr-start-queue.mjs /app/src/nvr-start-queue.mjs
 COPY nvr-start-queue.test.mjs /app/test/nvr-start-queue.test.mjs
 COPY nvr-media.mjs /app/src/nvr-media.mjs
