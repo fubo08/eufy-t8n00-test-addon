@@ -325,7 +325,13 @@ test("timestamped AAC path preserves source spacing despite burst delivery", asy
   const calls = [];
   class Mux {
     pushAudio(frame, time) { calls.push(["audio", time]); }
-    push(frame, time) { calls.push(["video", time]); return { data: Buffer.from("fragment") }; }
+    push(frame, time) {
+      calls.push(["video", time]);
+      const box = (type, body) => { const h=Buffer.alloc(8); h.writeUInt32BE(body.length+8); h.write(type,4); return Buffer.concat([h,body]); };
+      const tfhd=Buffer.alloc(8); tfhd.writeUInt32BE(1,4);
+      const tfdt=Buffer.alloc(8); tfdt.writeUInt32BE(time*90,4);
+      return { data: box("moof",box("traf",Buffer.concat([box("tfhd",tfhd),box("tfdt",tfdt)]))) };
+    }
   }
   let opts;
   const feed = new PassThrough({ objectMode: true });
@@ -380,6 +386,8 @@ test("Linux HEVC/AAC with a ten-second GOP emits before the second keyframe", { 
   assert.equal(res.headers["content-type"],"video/mp4");
   // Deliver three seconds of source data in one burst, unlike real-time arrival.
   for(const frame of frames) if(frame.kind==="video") feed.write(frame); else if(frame!==firstAudio) options.onAudio(frame);
+  // Allow the configured reserve plus the three seconds of source media to drain.
+  await new Promise((r)=>setTimeout(r,4500));
   const result=JSON.parse(run("ffprobe",["-v","error","-show_streams","-show_packets","-of","json","pipe:0"],Buffer.concat(chunks)));
   run("ffmpeg", ["-v","error","-xerror","-i","pipe:0","-f","null","-"], Buffer.concat(chunks));
   assert.ok(result.streams.some((s)=>s.codec_name==="hevc"));
