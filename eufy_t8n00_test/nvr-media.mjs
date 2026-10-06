@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import { createMediaPacer } from "./media-pacer.mjs";
 import { createStartQueue } from "./nvr-start-queue.mjs";
+import { createSnapshotReader } from "./nvr-snapshot.mjs";
 
 // Read only MP4 container headers; never inspect or log encoded media bytes.
 export function fragmentClocks(data) {
@@ -95,6 +96,7 @@ export function muxArgs(audio) {
 }
 
 export function createNvrHandler(ctx) {
+  const readSnapshot = ctx.readSnapshot ?? createSnapshotReader();
   const startQueue = createStartQueue();
   const viewers = new Map();
   // A failed lens must not make go2rtc hammer its sibling's NVR session, too.
@@ -192,14 +194,7 @@ export function createNvrHandler(ctx) {
       if (stopped) return;
       if (kind === "snapshot") {
         const id = sensor === 1 ? sn : `${sn}_fixed`;
-        const response = await fetch(
-          `http://127.0.0.1:1984/api/frame.jpeg?src=${encodeURIComponent(id)}`,
-          {
-            signal: AbortSignal.any([abort.signal, AbortSignal.timeout(18000)]),
-          },
-        );
-        if (!response.ok) throw new Error(`snapshot HTTP ${response.status}`);
-        const data = Buffer.from(await response.arrayBuffer());
+        const data = await readSnapshot(id);
         if (!stopped) {
           res.writeHead(200, {
             "content-type": "image/jpeg",

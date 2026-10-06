@@ -18,6 +18,8 @@ COPY media-pacer.test.mjs /app/test/media-pacer.test.mjs
 COPY nvr-start-queue.mjs /app/src/nvr-start-queue.mjs
 COPY nvr-start-queue.test.mjs /app/test/nvr-start-queue.test.mjs
 COPY nvr-media.mjs /app/src/nvr-media.mjs
+COPY nvr-snapshot.mjs /app/src/nvr-snapshot.mjs
+COPY nvr-snapshot.test.mjs /app/test/nvr-snapshot.test.mjs
 COPY nvr-media.test.mjs /app/test/nvr-media.test.mjs
 COPY nvr-rtsp.test.mjs /app/test/nvr-rtsp.test.mjs
 RUN node /tmp/patch-bridge.mjs && node --check src/http-routes.mjs

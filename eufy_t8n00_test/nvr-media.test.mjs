@@ -265,7 +265,6 @@ test("closing one lens keeps the other lens registered as streaming", async () =
 });
 
 test("snapshot failure does not delay either live lens", async (t) => {
-  t.mock.method(globalThis, "fetch", async () => new Response("unavailable", { status: 500 }));
   const sensors = [];
   const messages = [];
   const dev = {
@@ -277,6 +276,7 @@ test("snapshot failure does not delay either live lens", async (t) => {
   };
   const handler = createNvrHandler({
     cfg: {}, eufy: { getDevice: async () => dev },
+    readSnapshot: async () => { throw new Error("snapshot decoder unavailable"); },
     streamClientFor: async () => ({ getDevice: async () => dev }),
     eventLog: (message) => messages.push(message),
   });
@@ -285,7 +285,7 @@ test("snapshot failure does not delay either live lens", async (t) => {
   snapshot.end = () => {};
   await handler({}, snapshot, new URL("http://bridge/nvr-snapshot/CAM1/0"));
   assert.equal(snapshot.status, 502);
-  assert.ok(messages.some((m) => m.includes("snapshot failed: snapshot HTTP 500")));
+  assert.ok(messages.some((m) => m.includes("snapshot failed: snapshot decoder unavailable")));
   for (const sensor of [0, 1]) {
     const res = new EventEmitter();
     t.after(() => res.emit("close"));

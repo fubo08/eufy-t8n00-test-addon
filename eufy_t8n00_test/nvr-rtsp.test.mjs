@@ -7,9 +7,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { writeGo2rtcConfig } from "../go2rtc-config.mjs";
 import { nvrStreams } from "../src/nvr-media.mjs";
+import { createSnapshotReader } from "../src/nvr-snapshot.mjs";
 
-for (const format of ["mpegts", "mp4"]) test(
-  `NVR ${format} audio survives the actual go2rtc RTSP publication`,
+for (const [format, encoder] of [["mpegts", "libx264"], ["mp4", "libx264"], ["mp4", "libx265"]]) test(
+  `NVR ${format} ${encoder} audio and snapshot survive the actual go2rtc RTSP publication`,
   { skip: process.platform === "win32", timeout: 45000 },
   async () => {
     const dir = await mkdtemp(join(tmpdir(), "nvr-rtsp-"));
@@ -38,11 +39,12 @@ for (const format of ["mpegts", "mp4"]) test(
         "-t",
         "35",
         "-c:v",
-        "libx264",
+        encoder,
         "-preset",
         "ultrafast",
         "-tune",
         "zerolatency",
+        ...(encoder === "libx265" ? ["-x265-params", "pools=1:frame-threads=1:log-level=error"] : []),
         "-g",
         "15",
         "-c:a",
@@ -140,6 +142,9 @@ for (const format of ["mpegts", "mp4"]) test(
         output,
       );
       assert.doesNotMatch(logs, /AAC with no global headers/);
+      const jpeg = await createSnapshotReader()("SYNTHETIC");
+      assert.equal(jpeg.readUInt16BE(0), 0xffd8);
+      assert.equal(jpeg.readUInt16BE(jpeg.length - 2), 0xffd9);
     } finally {
       for (const child of children) child.kill("SIGKILL");
       server.closeAllConnections();
