@@ -10,6 +10,9 @@ export function createSnapshotReader({ spawnProcess = spawn, timeoutMs = 18000 }
     const result = new Promise((resolve, reject) => {
       const child = spawnProcess("ffmpeg", [
         "-hide_banner", "-loglevel", "error", "-rtsp_transport", "tcp",
+        // Codec parameters are supplied by RTSP SDP. Avoid the default multi-second
+        // probe consuming Home Assistant's ten-second image request budget.
+        "-analyzeduration", "500000", "-probesize", "262144",
         // Joining RTSP mid-GOP can decode concealed green frames successfully.
         // Wait for an independently decodable frame instead of accepting one.
         "-skip_frame", "nokey", "-err_detect", "explode",

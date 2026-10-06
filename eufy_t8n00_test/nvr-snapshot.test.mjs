@@ -25,6 +25,8 @@ test("concurrent snapshots share a decoder but lenses stay separate", async () =
     assert.equal(args[args.indexOf("-skip_frame") + 1], "nokey");
     assert.equal(args[args.indexOf("-err_detect") + 1], "explode");
     assert.ok(args.indexOf("-skip_frame") < args.indexOf("-i"));
+    assert.equal(args[args.indexOf("-analyzeduration") + 1], "500000");
+    assert.ok(args.indexOf("-analyzeduration") < args.indexOf("-i"));
     child.stdout.write(Buffer.from([255, 216, 1, 2, 255, 217]));
     child.emit("close", 0);
   }
