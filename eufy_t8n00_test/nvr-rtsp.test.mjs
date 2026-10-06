@@ -141,7 +141,11 @@ for (const [format, encoder, profile] of [["mpegts", "libx264", "original"], ["m
       );
       if (profile === "h264") {
         assert.ok(streams.some(s => s.codec_name === "h264"), output);
-        assert.ok(times.slice(1).every((t, i) => t > times[i]), `video timestamps must strictly increase: ${JSON.stringify(times)}`);
+        // ffprobe may omit PTS on the first RTP packet before clock anchoring.
+        // After that first packet, missing or backwards timestamps are failures.
+        const anchored = Number.isFinite(times[0]) ? times : times.slice(1);
+        assert.ok(anchored.every(Number.isFinite), `missing anchored PTS: ${JSON.stringify(times)}`);
+        assert.ok(anchored.slice(1).every((t, i) => t > anchored[i]), `video timestamps must strictly increase: ${JSON.stringify(times)}`);
         assert.match(await readFile(config, "utf8"), /SYNTHETIC_original:/);
       }
       assert.ok(
