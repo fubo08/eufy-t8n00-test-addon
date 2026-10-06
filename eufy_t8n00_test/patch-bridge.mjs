@@ -69,7 +69,7 @@ patch(
   "    lines.push(`  ${d.sn}: ffmpeg:",
   `    if (d.streams?.length) {
       for (const stream of d.streams) {
-        lines.push(\`  \${stream.id}: ffmpeg:http://\${cfg.selfHost}:\${cfg.port}/nvr-stream/\${d.sn}/\${stream.sensor}#video=copy#audio=aac#async\`);
+        lines.push(\`  \${stream.id}: ffmpeg:http://\${cfg.selfHost}:\${cfg.port}/nvr-stream/\${d.sn}/\${stream.sensor}#video=copy#audio=aac\`);
       }
       continue;
     }

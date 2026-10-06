@@ -78,7 +78,7 @@ for (const format of ["mpegts", "mp4"]) test(
       );
       assert.match(
         await readFile(config, "utf8"),
-        /#video=copy#audio=aac#async/,
+        /#video=copy#audio=aac/,
       );
       const relay = start("go2rtc", ["-config", config]);
       relay.stdout.on("data", (b) => {
@@ -101,7 +101,10 @@ for (const format of ["mpegts", "mp4"]) test(
         "-probesize",
         "262144",
         "-show_entries",
-        "stream=codec_type,codec_name",
+        "stream=codec_type,codec_name:packet=codec_type,pts_time",
+        "-show_packets",
+        "-read_intervals",
+        "%+4",
         "-of",
         "json",
         "rtsp://127.0.0.1:8554/SYNTHETIC",
@@ -121,7 +124,13 @@ for (const format of ["mpegts", "mp4"]) test(
       });
       clearTimeout(timeout);
       assert.equal(code, 0, errors + logs);
-      const streams = JSON.parse(output).streams;
+      const result = JSON.parse(output);
+      const streams = result.streams;
+      const times = result.packets.filter((p) => p.codec_type === "video").map((p) => Number(p.pts_time));
+      assert.ok(times.length >= 20, `too few video packets: ${times.length}`);
+      const deltas = times.slice(1).map((t, i) => t - times[i]).sort((a, b) => a - b);
+      const median = deltas[Math.floor(deltas.length / 2)];
+      assert.ok(median > 0.04 && median < 0.09, `15 fps source timing lost: median delta=${median}`);
       assert.ok(
         streams.some((s) => s.codec_type === "video"),
         output,
