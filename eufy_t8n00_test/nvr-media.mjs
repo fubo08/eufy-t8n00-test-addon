@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { createStartQueue } from "./nvr-start-queue.mjs";
 
 // Read only MP4 container headers; never inspect or log encoded media bytes.
 export function fragmentClocks(data) {
@@ -93,6 +94,7 @@ export function muxArgs(audio) {
 }
 
 export function createNvrHandler(ctx) {
+  const startQueue = createStartQueue();
   const viewers = new Map();
   // A failed lens must not make go2rtc hammer its sibling's NVR session, too.
   const retryAt = new Map();
@@ -228,7 +230,7 @@ export function createNvrHandler(ctx) {
       if (stopped) return;
       const dev = await client.getDevice(sn);
       if (stopped) return;
-      feed = await dev.camera().openReadable({
+      const openFeed = () => dev.camera().openReadable({
         sensor,
         objectMode: true,
         signal: abort.signal,
@@ -254,6 +256,13 @@ export function createNvrHandler(ctx) {
           }
         },
       });
+      const queuedAt = performance.now();
+      feed = await (process.env.EUFY_RTC_VIDEO_SIGNALING_MODE === "call"
+        ? startQueue(() => {
+            log(`starting native call after ${Math.round(performance.now() - queuedAt)} ms in queue`);
+            return openFeed();
+          }, abort.signal)
+        : openFeed());
       if (stopped) {
         feed.destroy();
         return;

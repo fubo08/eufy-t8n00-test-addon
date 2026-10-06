@@ -67,3 +67,7 @@ When rtc_video_ice_policy is all, enable a filtered native DTLS/SCTP trace. It r
 Set `rtc_video_signaling_mode` to `call` to send the complete native SDP answer, including SCTP, media and ICE attributes. The default `scall` keeps the previous compact exchange and is available for comparison. This follows the protocol change documented in [HallyAus native T8N00 calls](https://github.com/HallyAus/Eufy-Home-Assistant/commit/3d0c3c89b0449e1d020642dbe51e9740e045e0ee).
 
 Restart the bridge after changing this option. Keep the existing ICE policy for a controlled comparison; `call` does not itself force a local path. Video only: control/PTZ signaling, ports, credentials and integration configuration are unchanged. This is an experiment, not a confirmed local-connectivity fix. Certificate verification remains enabled.
+
+## 0.3.10: coordinate native video starts
+
+In `call` mode the bridge queues new video negotiations. The next start waits until the previous pull has produced its first video frame (or failed), with at least eight seconds between start attempts. Running streams continue concurrently. Abandoned queued HTTP requests are cancelled before they open a session. `scall` is unchanged. This targets the observed simultaneous-start timeout; it does not claim to fix remaining audio timing irregularities.
