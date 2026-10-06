@@ -66,11 +66,19 @@ patch(
 );
 patch(
   "go2rtc-config.mjs",
+  'import { dirname } from "node:path";',
+  'import { dirname } from "node:path";\nimport { playbackStreams, playbackTemplates } from "./src/nvr-playback.mjs";',
+);
+patch(
+  "go2rtc-config.mjs",
+  '    "streams:",',
+  '    ...playbackTemplates(),\n    "streams:",',
+);
+patch(
+  "go2rtc-config.mjs",
   "    lines.push(`  ${d.sn}: ffmpeg:",
   `    if (d.streams?.length) {
-      for (const stream of d.streams) {
-        lines.push(\`  \${stream.id}: ffmpeg:http://\${cfg.selfHost}:\${cfg.port}/nvr-stream/\${d.sn}/\${stream.sensor}#video=copy#audio=aac\`);
-      }
+      lines.push(...playbackStreams(cfg, d));
       continue;
     }
     lines.push(\`  \${d.sn}: ffmpeg:`,

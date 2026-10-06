@@ -9,8 +9,8 @@ import { writeGo2rtcConfig } from "../go2rtc-config.mjs";
 import { nvrStreams } from "../src/nvr-media.mjs";
 import { createSnapshotReader } from "../src/nvr-snapshot.mjs";
 
-for (const [format, encoder] of [["mpegts", "libx264"], ["mp4", "libx264"], ["mp4", "libx265"]]) test(
-  `NVR ${format} ${encoder} audio and snapshot survive the actual go2rtc RTSP publication`,
+for (const [format, encoder, profile] of [["mpegts", "libx264", "original"], ["mp4", "libx264", "original"], ["mp4", "libx265", "original"], ["mp4", "libx265", "h264"]]) test(
+  `NVR ${format} ${encoder} ${profile} audio and snapshot survive the actual go2rtc RTSP publication`,
   { skip: process.platform === "win32", timeout: 45000 },
   async () => {
     const dir = await mkdtemp(join(tmpdir(), "nvr-rtsp-"));
@@ -61,7 +61,9 @@ for (const [format, encoder] of [["mpegts", "libx264"], ["mp4", "libx264"], ["mp
       res.once("close", () => generator.kill("SIGKILL"));
     });
     let logs = "";
+    const previousProfile = process.env.EUFY_PLAYBACK_PROFILE;
     try {
+      process.env.EUFY_PLAYBACK_PROFILE = profile;
       await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
       const config = join(dir, "go2rtc.yaml");
       await writeGo2rtcConfig(
@@ -137,6 +139,11 @@ for (const [format, encoder] of [["mpegts", "libx264"], ["mp4", "libx264"], ["mp
         streams.some((s) => s.codec_type === "video"),
         output,
       );
+      if (profile === "h264") {
+        assert.ok(streams.some(s => s.codec_name === "h264"), output);
+        assert.ok(times.slice(1).every((t, i) => t > times[i]), "video timestamps must strictly increase");
+        assert.match(await readFile(config, "utf8"), /SYNTHETIC_original:/);
+      }
       assert.ok(
         streams.some((s) => s.codec_name === "aac"),
         output,
@@ -146,6 +153,8 @@ for (const [format, encoder] of [["mpegts", "libx264"], ["mp4", "libx264"], ["mp
       assert.equal(jpeg.readUInt16BE(0), 0xffd8);
       assert.equal(jpeg.readUInt16BE(jpeg.length - 2), 0xffd9);
     } finally {
+      if (previousProfile === undefined) delete process.env.EUFY_PLAYBACK_PROFILE;
+      else process.env.EUFY_PLAYBACK_PROFILE = previousProfile;
       for (const child of children) child.kill("SIGKILL");
       server.closeAllConnections();
       await new Promise((resolve) => server.close(resolve));
