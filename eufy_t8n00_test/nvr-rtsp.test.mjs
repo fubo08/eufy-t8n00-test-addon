@@ -141,7 +141,7 @@ for (const [format, encoder, profile] of [["mpegts", "libx264", "original"], ["m
       );
       if (profile === "h264") {
         assert.ok(streams.some(s => s.codec_name === "h264"), output);
-        assert.ok(times.slice(1).every((t, i) => t > times[i]), "video timestamps must strictly increase");
+        assert.ok(times.slice(1).every((t, i) => t > times[i]), `video timestamps must strictly increase: ${JSON.stringify(times)}`);
         assert.match(await readFile(config, "utf8"), /SYNTHETIC_original:/);
       }
       assert.ok(
