@@ -25,6 +25,7 @@ export function fragmentClocks(data) {
 }
 
 export function nvrStreams(sn, model) {
+  if (model === "T8P00") return [{ id: sn, sensor: 0, name: "Camera", snapshot: `/nvr-snapshot/${sn}/0` }];
   return model === "T8E00"
     ? [
         {
@@ -195,7 +196,8 @@ export function createNvrHandler(ctx) {
       }
       if (stopped) return;
       if (kind === "snapshot") {
-        const id = sensor === 1 ? sn : `${sn}_fixed`;
+        const id = nvrStreams(sn, device.describe().model)?.find(stream => stream.sensor === sensor)?.id;
+        if (!id) throw new Error("No snapshot stream for requested sensor");
         const data = await readSnapshot(id);
         if (!stopped) {
           res.writeHead(200, {

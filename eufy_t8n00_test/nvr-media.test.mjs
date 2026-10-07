@@ -133,7 +133,8 @@ test("S4 streams retain the primary ID and isolate the fixed lens", () => {
       ["CAM1_fixed", 0],
     ],
   );
-  assert.equal(nvrStreams("CAM1", "T8P00"), undefined);
+  assert.deepEqual(nvrStreams("CAM1", "T8P00"), [{ id: "CAM1", sensor: 0, name: "Camera", snapshot: "/nvr-snapshot/CAM1/0" }]);
+  assert.equal(nvrStreams("CAM1", "T8214"), undefined);
   assert.deepEqual(audioInput({ codec: "g711a" }), [
     "-f",
     "alaw",

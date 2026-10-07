@@ -1,5 +1,5 @@
 name: eufy T8N00 RTC Test Bridge
-version: "0.3.18"
+version: "0.3.19"
 slug: eufy_t8n00_test
 stage: experimental
 description: Experimental T8N00 WebRTC command bridge. Run only one bridge per eufy account.
