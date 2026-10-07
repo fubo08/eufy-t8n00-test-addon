@@ -117,6 +117,7 @@ export function createNvrHandler(ctx) {
       res.end("Invalid NVR media path");
       return;
     }
+    const requestStarted = performance.now();
     const [, kind, sn, sensorText] = match;
     const sensor = Number(sensorText);
     const pullKey = `${sn}/${sensor}`;
@@ -176,7 +177,7 @@ export function createNvrHandler(ctx) {
           Date.now() + (/scall answered 486/.test(error.message) ? 30000 : 10000),
         );
       }
-      log(`${kind} failed: ${error.message}`);
+      log(`${kind} failed after ${Math.round(performance.now() - requestStarted)} ms: ${error.message}`);
       if (!res.headersSent) {
         res.writeHead(502);
         res.end("NVR media unavailable");
@@ -185,7 +186,8 @@ export function createNvrHandler(ctx) {
     };
     try {
       const device = await ctx.eufy.getDevice(sn);
-      if (!nvrStreams(sn, device.describe().model)) {
+      // E40 diagnostic access: keep dashboard routing unchanged until a sensor is verified.
+      if (!nvrStreams(sn, device.describe().model) && device.describe().model !== "T8P00") {
         res.writeHead(404);
         res.end();
         cleanup();
@@ -264,6 +266,7 @@ export function createNvrHandler(ctx) {
         feed.destroy();
         return;
       }
+      log(`first frame ready after ${Math.round(performance.now() - requestStarted)} ms from request`);
       registered = true;
       opening.delete(pullKey);
       ownsOpening = false;

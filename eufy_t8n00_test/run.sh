@@ -1,11 +1,11 @@
 #!/bin/sh
-# Add-on entrypoint: translate Home Assistant add-on options → the env the bridge reads, then hand off.
+# Add-on entrypoint: translate Home Assistant add-on options â†’ the env the bridge reads, then hand off.
 #
 # HA writes the user's options to /data/options.json (not env), so this is the one glue step the thin
 # wrapper adds on top of the bridge image. /data is the add-on's persistent volume, so the login token
-# survives restarts (eufy allows ONE session per account — re-auth escalates to 2FA).
+# survives restarts (eufy allows ONE session per account â€” re-auth escalates to 2FA).
 set -e
-echo '[addon] T8N00 RTC Test Bridge 0.3.17, SDK e98341d; dual sensor + audio test'
+echo '[addon] T8N00 RTC Test Bridge 0.3.18, SDK e98341d; dual sensor + audio test'
 
 OPTS=/data/options.json
 export EUFY_RTC_VIDEO_ICE_POLICY="$(jq -r '.rtc_video_ice_policy // "relay"' "$OPTS")"
@@ -26,7 +26,7 @@ export EUFY_SESSION="/data/.eufy-session.json"
 # Reachable through ingress + the hosted go2rtc ports (not just localhost).
 export BRIDGE_HOST="0.0.0.0"
 
-# Optional tuning → bridge env. Defaults in config.yaml mirror the bridge's own, so these are a no-op
+# Optional tuning â†’ bridge env. Defaults in config.yaml mirror the bridge's own, so these are a no-op
 # unless the user changes them. debug is a bool option; map it to the truthy string the bridge expects.
 export EUFY_POLL_MS="$(jq -r '.poll_ms // 600000' "$OPTS")"
 export STREAM_IDLE_MS="$(jq -r '.stream_idle_ms // 300000' "$OPTS")"
@@ -43,8 +43,8 @@ budget_ms="$(jq -r '.stream_battery_budget_ms // empty' "$OPTS")"
 # Bundled go2rtc is on by default; only pass the override when the user turns it off.
 [ "$(jq -r '.go2rtc_enable // true' "$OPTS")" = "false" ] && export GO2RTC_ENABLE=0
 
-# Optional Anker Solix (a SEPARATE Anker account from eufy). Empty email/password ⇒ Solix stays off
-# (the bridge enables it only when BOTH are set). Empty country ⇒ the bridge falls back to EUFY_COUNTRY.
+# Optional Anker Solix (a SEPARATE Anker account from eufy). Empty email/password â‡’ Solix stays off
+# (the bridge enables it only when BOTH are set). Empty country â‡’ the bridge falls back to EUFY_COUNTRY.
 # Its session persists on /data so the Solix login token survives restarts, like the eufy one.
 export SOLIX_EMAIL="$(jq -r '.solix_email // ""' "$OPTS")"
 export SOLIX_PASSWORD="$(jq -r '.solix_password // ""' "$OPTS")"
