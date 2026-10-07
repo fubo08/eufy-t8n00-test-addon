@@ -10,6 +10,8 @@ echo '[addon] T8N00 RTC Test Bridge 0.3.19, SDK e98341d; dual sensor + audio tes
 OPTS=/data/options.json
 export EUFY_RTC_VIDEO_ICE_POLICY="$(jq -r '.rtc_video_ice_policy // "relay"' "$OPTS")"
 echo "[addon] Video ICE policy: $EUFY_RTC_VIDEO_ICE_POLICY (all permits direct + TURN; relay forces TURN)"
+export EUFY_RTC_VIDEO_START_MODE="$(jq -r '.rtc_video_start_mode // "prelude"' "$OPTS")"
+echo "[addon] Video start: $EUFY_RTC_VIDEO_START_MODE"
 export EUFY_RTC_VIDEO_SIGNALING_MODE="$(jq -r '.rtc_video_signaling_mode // "scall"' "$OPTS")"
 echo "[addon] Video signaling: $EUFY_RTC_VIDEO_SIGNALING_MODE (call sends full SDP; scall uses compact SDP)"
 export EUFY_RTC_START_SPACING_MS="$(jq -r '.rtc_start_spacing_ms // 8000' "$OPTS")"

@@ -35,7 +35,7 @@ streams = streams
   .replace(sdkImport, `${sdkImport}, ConsoleLogger`)
   .replace(
     realtime,
-    'logger: /^(1|true|yes|on)$/i.test(process.env.BRIDGE_DEBUG_P2P ?? "") ? new ConsoleLogger() : new ConsoleLogger("info"),\n    rtcVideoIcePolicy: process.env.EUFY_RTC_VIDEO_ICE_POLICY === "all" ? "all" : "relay",\n    rtcVideoSignalingMode: process.env.EUFY_RTC_VIDEO_SIGNALING_MODE === "call" ? "call" : "scall",\n    autoRealtime: false,',
+    'logger: /^(1|true|yes|on)$/i.test(process.env.BRIDGE_DEBUG_P2P ?? "") ? new ConsoleLogger() : new ConsoleLogger("info"),\n    rtcVideoIcePolicy: process.env.EUFY_RTC_VIDEO_ICE_POLICY === "all" ? "all" : "relay",\n    rtcVideoSignalingMode: process.env.EUFY_RTC_VIDEO_SIGNALING_MODE === "call" ? "call" : "scall",\n    rtcVideoStartMode: process.env.EUFY_RTC_VIDEO_START_MODE === "direct" ? "direct" : "prelude",\n    autoRealtime: false,',
   );
 writeFileSync(streamsPath, 'import "./src/rtc-native.mjs";\n' + streams);
 
