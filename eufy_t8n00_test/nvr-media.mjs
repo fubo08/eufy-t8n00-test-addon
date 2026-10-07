@@ -177,7 +177,7 @@ export function createNvrHandler(ctx) {
           Date.now() + (/scall answered 486/.test(error.message) ? 30000 : 10000),
         );
       }
-      log(`${kind} failed after ${Math.round(performance.now() - requestStarted)} ms: ${error.message}`);
+      log(`${kind} failed: ${error.message}; elapsedMs=${Math.round(performance.now() - requestStarted)}`);
       if (!res.headersSent) {
         res.writeHead(502);
         res.end("NVR media unavailable");
