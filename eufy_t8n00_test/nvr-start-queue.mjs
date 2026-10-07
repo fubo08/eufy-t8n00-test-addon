@@ -1,4 +1,9 @@
 // Native NVR calls can collide while negotiating. Space starts, not playback.
+export function configuredStartSpacing(value) {
+  const ms = Number(value ?? 8000);
+  return Number.isFinite(ms) && ms >= 0 && ms <= 8000 ? ms : 8000;
+}
+
 export function createStartQueue(spacingMs = 8000) {
   const queue = [];
   let busy = false;

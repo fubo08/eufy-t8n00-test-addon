@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createStartQueue } from "../src/nvr-start-queue.mjs";
+import { createStartQueue, configuredStartSpacing } from "../src/nvr-start-queue.mjs";
 
 test("spaces starts while returning the first feed immediately", async () => {
   const run = createStartQueue(40);
@@ -39,4 +39,10 @@ test("cancels a queued request without opening it or blocking later requests", a
   await first;
   assert.equal(await run(() => "last"), "last");
   assert.equal(opened, false);
+});
+
+test("start spacing keeps rollback default and accepts zero", () => {
+  for (const value of [undefined, "invalid", -1, 8001]) assert.equal(configuredStartSpacing(value), 8000);
+  assert.equal(configuredStartSpacing("4000"), 4000);
+  assert.equal(configuredStartSpacing("0"), 0);
 });

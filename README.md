@@ -75,3 +75,8 @@ In `call` mode the bridge queues new video negotiations. The next start waits un
 ## 0.3.11: optional shared AV pacing buffer
 
 `media_buffer_ms` defaults to 1500 (range 0–3000). Complete video/AAC fragments are paced together on their source video clock; encoded contents and media timestamps are unchanged. This trades additional latency for a reserve against uneven arrival. Set 0 to disable the reserve for comparison. A gap exceeding the reserve triggers rebuffering, logged explicitly; missing media cannot be restored. Pending output is cancelled on disconnect and the pacing queue is capped at 8 MiB. Video-only/G.711 fallback is unchanged.
+
+## 0.3.17: adjustable native-call startup spacing
+
+rtc_start_spacing_ms (0–8000, default 8000) controls the minimum interval between native call starts. Negotiations remain serialized even at zero. Use 4000 for an initial controlled comparison; retain 8000 as rollback if starts fail. This affects new calls only, not codec, audio or playback buffering. A shorter interval has not yet been validated on hardware.
+
