@@ -1,4 +1,10 @@
-# Eufy T8N00 RTC test bridge — 0.3.5
+# Eufy T8N00 RTC test bridge — 0.3.21
+
+## 0.3.21: independently selectable command transport
+
+Intermittent arming requests can fail while opening the RTC command channel even when native video calls work. Commands previously always used compact `scall` signaling with relay-only ICE. The new options `rtc_command_signaling_mode` (`scall` / `call`) and `rtc_command_ice_policy` (`relay` / `all`) allow a controlled comparison. Defaults preserve the previous path; video settings are independent.
+
+For a T8N00 hardware comparison, select `call` and `all`, restart this bridge, and verify command ACKs and resulting state after idle periods and during video. Rollback is `scall` / `relay` plus a bridge restart. These options do not remove cloud signaling, weaken certificate validation, or replay commands after uncertain results. Hardware comparison is required; this release alone does not prove the morning timeout is fixed.
 
 Version 0.3.5 adds targeted timing diagnostics for backwards jumps during otherwise continuous playback. Per-sensor RTC summaries report source timestamp regressions, repeated timestamps, arrival gaps and relative lag growth for audio/video. Bridge output summaries inspect fMP4 track decode clocks, emission gaps and queued bytes. Encoded media is neither logged nor reordered. This is a diagnostic release, not a confirmed fix for the remaining jumps. Keep debug_p2p enabled and capture 60–90 seconds with the same two views. Integration remains 0.3.1b1.
 

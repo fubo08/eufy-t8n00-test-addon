@@ -9,6 +9,14 @@ function patch(file, needle, replacement) {
   writeFileSync(path, source.replace(needle, replacement));
 }
 
+patch(
+  "src/client.mjs",
+  "    countryCode: cfg.country,",
+  `    countryCode: cfg.country,
+    rtcCommandIcePolicy: process.env.EUFY_RTC_COMMAND_ICE_POLICY === "all" ? "all" : "relay",
+    rtcCommandSignalingMode: process.env.EUFY_RTC_COMMAND_SIGNALING_MODE === "call" ? "call" : "scall",`,
+);
+
 // The SDK can return either H.264 or H.265 Annex-B. Let ffmpeg probe the bytes
 // instead of declaring every camera to be H.264 in the HTTP response.
 const path = `${root}/src/http-routes.mjs`;

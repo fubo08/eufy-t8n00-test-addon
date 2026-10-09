@@ -1,5 +1,5 @@
 name: eufy T8N00 RTC Test Bridge
-version: "0.3.20"
+version: "0.3.21"
 slug: eufy_t8n00_test
 stage: experimental
 description: Experimental T8N00 WebRTC command bridge. Run only one bridge per eufy account.
@@ -33,6 +33,8 @@ options:
   debug_p2p: false
   go2rtc_enable: true
   rtc_video_ice_policy: relay
+  rtc_command_ice_policy: relay
+  rtc_command_signaling_mode: scall
   rtc_video_signaling_mode: scall
   rtc_video_start_mode: prelude
   rtc_start_spacing_ms: 8000
@@ -59,6 +61,8 @@ schema:
   debug_p2p: bool
   go2rtc_enable: bool
   rtc_video_ice_policy: list(relay|all)
+  rtc_command_ice_policy: list(relay|all)
+  rtc_command_signaling_mode: list(scall|call)
   rtc_video_signaling_mode: list(scall|call)
   rtc_video_start_mode: list(prelude|direct)
   rtc_start_spacing_ms: int(0,8000)
