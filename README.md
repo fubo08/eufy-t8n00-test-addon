@@ -1,4 +1,14 @@
-# Eufy T8N00 RTC test bridge — 0.3.21
+# Eufy T8N00 RTC test bridge — 0.3.22
+
+## 0.3.22: exact PR #354 hardware qualification
+
+I bundled the unmodified SDK revision `897201955d58e4ce1932e5d27575528f648d8e43` separately for an opt-in hardware test. My normal bridge continues using the experimental SDK with the existing S4/E40 media changes. This is not a wholesale migration to upstream 0.5.0.
+
+The default `qualify_pr354: false` performs no test. After independently confirming that my NVR is Home and closing live viewers, I can enable it and restart this bridge. Before normal bridge startup, it attempts one Home command only if exactly one T8N00 is found and its reported mode is Home. Cloud state can lag; this guard is not an independent real-time observation. The test uses a private copy of the saved login session, supplies no password, and never writes the live session file.
+
+The test logs the exact revision, call-authentication evidence and command 1224 ACK evidence. It times out after 90 seconds, and normal bridge startup follows even after failure. A persistent per-revision attempt marker prevents automatic repetition. I turn the option off after the attempt. A successful ACK does not prove an Away-to-Home transition, direct ICE selection or long-term reliability.
+
+Created with Codex.
 
 ## 0.3.21: independently selectable command transport
 
@@ -20,7 +30,7 @@ Version 0.3.1 fixes the RTSP handoff of AAC sound. The 0.3.0 hardware log confir
 
 Update only the bridge to 0.3.1; the companion HA integration remains 0.3.1b1. Close existing live viewers before restarting the bridge, then test one view first.
 
-Experimental Home Assistant add-on. Arming-mode changes and one T8E00 PoE S4 live view have been confirmed on the owner's T8N00. This update adds selection of the two optical sensors, PTZ detection and received audio support. Both views, received audio and PTZ have since been confirmed on the owner's hardware.
+Experimental Home Assistant add-on. I confirmed arming-mode changes and one T8E00 PoE S4 live view on my T8N00. The experimental media changes add selection of the two optical sensors, PTZ detection and received audio support. I subsequently confirmed both views, received audio and PTZ on my hardware.
 
 ## Update and view both cameras
 

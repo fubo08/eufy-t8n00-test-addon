@@ -5,7 +5,7 @@
 # wrapper adds on top of the bridge image. /data is the add-on's persistent volume, so the login token
 # survives restarts (eufy allows ONE session per account â€” re-auth escalates to 2FA).
 set -e
-echo '[addon] T8N00 RTC Test Bridge 0.3.19, SDK e98341d; dual sensor + audio test'
+echo '[addon] T8N00 RTC Test Bridge 0.3.22; experimental media SDK plus isolated PR354 qualification'
 
 OPTS=/data/options.json
 export EUFY_RTC_VIDEO_ICE_POLICY="$(jq -r '.rtc_video_ice_policy // "relay"' "$OPTS")"
@@ -138,6 +138,9 @@ wait_for_bridge() {
 
 # Contract with ha-eufy-sdk-bridge: the bridge image provides this launcher, which starts the daemon
 # AND go2rtc. Start it first so HA's discovery flow can immediately validate the WebSocket.
+# Optional, bounded, once per exact revision; the normal bridge is not logged in concurrently.
+# The harness never writes the live session file. A failed qualification must not prevent normal startup.
+node /qualification/qualify-pr354.mjs || echo '[qualification] Process failed; starting the normal bridge.'
 /usr/local/bin/eufy-sdk-bridge &
 bridge_pid="$!"
 
