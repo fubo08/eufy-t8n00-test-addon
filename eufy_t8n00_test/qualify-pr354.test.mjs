@@ -28,11 +28,12 @@ function fixture({ valid = true, mode = 1, ack = true, call = true } = {}) {
 test('uses a private cached session, no login credentials, and requires real RTC evidence', async () => {
   const { sdk, observed } = fixture();
   const saved = { token: 'synthetic' }, report = {};
-  await qualify(sdk, saved, report);
+  await qualify(sdk, saved, report, 'synthetic@example.invalid');
   assert.equal(report.status, 'passed');
   assert.deepEqual(observed.writes, ['home']);
   assert.notEqual(observed.saved, saved);
   assert.equal(observed.options.password, undefined);
+  assert.equal(observed.options.email, 'synthetic@example.invalid');
   assert.equal(observed.options.autoRealtime, false);
   assert.equal(observed.closed, true);
 });

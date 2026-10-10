@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 
 export const REVISION = '897201955d58e4ce1932e5d27575528f648d8e43';
 
-export async function qualify(sdk, saved, report) {
+export async function qualify(sdk, saved, report, email, countryCode = 'DE') {
   if (!sdk.isSessionValid(saved)) throw new Error('cached_session_unusable');
   const store = new sdk.MemorySessionStore();
   store.save(structuredClone(saved));
@@ -16,7 +16,8 @@ export async function qualify(sdk, saved, report) {
     info() {}, warn() {}, error() {},
   };
   // No account password: an expired/rejected cached token must not trigger a fresh login.
-  const client = new sdk.EufyMega({ store, autoRealtime: false, pollMs: 0, prewarmEvents: [], logger });
+  // Email supplies the protocol's user_name; no password is ever supplied.
+  const client = new sdk.EufyMega({ email, countryCode, store, autoRealtime: false, pollMs: 0, prewarmEvents: [], logger });
   client.on('error', () => {});
   try {
     const login = await client.login();
@@ -63,7 +64,7 @@ export async function main() {
   try {
     const sdk = await import('/qualification/sdk/dist/index.js');
     const saved = JSON.parse(readFileSync('/data/.eufy-session.json', 'utf8'));
-    await qualify(sdk, saved, report);
+    await qualify(sdk, saved, report, options.email, options.country);
   } catch (error) {
     report.status = 'failed';
     // Only known harness errors are recorded. SDK errors may contain account or device details.
