@@ -1,5 +1,5 @@
 name: eufy T8N00 RTC Test Bridge
-version: "0.3.21"
+version: "0.3.22"
 slug: eufy_t8n00_test
 stage: experimental
 description: Experimental T8N00 WebRTC command bridge. Run only one bridge per eufy account.
@@ -21,6 +21,7 @@ ports_description:
   3000/tcp: Bridge WS + HTTP control (point the eufy-sdk integration here)
   8554/tcp: RTSP
 options:
+  qualify_pr354: false
   email: ""
   password: ""
   country: DE
@@ -48,6 +49,7 @@ options:
   solix_retry_base_ms: 900000
   solix_retry_max_ms: 3600000
 schema:
+  qualify_pr354: bool
   email: str
   password: password
   country: str

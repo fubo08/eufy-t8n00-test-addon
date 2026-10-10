@@ -1,3 +1,12 @@
+FROM node:24-bookworm-slim AS qualification
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
+WORKDIR /qualification/sdk
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/897201955d58e4ce1932e5d27575528f648d8e43 | tar -xz --strip-components=1
+# The optional native peer's declarations are needed for compilation; the runtime uses /app's tested native binary.
+RUN npm ci --ignore-scripts && npm pack node-datachannel@0.33.4 --pack-destination /tmp \
+    && mkdir -p node_modules/node-datachannel && tar -xzf /tmp/node-datachannel-0.33.4.tgz -C node_modules/node-datachannel --strip-components=1 \
+    && npm run typecheck && npm run build
+
 FROM node:24-bookworm-slim AS sdk
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl python3 make g++ cmake && rm -rf /var/lib/apt/lists/*
 WORKDIR /sdk
@@ -35,6 +44,12 @@ RUN EUFY_RTC_COMMAND_ICE_POLICY=all EUFY_RTC_COMMAND_SIGNALING_MODE=call node --
 RUN arch="${TARGETARCH:-$(dpkg --print-architecture)}"; case "$arch" in amd64|arm64) ;; *) exit 1;; esac; \
     curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/download/v1.9.9/go2rtc_linux_${arch}" -o /usr/local/bin/go2rtc && chmod +x /usr/local/bin/go2rtc
 COPY run.sh /run.sh
+COPY --from=qualification /qualification/sdk/dist /qualification/sdk/dist
+COPY --from=qualification /qualification/sdk/package.json /qualification/sdk/package.json
+COPY qualify-pr354.mjs qualify-pr354.test.mjs /qualification/
+RUN ln -s /app/node_modules /qualification/sdk/node_modules \
+    && node --test /qualification/qualify-pr354.test.mjs \
+    && node --input-type=module -e "const s=await import('/qualification/sdk/dist/index.js'); if(typeof s.EufyMega!=='function'||typeof s.isSessionValid!=='function')process.exit(1)"
 RUN chmod +x /run.sh && mkdir -p /data && sh -n /run.sh
 ENV BRIDGE_APP_DIR=/app BRIDGE_PORT=3000 BRIDGE_HOST=0.0.0.0 GO2RTC_CONFIG=/data/go2rtc.yaml EUFY_SESSION=/data/.eufy-session.json
 EXPOSE 3000 8554
