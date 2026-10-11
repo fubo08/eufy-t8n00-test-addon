@@ -1,3 +1,7 @@
+# 0.3.25
+
+I added a separate once-only qualification using camera notification style 6020, keeping the currently reported Included Thumbnail value (2). This existing JSON command preserves the camera channel. It is enabled only by qualify_camera_notification_beta22; prior camera-test options are inactive. I also classify the SDK's explicit ambiguous-channel error without logging device identifiers. The two previous command attempts did not produce an ACK. Created with Codex.
+
 # 0.3.24
 
 I replaced the unsuccessful scalar LED qualification with a separate opt-in same-value night-vision command (1277, Infrared) using official SDK beta.22. The RTC router supports payload/JSON commands, not the LED's scalar command. The new option is qualify_camera_nightvision_beta22; the old option has no effect. The target must already report Infrared. This is a new explicit test with its own once-only marker, not an automatic retry. Created with Codex.
