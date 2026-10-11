@@ -1,4 +1,4 @@
-# Eufy T8N00 RTC test bridge — 0.3.22
+# Eufy T8N00 RTC test bridge — 0.3.23
 
 ## 0.3.22: exact PR #354 hardware qualification
 

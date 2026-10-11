@@ -1,3 +1,10 @@
+FROM node:24-bookworm-slim AS cameraqualification
+WORKDIR /camera-qualification/sdk
+# Published, unmodified official npm package requested in PR #354.
+RUN npm pack @mega-yfue/eufy-sdk@0.5.0-beta.22 --pack-destination /tmp \
+    && tar -xzf /tmp/mega-yfue-eufy-sdk-0.5.0-beta.22.tgz --strip-components=1 \
+    && node -e "if(require('./package.json').version!=='0.5.0-beta.22')process.exit(1)"
+
 FROM node:24-bookworm-slim AS qualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /qualification/sdk
@@ -44,6 +51,11 @@ RUN EUFY_RTC_COMMAND_ICE_POLICY=all EUFY_RTC_COMMAND_SIGNALING_MODE=call node --
 RUN arch="${TARGETARCH:-$(dpkg --print-architecture)}"; case "$arch" in amd64|arm64) ;; *) exit 1;; esac; \
     curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/download/v1.9.9/go2rtc_linux_${arch}" -o /usr/local/bin/go2rtc && chmod +x /usr/local/bin/go2rtc
 COPY run.sh /run.sh
+COPY --from=cameraqualification /camera-qualification/sdk /camera-qualification/sdk
+COPY qualify-camera.mjs qualify-camera.test.mjs /camera-qualification/
+RUN ln -s /app/node_modules /camera-qualification/sdk/node_modules \
+    && node --test /camera-qualification/qualify-camera.test.mjs \
+    && node --input-type=module -e "const s=await import('/camera-qualification/sdk/dist/index.js'); if(typeof s.EufyMega!=='function'||typeof s.isSessionValid!=='function')process.exit(1)"
 COPY --from=qualification /qualification/sdk/dist /qualification/sdk/dist
 COPY --from=qualification /qualification/sdk/package.json /qualification/sdk/package.json
 COPY qualify-pr354.mjs qualify-pr354.test.mjs /qualification/
