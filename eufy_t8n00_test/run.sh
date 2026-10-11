@@ -5,7 +5,7 @@
 # wrapper adds on top of the bridge image. /data is the add-on's persistent volume, so the login token
 # survives restarts (eufy allows ONE session per account â€” re-auth escalates to 2FA).
 set -e
-echo '[addon] T8N00 RTC Test Bridge 0.3.22; experimental media SDK plus isolated PR354 qualification'
+echo '[addon] T8N00 RTC Test Bridge 0.3.23; isolated official beta.22 camera qualification'
 
 OPTS=/data/options.json
 export EUFY_RTC_VIDEO_ICE_POLICY="$(jq -r '.rtc_video_ice_policy // "relay"' "$OPTS")"
@@ -141,6 +141,7 @@ wait_for_bridge() {
 # Optional, bounded, once per exact revision; the normal bridge is not logged in concurrently.
 # The harness never writes the live session file. A failed qualification must not prevent normal startup.
 node /qualification/qualify-pr354.mjs || echo '[qualification] Process failed; starting the normal bridge.'
+node /camera-qualification/qualify-camera.mjs || echo '[camera-qualification] Process failed; starting the normal bridge.'
 /usr/local/bin/eufy-sdk-bridge &
 bridge_pid="$!"
 

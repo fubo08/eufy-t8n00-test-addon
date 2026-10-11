@@ -1,3 +1,9 @@
+# 0.3.23
+
+I added an isolated, opt-in test of the published official `@mega-yfue/eufy-sdk@0.5.0-beta.22` package. With `qualify_camera_beta22: true`, I send one LED-off command to a T8E00 (or T8P00) attached to the single T8N00, only when its status LED is already reported off. The test requires call authentication and command 1045 ACK evidence. It reuses a private cached session without a password, runs once with a 90-second deadline before the normal bridge, and never automatically retries. The result does not establish physical actuation of a same-state write. My normal experimental media SDK is unchanged. Leave the option false for ordinary use.
+
+Created with Codex.
+
 # 0.3.22
 
 I added an opt-in, once-per-revision hardware qualification of PR #354 at `897201955d58e4ce1932e5d27575528f648d8e43`. The exact unmodified SDK is compiled separately. The normal bridge keeps my experimental camera/video SDK and configuration.
