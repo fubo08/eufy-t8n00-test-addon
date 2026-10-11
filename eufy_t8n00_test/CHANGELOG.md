@@ -1,3 +1,7 @@
+# 0.3.24
+
+I replaced the unsuccessful scalar LED qualification with a separate opt-in same-value night-vision command (1277, Infrared) using official SDK beta.22. The RTC router supports payload/JSON commands, not the LED's scalar command. The new option is qualify_camera_nightvision_beta22; the old option has no effect. The target must already report Infrared. This is a new explicit test with its own once-only marker, not an automatic retry. Created with Codex.
+
 # 0.3.23
 
 I added an isolated, opt-in test of the published official `@mega-yfue/eufy-sdk@0.5.0-beta.22` package. With `qualify_camera_beta22: true`, I send one LED-off command to a T8E00 (or T8P00) attached to the single T8N00, only when its status LED is already reported off. The test requires call authentication and command 1045 ACK evidence. It reuses a private cached session without a password, runs once with a 90-second deadline before the normal bridge, and never automatically retries. The result does not establish physical actuation of a same-state write. My normal experimental media SDK is unchanged. Leave the option false for ordinary use.
