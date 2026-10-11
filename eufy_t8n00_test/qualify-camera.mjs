@@ -11,7 +11,7 @@ export async function qualify(sdk, saved, report, email, countryCode = 'DE') {
   const logger = {
     debug(message) {
       if (/^\[rtc\] \S+ authenticated — call$/.test(message)) report.callAuthenticated = true;
-      if (/^\[rtc\] \S+ cmd 1045 acked$/.test(message)) report.command1045Ack = true;
+      if (/^\[rtc\] \S+ cmd 1277 acked$/.test(message)) report.command1277Ack = true;
     },
     info() {}, warn() {}, error() {},
   };
@@ -33,18 +33,18 @@ export async function qualify(sdk, saved, report, email, countryCode = 'DE') {
     if (!target) throw new Error('no_attached_camera');
     const device = await client.getDevice(target.sn);
     const camera = device.camera();
-    // HA independently reported these indicators off before the test was enabled.
-    if (camera?.statusLed !== false || typeof camera.setStatusLed !== 'function') {
-      throw new Error('reported_led_not_off');
+    // HA independently reported the S4 night-vision setting as Infrared before this test.
+    if (camera?.nightVision !== 1 || typeof camera.setNightVision !== 'function') {
+      throw new Error('reported_night_vision_not_infrared');
     }
     report.cameraModel = target.model;
-    report.reportedLedBefore = false;
-    report.stage = 'sending_led_off';
+    report.reportedNightVisionBefore = 1;
+    report.stage = 'sending_same_night_vision';
     const start = Date.now();
-    await camera.setStatusLed(false);
+    await camera.setNightVision(1);
     report.commandMs = Date.now() - start;
     report.setterCompleted = true;
-    if (!report.command1045Ack || !report.callAuthenticated) throw new Error('rtc_ack_evidence_missing');
+    if (!report.command1277Ack || !report.callAuthenticated) throw new Error('rtc_ack_evidence_missing');
     report.status = 'passed';
   } finally {
     await client.disconnect();
@@ -53,13 +53,13 @@ export async function qualify(sdk, saved, report, email, countryCode = 'DE') {
 
 export async function main() {
   const options = JSON.parse(readFileSync('/data/options.json', 'utf8'));
-  if (options.qualify_camera_beta22 !== true) return;
-  const path = `/data/qualification-camera-${REVISION}.json`;
+  if (options.qualify_camera_nightvision_beta22 !== true) return;
+  const path = `/data/qualification-camera-nightvision-${REVISION}.json`;
   if (existsSync(path)) {
     console.info('[camera-qualification] This revision was already attempted; no command repeated.');
     return;
   }
-  const report = { revision: REVISION, timestamp: new Date().toISOString(), status: 'started', stage: 'loading', command1045Ack: false, callAuthenticated: false };
+  const report = { revision: REVISION, timestamp: new Date().toISOString(), status: 'started', stage: 'loading', command1277Ack: false, callAuthenticated: false };
   const save = () => writeFileSync(path, JSON.stringify(report, null, 2), { mode: 0o600 });
   save(); // Before any network operation, so a crash/restart never repeats the command.
   const timer = setTimeout(() => {
@@ -75,8 +75,15 @@ export async function main() {
   } catch (error) {
     report.status = 'failed';
     // Only known harness errors are recorded. SDK errors may contain account or device details.
-    const safe = ['cached_session_unusable', 'cached_session_not_restored', 'expected_one_t8n00', 'reported_led_not_off', 'no_attached_camera', 'rtc_ack_evidence_missing'];
+    const safe = ['cached_session_unusable', 'cached_session_not_restored', 'expected_one_t8n00', 'reported_night_vision_not_infrared', 'no_attached_camera', 'rtc_ack_evidence_missing'];
     report.reason = safe.includes(error?.message) ? error.message : 'sdk_or_environment_error';
+    // Classify known SDK errors without writing identifiers, tokens or raw messages.
+    const message = String(error?.message ?? '');
+    if (message.includes('is not routable over the RTC control channel')) report.failureKind = 'unsupported_command_form';
+    else if (message.includes('rejected cmd')) report.failureKind = 'device_rejected_command';
+    else if (message.includes('ACK timed out')) report.failureKind = 'ack_timeout';
+    else if (message.includes('did not come up')) report.failureKind = 'channel_start_timeout';
+    else if (message.includes('session closed')) report.failureKind = 'session_closed';
   } finally {
     clearTimeout(timer);
     save();
