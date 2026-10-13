@@ -1,4 +1,4 @@
-# Eufy T8N00 RTC test bridge — 0.3.25
+# Eufy T8N00 RTC test bridge — 0.3.26
 
 ## 0.3.22: exact PR #354 hardware qualification
 
@@ -96,3 +96,7 @@ In `call` mode the bridge queues new video negotiations. The next start waits un
 
 rtc_start_spacing_ms (0–8000, default 8000) controls the minimum interval between native call starts. Negotiations remain serialized even at zero. Use 4000 for an initial controlled comparison; retain 8000 as rollback if starts fail. This affects new calls only, not codec, audio or playback buffering. A shorter interval has not yet been validated on hardware.
 
+
+## 0.3.26: corrected PR #376 qualification
+
+I keep `qualify_pr376` false during normal operation. When enabled, before normal bridge startup the isolated exact revision sends one right step followed by one left step through the public `device.ptz().rotate()` API. A persistent attempt marker prevents repetition; a 90-second deadline returns to normal startup. Opposite steps do not guarantee exact restoration of the original aim. ACK evidence does not establish physical motion; I record that observation separately. Created with Codex.

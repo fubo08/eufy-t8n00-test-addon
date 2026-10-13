@@ -1,3 +1,7 @@
+# 0.3.26
+
+I added an isolated, opt-in once-only PTZ qualification of unmodified SDK PR #376 revision d8a4167bf1018fa8816f05127d6c38a031050420. It requires one attached T8E00 and the public PTZ capability, sends one right step then one left step, and records ACKs separately from physical observation. The normal experimental media SDK is unchanged. Created with Codex.
+
 # 0.3.25
 
 I added a separate once-only qualification using camera notification style 6020, keeping the currently reported Included Thumbnail value (2). This existing JSON command preserves the camera channel. It is enabled only by qualify_camera_notification_beta22; prior camera-test options are inactive. I also classify the SDK's explicit ambiguous-channel error without logging device identifiers. The two previous command attempts did not produce an ACK. Created with Codex.

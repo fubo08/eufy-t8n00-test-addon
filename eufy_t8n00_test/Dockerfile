@@ -1,3 +1,12 @@
+FROM node:24-bookworm-slim AS ptzqualification
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
+WORKDIR /ptz-qualification/sdk
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/d8a4167bf1018fa8816f05127d6c38a031050420 | tar -xz --strip-components=1
+# The optional native peer's declarations are needed for compilation; the runtime uses /app's tested native binary.
+RUN npm ci --ignore-scripts && npm pack node-datachannel@0.33.4 --pack-destination /tmp \
+    && mkdir -p node_modules/node-datachannel && tar -xzf /tmp/node-datachannel-0.33.4.tgz -C node_modules/node-datachannel --strip-components=1 \
+    && npm run typecheck && npm run build
+
 FROM node:24-bookworm-slim AS cameraqualification
 WORKDIR /camera-qualification/sdk
 # Published, unmodified official npm package requested in PR #354.
@@ -50,6 +59,10 @@ RUN EUFY_RTC_VIDEO_START_MODE=direct EUFY_RTC_VIDEO_ICE_POLICY=all EUFY_RTC_VIDE
 RUN EUFY_RTC_COMMAND_ICE_POLICY=all EUFY_RTC_COMMAND_SIGNALING_MODE=call node --input-type=module -e "import {strict as a} from 'node:assert'; import {createEufy} from './src/client.mjs'; const c=createEufy({cfg:{email:'test@example.com',password:'synthetic',country:'DE',session:'/tmp/synthetic-session.json',pushSession:'/tmp/synthetic-push.json',pollMs:0,prewarm:false},DEBUG_P2P:false}); a.equal(c.rtc.deps.signalingMode,'call'); a.equal(c.rtc.deps.iceTransportPolicy,'all'); (await import('node-datachannel')).cleanup();"
 RUN arch="${TARGETARCH:-$(dpkg --print-architecture)}"; case "$arch" in amd64|arm64) ;; *) exit 1;; esac; \
     curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/download/v1.9.9/go2rtc_linux_${arch}" -o /usr/local/bin/go2rtc && chmod +x /usr/local/bin/go2rtc
+COPY --from=ptzqualification /ptz-qualification/sdk/dist /ptz-qualification/sdk/dist
+COPY --from=ptzqualification /ptz-qualification/sdk/package.json /ptz-qualification/sdk/package.json
+COPY qualify-ptz.mjs qualify-ptz.test.mjs /ptz-qualification/
+RUN ln -s /app/node_modules /ptz-qualification/sdk/node_modules && node --test /ptz-qualification/qualify-ptz.test.mjs
 COPY run.sh /run.sh
 COPY --from=cameraqualification /camera-qualification/sdk /camera-qualification/sdk
 COPY qualify-camera.mjs qualify-camera.test.mjs /camera-qualification/
