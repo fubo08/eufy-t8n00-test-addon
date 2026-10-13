@@ -14,13 +14,16 @@ function fixture({valid=true, ptz=true, ack=true, count=1}={}) {
 }
 test('calls the public PTZ API and distinguishes ACKs from observation',async()=>{
  const {sdk,observed}=fixture(),saved={token:'synthetic'},report={};
- await qualify(sdk,saved,report,'synthetic@example.invalid');
+ await qualify(sdk,saved,report,'synthetic@example.invalid', 'DE', 'camera0');
  assert.deepEqual(observed.writes,['right','left']);assert.equal(report.command6030AckCount,2);
  assert.equal(report.status,'commands_acked');assert.equal(report.physicalMovement,'requires_independent_observation');
  assert.notEqual(observed.saved,saved);assert.equal(observed.options.password,undefined);assert.equal(observed.closed,true);
 });
-for(const options of [{ptz:false},{count:0},{count:2}])test('fails before movement on unavailable or ambiguous target '+JSON.stringify(options),async()=>{
- const {sdk,observed}=fixture(options);await assert.rejects(qualify(sdk,{},{}));assert.deepEqual(observed.writes,[]);assert.equal(observed.closed,true);
+for(const options of [{ptz:false},{count:0}])test('fails before movement on unavailable or ambiguous target '+JSON.stringify(options),async()=>{
+ const {sdk,observed}=fixture(options);await assert.rejects(qualify(sdk,{}, {}, undefined, 'DE', 'camera0'));assert.deepEqual(observed.writes,[]);assert.equal(observed.closed,true);
 });
-test('invalid session never constructs a client',async()=>{const {sdk,observed}=fixture({valid:false});await assert.rejects(qualify(sdk,{},{}));assert.equal(observed.options,undefined);});
-test('missing ACK cannot pass',async()=>{const {sdk}=fixture({ack:false});const report={};await assert.rejects(qualify(sdk,{},report),/rtc_ack_evidence_missing/);assert.notEqual(report.status,'commands_acked');});
+test('invalid session never constructs a client',async()=>{const {sdk,observed}=fixture({valid:false});await assert.rejects(qualify(sdk,{}, {}, undefined, 'DE', 'camera0'));assert.equal(observed.options,undefined);});
+test('missing ACK cannot pass',async()=>{const {sdk}=fixture({ack:false});const report={};await assert.rejects(qualify(sdk,{},report, undefined, 'DE', 'camera0'),/rtc_ack_evidence_missing/);assert.notEqual(report.status,'commands_acked');});
+
+test('explicit target selects only that device when two S4s exist',async()=>{const {sdk,observed}=fixture({count:2});await qualify(sdk,{}, {},undefined,'DE','camera1');assert.deepEqual(observed.writes,['right','left']);});
+test('missing target refuses before constructing a network client',async()=>{const {sdk,observed}=fixture();await assert.rejects(qualify(sdk,{},{}),/target_required/);assert.equal(observed.options,undefined);});

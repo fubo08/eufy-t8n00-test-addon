@@ -1,3 +1,7 @@
+# 0.3.27
+
+I require an explicitly selected S4 serial for the isolated PTZ test because my account has two S4 cameras. The first attempt stopped before any motion. The targeted qualification has its own once-only marker; the pinned SDK revision is unchanged. Created with Codex.
+
 # 0.3.26
 
 I added an isolated, opt-in once-only PTZ qualification of unmodified SDK PR #376 revision d8a4167bf1018fa8816f05127d6c38a031050420. It requires one attached T8E00 and the public PTZ capability, sends one right step then one left step, and records ACKs separately from physical observation. The normal experimental media SDK is unchanged. Created with Codex.
