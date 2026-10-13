@@ -1,4 +1,4 @@
-# Eufy T8N00 RTC test bridge — 0.3.27
+# Eufy T8N00 RTC test bridge — 0.3.28
 
 ## 0.3.22: exact PR #354 hardware qualification
 
@@ -102,3 +102,5 @@ rtc_start_spacing_ms (0–8000, default 8000) controls the minimum interval betw
 I keep `qualify_pr376` false during normal operation. When enabled, before normal bridge startup the isolated exact revision sends one right step followed by one left step through the public `device.ptz().rotate()` API. A persistent attempt marker prevents repetition; a 90-second deadline returns to normal startup. Opposite steps do not guarantee exact restoration of the original aim. ACK evidence does not establish physical motion; I record that observation separately. Created with Codex.
 
 For 0.3.27 I must set `qualify_pr376_target` to the selected camera serial before enabling the test; the serial is not included in public logs. Created with Codex.
+
+For 0.3.28 the explicitly requested second trial sends two left steps, five seconds apart, with a separate once-only marker. It does not restore aim automatically. Created with Codex.

@@ -38,12 +38,12 @@ export async function qualify(sdk, saved, report, email, countryCode = 'DE', tar
     report.cameraModel = target.model;
     report.ptzAvailable = true;
     report.movements = [];
-    for (const direction of ['right', 'left']) {
+    for (const direction of ['left', 'left']) {
       report.stage = 'rotating_' + direction;
       const start = Date.now();
       await ptz.rotate(direction);
       report.movements.push({ direction, commandMs: Date.now() - start, setterCompleted: true });
-      if (direction === 'right') await new Promise(resolve => setTimeout(resolve, 5000));
+      if (report.movements.length === 1) await new Promise(resolve => setTimeout(resolve, 5000));
     }
     if (report.command6030AckCount !== 2 || !report.callAuthenticated) throw new Error('rtc_ack_evidence_missing');
     report.status = 'commands_acked';
@@ -56,7 +56,7 @@ export async function qualify(sdk, saved, report, email, countryCode = 'DE', tar
 export async function main() {
   const options = JSON.parse(readFileSync('/data/options.json', 'utf8'));
   if (options.qualify_pr376 !== true) return;
-  const path = `/data/qualification-ptz-targeted-${REVISION}.json`;
+  const path = `/data/qualification-ptz-lefttwice-${REVISION}.json`;
   if (existsSync(path)) {
     console.info('[ptz-qualification] This revision was already attempted; no command repeated.');
     return;

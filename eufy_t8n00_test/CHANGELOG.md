@@ -1,3 +1,7 @@
+# 0.3.28
+
+I explicitly requested a second observation trial: two left steps, five seconds apart, on the same selected S4 and unchanged PR #376 SDK revision. This trial has a separate once-only marker and remains opt-in. Created with Codex.
+
 # 0.3.27
 
 I require an explicitly selected S4 serial for the isolated PTZ test because my account has two S4 cameras. The first attempt stopped before any motion. The targeted qualification has its own once-only marker; the pinned SDK revision is unchanged. Created with Codex.
