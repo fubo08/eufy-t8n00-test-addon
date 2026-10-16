@@ -1,3 +1,11 @@
+FROM node:24-bookworm-slim AS mediaqualification
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
+WORKDIR /media-qualification/sdk
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/ff6b388ac198d9db7e719e19a043433c1cb56cd3 | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts && npm pack node-datachannel@0.33.4 --pack-destination /tmp \
+    && mkdir -p node_modules/node-datachannel && tar -xzf /tmp/node-datachannel-0.33.4.tgz -C node_modules/node-datachannel --strip-components=1 \
+    && npm run typecheck && npm run build && npm prune --omit=dev --ignore-scripts
+
 FROM node:24-bookworm-slim AS ptzqualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /ptz-qualification/sdk
@@ -63,6 +71,13 @@ COPY --from=ptzqualification /ptz-qualification/sdk/dist /ptz-qualification/sdk/
 COPY --from=ptzqualification /ptz-qualification/sdk/package.json /ptz-qualification/sdk/package.json
 COPY qualify-ptz.mjs qualify-ptz.test.mjs /ptz-qualification/
 RUN ln -s /app/node_modules /ptz-qualification/sdk/node_modules && node --test /ptz-qualification/qualify-ptz.test.mjs
+COPY --from=mediaqualification /media-qualification/sdk /media-qualification/sdk
+COPY qualify-media.mjs nvr-beta-live-feed.mjs nvr-beta-live-feed.test.mjs /media-qualification/
+RUN rm -rf /media-qualification/sdk/node_modules/node-datachannel \
+    && ln -s /app/node_modules/node-datachannel /media-qualification/sdk/node_modules/node-datachannel \
+    && node --test /media-qualification/nvr-beta-live-feed.test.mjs \
+    && node --check /media-qualification/qualify-media.mjs \
+    && node --input-type=module -e "const m=await import('/media-qualification/sdk/dist/index.js'); if(typeof m.EufyMega!=='function')process.exit(1)"
 COPY run.sh /run.sh
 COPY --from=cameraqualification /camera-qualification/sdk /camera-qualification/sdk
 COPY qualify-camera.mjs qualify-camera.test.mjs /camera-qualification/
