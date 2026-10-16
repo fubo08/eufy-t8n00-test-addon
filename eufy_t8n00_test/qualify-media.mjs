@@ -59,6 +59,7 @@ export async function measure(client, target, sensor, duration = 45000) {
     }
   }
   result.elapsedMs = Math.round(performance.now()-start);
+  result.earlyStop = !abort.signal.aborted;
   result.validVideo = result.decodedFrames > 0 && result.decoderExit === 0 && !result.decoderFailed;
   return result;
 }
@@ -90,7 +91,7 @@ export async function qualify(sdk, saved, options, report, save) {
     await delay(4000);
     const second = measure(client,s4,1,60000);
     report.concurrent = await Promise.all([first,second]);
-    report.status = [...report.runs,...report.concurrent].every(r => r.validVideo && r.audioFrames > 0 && !r.streamFailed)
+    report.status = [...report.runs,...report.concurrent].every(r => r.validVideo && r.audioFrames > 0 && !r.streamFailed && !r.earlyStop)
       ? 'media_observed' : 'failed';
     report.limits = 'Decoder and packet evidence only; audible sound, browser playback and selected ICE candidate not verified.';
   } finally { await client.disconnect(); }

@@ -72,11 +72,11 @@ COPY --from=ptzqualification /ptz-qualification/sdk/package.json /ptz-qualificat
 COPY qualify-ptz.mjs qualify-ptz.test.mjs /ptz-qualification/
 RUN ln -s /app/node_modules /ptz-qualification/sdk/node_modules && node --test /ptz-qualification/qualify-ptz.test.mjs
 COPY --from=mediaqualification /media-qualification/sdk /media-qualification/sdk
-COPY qualify-media.mjs nvr-beta-live-feed.mjs nvr-beta-live-feed.test.mjs /media-qualification/
+COPY qualify-media.mjs qualify-media.test.mjs nvr-beta-live-feed.mjs nvr-beta-live-feed.test.mjs /media-qualification/
 RUN rm -rf /media-qualification/sdk/node_modules/node-datachannel \
     && ln -s /app/node_modules/node-datachannel /media-qualification/sdk/node_modules/node-datachannel \
     && node --test /media-qualification/nvr-beta-live-feed.test.mjs \
-    && node --check /media-qualification/qualify-media.mjs \
+    && node --test /media-qualification/qualify-media.test.mjs \
     && node --input-type=module -e "const m=await import('/media-qualification/sdk/dist/index.js'); if(typeof m.EufyMega!=='function')process.exit(1)"
 COPY run.sh /run.sh
 COPY --from=cameraqualification /camera-qualification/sdk /camera-qualification/sdk
