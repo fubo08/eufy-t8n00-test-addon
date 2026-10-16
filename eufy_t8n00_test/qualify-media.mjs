@@ -1,12 +1,12 @@
-// My isolated PR #436 hardware qualification. Created with Codex.
+// My integration qualification of PR #436 plus the isolated #437 power fix. Created with Codex.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { openBetaLiveFeed } from './nvr-beta-live-feed.mjs';
-export const REVISION = 'ff6b388ac198d9db7e719e19a043433c1cb56cd3';
+export const REVISION = '2cc6422976dc13229e52366e69a1aaf32a2bd9f7';
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-export async function measure(client, target, sensor, duration = 45000) {
+export async function measure(client, target, sensor, duration = 120000) {
   const result = { model: target.model, sensor, frames: 0, audioFrames: 0,
     decodedFrames: 0, decoderWarnings: 0, backwards: 0, maxGapMs: 0, firstVideoMs: null };
   const start = performance.now();
@@ -87,9 +87,9 @@ export async function qualify(sdk, saved, options, report, save) {
       await delay(10000); // Wait for shared-source linger before the next independent start.
     }
     report.stage = 'simultaneous-s4'; save();
-    const first = measure(client,s4,0,45000);
+    const first = measure(client,s4,0,120000);
     await delay(4000);
-    const second = measure(client,s4,1,60000);
+    const second = measure(client,s4,1,135000);
     report.concurrent = await Promise.all([first,second]);
     report.status = [...report.runs,...report.concurrent].every(r => r.validVideo && r.audioFrames > 0 && !r.streamFailed && !r.earlyStop)
       ? 'media_observed' : 'failed';
@@ -102,10 +102,10 @@ export async function main() {
   if (options.qualify_pr436 !== true) return;
   const path = `/data/qualification-media-${REVISION}.json`;
   if (existsSync(path)) { console.info('[media-qualification] Exact revision already attempted; skipping.'); return; }
-  const report = { revision:REVISION, timestamp:new Date().toISOString(), status:'started', runs:[] };
+  const report = { revision:REVISION, mediaRevision:'ff6b388ac198d9db7e719e19a043433c1cb56cd3', powerRevision:'4ed23b201c94830294f6e11337829dade5f2ca64', testBridgeVersion:'0.3.30', timestamp:new Date().toISOString(), status:'started', runs:[] };
   const save = () => writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});
   save();
-  const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },330000);
+  const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },660000);
   try {
     const sdk = await import('/media-qualification/sdk/dist/index.js');
     const saved = JSON.parse(readFileSync('/data/.eufy-session.json','utf8'));

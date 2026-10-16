@@ -5,7 +5,7 @@
 # wrapper adds on top of the bridge image. /data is the add-on's persistent volume, so the login token
 # survives restarts (eufy allows ONE session per account â€” re-auth escalates to 2FA).
 set -e
-echo '[addon] T8N00 RTC Test Bridge 0.3.29; isolated exact-commit PR436 media qualification'
+echo '[addon] T8N00 RTC Test Bridge 0.3.30; prolonged PR436 plus PoE power qualification'
 
 OPTS=/data/options.json
 export EUFY_RTC_VIDEO_ICE_POLICY="$(jq -r '.rtc_video_ice_policy // "relay"' "$OPTS")"
