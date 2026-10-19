@@ -13,9 +13,9 @@ function camera() {
   return { consumer, calls, live: async opts => { calls.push(opts); return consumer; } };
 }
 
-test('one public consumer forwards video and audio with original clocks and stops on close', async () => {
+test('one public consumer forwards video and audio unchanged and stops on close', async () => {
   const cam = camera(), audio = [];
-  const feed = await openBetaLiveFeed(cam, { sensor: 1, onAudio: f => audio.push(f) });
+  const feed = await openBetaLiveFeed(cam, { onAudio: f => audio.push(f) });
   const video = { data: Buffer.from([0,0,0,1,0x65]), codec: 'h264', timestampMs: 12345 };
   const sound = { data: Buffer.from([1,2]), codec: 'g711a', timestampMs: 12346 };
   cam.consumer.emit('video', video);
@@ -23,7 +23,7 @@ test('one public consumer forwards video and audio with original clocks and stop
   assert.equal(feed.read(), video);
   assert.equal(audio[0], sound);
   assert.equal(cam.calls.length, 1);
-  assert.equal(cam.calls[0].sensor, 1);
+  assert.equal('sensor' in cam.calls[0], false);
   feed.destroy();
   await once(feed, 'close');
   assert.equal(cam.consumer.stops, 1);

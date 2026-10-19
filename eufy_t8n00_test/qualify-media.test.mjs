@@ -27,7 +27,7 @@ test('an early stream end is not mistaken for a completed measurement', async ()
   const client={getDevice:async()=>({camera:()=>({live:async()=>{
     setTimeout(()=>consumer.emit('stop'),10);return consumer;
   }})})};
-  const report=await measure(client,{sn:'synthetic',model:'T8P00'},0,1000);
+  const report=await measure(client,{sn:'synthetic',model:'T8P00'},1000);
   assert.equal(report.earlyStop,true); assert.equal(report.validVideo,false);
 });
 
@@ -43,7 +43,7 @@ test('real decoder accepts generated H264 and reports decoded frames', async () 
       consumer.emit('video',{codec:'h264',data:generated.stdout,timestampMs:1,width:64,height:64});
     },10);return consumer;
   }})})};
-  const report=await measure(client,{sn:'synthetic',model:'T8P00'},0,1000);
+  const report=await measure(client,{sn:'synthetic',model:'T8P00'},1000);
   assert.equal(report.earlyStop,false);
   assert.equal(report.validVideo,true); assert.equal(report.decodedFrames,10);
   assert.equal(report.audioFrames,1);

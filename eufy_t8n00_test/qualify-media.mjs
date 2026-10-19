@@ -1,28 +1,27 @@
-// My integration qualification of PR #436 plus the isolated #437 power fix. Created with Codex.
+// My integration qualification of the reduced PR #436 on current beta. Created with Codex.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { openBetaLiveFeed } from './nvr-beta-live-feed.mjs';
-export const REVISION = '2cc6422976dc13229e52366e69a1aaf32a2bd9f7';
+export const REVISION = '020e372417460e43d787dd11c9846a44a6f71774';
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-export async function measure(client, target, sensor, duration = 120000) {
-  const result = { model: target.model, sensor, frames: 0, audioFrames: 0,
-    decodedFrames: 0, decoderWarnings: 0, backwards: 0, maxGapMs: 0, firstVideoMs: null };
+export async function measure(client, target, duration = 120000) {
+  const result = { model: target.model, frames: 0, audioFrames: 0,
+    decodedFrames: 0, decoderWarnings: 0, maxGapMs: 0, firstVideoMs: null };
   const start = performance.now();
-  let last, timestamp, decoder, decoderDone, buffer = '', feed;
+  let last, decoder, decoderDone, buffer = '', feed;
   const abort = new AbortController();
   const timer = setTimeout(() => abort.abort(), duration);
   try {
     const device = await client.getDevice(target.sn);
-    feed = await openBetaLiveFeed(device.camera(), { sensor, signal: abort.signal,
+    feed = await openBetaLiveFeed(device.camera(), { signal: abort.signal,
       onAudio(frame) { result.audioFrames++; result.audioCodec = frame.codec; } });
     for await (const frame of feed) {
       const now = performance.now();
       result.firstVideoMs ??= Math.round(now - start);
       if (last !== undefined) result.maxGapMs = Math.max(result.maxGapMs, Math.round(now - last));
-      if (timestamp !== undefined && frame.timestampMs < timestamp) result.backwards++;
-      last = now; timestamp = frame.timestampMs;
+      last = now;
       result.frames++; result.codec = frame.codec;
       result.width = frame.width; result.height = frame.height;
       if (!decoder) {
@@ -81,15 +80,15 @@ export async function qualify(sdk, saved, options, report, save) {
     const find = model => devices.find(d => d.model === model && d.stationSn === nvr[0].sn);
     const e40 = find('T8P00'), s4 = find('T8E00');
     if (!e40 || !s4) throw new Error('missing_camera_models');
-    for (const [target,sensor] of [[e40,0],[s4,0],[s4,1]]) {
-      report.stage = `${target.model}-sensor${sensor}`; save();
-      report.runs.push(await measure(client,target,sensor)); save();
+    for (const target of [e40,s4]) {
+      report.stage = `${target.model}-primary`; save();
+      report.runs.push(await measure(client,target)); save();
       await delay(10000); // Wait for shared-source linger before the next independent start.
     }
-    report.stage = 'simultaneous-s4'; save();
-    const first = measure(client,s4,0,120000);
+    report.stage = 'simultaneous-e40-s4'; save();
+    const first = measure(client,e40,120000);
     await delay(4000);
-    const second = measure(client,s4,1,135000);
+    const second = measure(client,s4,135000);
     report.concurrent = await Promise.all([first,second]);
     report.status = [...report.runs,...report.concurrent].every(r => r.validVideo && r.audioFrames > 0 && !r.streamFailed && !r.earlyStop)
       ? 'media_observed' : 'failed';
@@ -102,10 +101,10 @@ export async function main() {
   if (options.qualify_pr436 !== true) return;
   const path = `/data/qualification-media-${REVISION}.json`;
   if (existsSync(path)) { console.info('[media-qualification] Exact revision already attempted; skipping.'); return; }
-  const report = { revision:REVISION, mediaRevision:'ff6b388ac198d9db7e719e19a043433c1cb56cd3', powerRevision:'4ed23b201c94830294f6e11337829dade5f2ca64', testBridgeVersion:'0.3.30', timestamp:new Date().toISOString(), status:'started', runs:[] };
+  const report = { revision:REVISION, testBridgeVersion:'0.3.31', timestamp:new Date().toISOString(), status:'started', runs:[] };
   const save = () => writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});
   save();
-  const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },660000);
+  const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },480000);
   try {
     const sdk = await import('/media-qualification/sdk/dist/index.js');
     const saved = JSON.parse(readFileSync('/data/.eufy-session.json','utf8'));

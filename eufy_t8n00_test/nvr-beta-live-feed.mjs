@@ -4,9 +4,9 @@ import { Readable } from 'node:stream';
  * One consumer carries video and audio; SDK flow control bounds its queue.
  * Kept separate from the deployed bridge until qualification on the exact SDK commit.
  */
-export async function openBetaLiveFeed(camera, { sensor, signal, onAudio = () => {} } = {}) {
+export async function openBetaLiveFeed(camera, { signal, onAudio = () => {} } = {}) {
   signal?.throwIfAborted();
-  const consumer = await camera.live({ sensor, signal });
+  const consumer = await camera.live({ signal });
   let ended = false;
   const onAbort = () => feed.destroy();
   const feed = new Readable({
