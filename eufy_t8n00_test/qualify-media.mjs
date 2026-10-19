@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { openBetaLiveFeed } from './nvr-beta-live-feed.mjs';
-export const REVISION = 'd8cc367895f286cc665f06449050c8a65bbd5fd9';
+export const REVISION = '8e91397c01f455634d25c61943c3ab846e5a4386';
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function measure(client, target, duration = 120000) {
