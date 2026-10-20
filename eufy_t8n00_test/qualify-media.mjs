@@ -1,14 +1,14 @@
-// My integration qualification of the reduced PR #436 on current beta. Created with Codex.
+// My integration qualification of independent NVR optical views on beta.74. Created with Codex.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { openBetaLiveFeed } from './nvr-beta-live-feed.mjs';
-export const REVISION = '079625672e606a50ba1954be7618a1eaf247333a';
+export const REVISION = '2f3507092259b12e3180d7a5e141fa483a4071c1';
 export const PORTAL_REVISION = '38e0c73ee6a53730d573dbd04d7d701ba58031eb';
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function measure(client, target, duration = 120000) {
-  const result = { model: target.model, frames: 0, audioFrames: 0,
+  const result = { model: target.model, view: target.view ?? 0, frames: 0, audioFrames: 0,
     decodedFrames: 0, decoderWarnings: 0, maxGapMs: 0, firstVideoMs: null };
   const start = performance.now();
   let last, decoder, decoderDone, buffer = '', feed;
@@ -16,7 +16,7 @@ export async function measure(client, target, duration = 120000) {
   const timer = setTimeout(() => abort.abort(), duration);
   try {
     const device = await client.getDevice(target.sn);
-    feed = await openBetaLiveFeed(device.camera(), { signal: abort.signal,
+    feed = await openBetaLiveFeed(device.camera(), { signal: abort.signal, view: target.view,
       onAudio(frame) { result.audioFrames++; result.audioCodec = frame.codec; } });
     for await (const frame of feed) {
       const now = performance.now();
@@ -81,6 +81,35 @@ export async function qualify(sdk, saved, options, report, save) {
     const find = model => devices.find(d => d.model === model && d.stationSn === nvr[0].sn);
     const e40 = find('T8P00'), s4 = find('T8E00');
     if (!e40 || !s4) throw new Error('missing_camera_models');
+    if (report.mode === 'optical-views') {
+      const s4Camera = (await client.getDevice(s4.sn)).camera();
+      const e40Camera = (await client.getDevice(e40.sn)).camera();
+      report.views = { S4: s4Camera.views?.(), E40: e40Camera.views?.() };
+      if (JSON.stringify(report.views) !== JSON.stringify({ S4:[0,1], E40:[0] })) throw new Error('unexpected_optical_views');
+      try {
+        const unexpected = await e40Camera.live({ view:1 });
+        unexpected.stop();
+        throw new Error('e40_secondary_was_accepted');
+      } catch (error) {
+        if (!(error instanceof RangeError)) throw error;
+        report.e40SecondaryRejected = true;
+      }
+      for (const view of [undefined,1]) {
+        report.stage = `S4-single-view-${view ?? 0}`; save();
+        report.runs.push(await measure(client,{...s4,view},90000)); save();
+        await delay(10000);
+      }
+      report.stage = 'S4-concurrent-views-and-repeated-consumer'; save();
+      const fixed = measure(client,{...s4,view:0},120000);
+      await delay(4000);
+      const movable = measure(client,{...s4,view:1},135000);
+      const repeated = measure(client,{...s4,view:0},90000);
+      report.concurrent = await Promise.all([fixed,movable,repeated]);
+      report.status = [...report.runs,...report.concurrent].every(r => r.validVideo && r.audioFrames > 0 && !r.streamFailed && !r.earlyStop)
+        ? 'media_observed' : 'failed';
+      report.limits = 'Exact extracted optical-view SDK; decoded video and audio-packet receipt only. Audible sound, browser playback, visual lens identity and selected ICE candidate require separate observation.';
+      return;
+    }
     if (report.mode === 'portal-shard') {
       report.phoneShard = client.mega.rtcShard;
       report.resolvedShards = [];
@@ -120,6 +149,7 @@ export async function qualify(sdk, saved, options, report, save) {
 export async function main() {
   const options = JSON.parse(readFileSync('/data/options.json','utf8'));
   const jobs = [
+    { enabled:options.qualify_pr441, revision:REVISION, sdkPath:'/media-qualification/sdk/dist/index.js', mode:'optical-views', timeout:420000 },
     { enabled:options.qualify_pr436, revision:REVISION, sdkPath:'/media-qualification/sdk/dist/index.js', mode:'primary', timeout:480000 },
     { enabled:options.qualify_pr450, revision:PORTAL_REVISION, sdkPath:'/portal-qualification/sdk/dist/index.js', mode:'portal-shard', timeout:180000 },
   ];
@@ -127,7 +157,7 @@ export async function main() {
     if (job.enabled !== true) continue;
     const path = `/data/qualification-media-${job.revision}.json`;
     if (existsSync(path)) { console.info('[media-qualification] Exact revision already attempted; skipping.'); continue; }
-    const report = { revision:job.revision, mode:job.mode, testBridgeVersion:'0.3.33', timestamp:new Date().toISOString(), status:'started', runs:[] };
+    const report = { revision:job.revision, mode:job.mode, testBridgeVersion:'0.3.34', timestamp:new Date().toISOString(), status:'started', runs:[] };
     const save = () => writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});
     save();
     const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },job.timeout);

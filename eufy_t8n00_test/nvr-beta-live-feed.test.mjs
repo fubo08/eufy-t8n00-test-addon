@@ -59,3 +59,11 @@ test('audio sink failure terminates the consumer and surfaces the error', async 
   assert.equal((await failure)[0].message, 'synthetic sink');
   assert.equal(cam.consumer.stops, 1);
 });
+
+test('an optical view is passed unchanged through the public live caller', async () => {
+  const cam = camera();
+  const feed = await openBetaLiveFeed(cam, { view:1 });
+  assert.equal(cam.calls[0].view,1);
+  assert.equal('sensor' in cam.calls[0],false);
+  feed.destroy();
+});

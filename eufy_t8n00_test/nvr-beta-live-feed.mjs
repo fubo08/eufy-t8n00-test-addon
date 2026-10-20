@@ -1,12 +1,12 @@
 import { Readable } from 'node:stream';
 
-/** Bridge adapter for PR #436's public camera.live() API.
+/** Bridge adapter for the public camera.live() API.
  * One consumer carries video and audio; SDK flow control bounds its queue.
  * Kept separate from the deployed bridge until qualification on the exact SDK commit.
  */
-export async function openBetaLiveFeed(camera, { signal, onAudio = () => {} } = {}) {
+export async function openBetaLiveFeed(camera, { signal, view, onAudio = () => {} } = {}) {
   signal?.throwIfAborted();
-  const consumer = await camera.live({ signal });
+  const consumer = await camera.live({ signal, view });
   let ended = false;
   const onAbort = () => feed.destroy();
   const feed = new Readable({
