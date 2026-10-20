@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { createMediaPacer } from "./media-pacer.mjs";
 import { createStartQueue, configuredStartSpacing } from "./nvr-start-queue.mjs";
 import { createSnapshotReader } from "./nvr-snapshot.mjs";
+import { createPreviewCache } from "./nvr-preview-cache.mjs";
 
 // Read only MP4 container headers; never inspect or log encoded media bytes.
 export function fragmentClocks(data) {
@@ -97,9 +98,14 @@ export function muxArgs(audio) {
 }
 
 export function createNvrHandler(ctx) {
-  const readSnapshot = ctx.readSnapshot ?? createSnapshotReader();
   const startQueue = createStartQueue(configuredStartSpacing(process.env.EUFY_RTC_START_SPACING_MS));
   const viewers = new Map();
+  const readSnapshot = ctx.readSnapshot ?? createPreviewCache({
+    read: createSnapshotReader(),
+    directory: process.env.BRIDGE_PREVIEW_CACHE_DIR,
+    canRefresh: () => [...viewers.values()].reduce((a, b) => a + b, 0) < 2,
+    log: message => ctx.eventLog?.(`[nvr:preview] ${message}`),
+  });
   // A failed lens must not make go2rtc hammer its sibling's NVR session, too.
   const retryAt = new Map();
   const opening = new Set();
@@ -110,6 +116,11 @@ export function createNvrHandler(ctx) {
     (async (...args) =>
       (await import("../streams.mjs")).streamClientFor(...args));
   return async function handleNvr(req, res, url) {
+    if (url.pathname === "/nvr-preview-status") {
+      res.writeHead(200, { "content-type": "application/json", "cache-control": "no-store" });
+      res.end(JSON.stringify(readSnapshot.status?.() ?? {}));
+      return;
+    }
     const match = /^\/nvr-(stream|snapshot)\/([A-Za-z0-9_-]+)\/([01])$/.exec(
       url.pathname,
     );
@@ -123,7 +134,7 @@ export function createNvrHandler(ctx) {
     const sensor = Number(sensorText);
     const pullKey = `${sn}/${sensor}`;
     const remaining = (retryAt.get(sn) ?? 0) - Date.now();
-    if (remaining > 0 || (kind === "stream" && opening.has(pullKey))) {
+    if (kind === "stream" && (remaining > 0 || opening.has(pullKey))) {
       res.writeHead(503, {
         "retry-after": String(Math.max(1, Math.ceil(remaining / 1000))),
       });

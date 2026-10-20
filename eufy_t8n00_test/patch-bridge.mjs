@@ -60,7 +60,21 @@ patch(
 patch(
   "src/http-routes.mjs",
   "    // A current still:",
-  '    if (kind === "nvr-stream" || kind === "nvr-snapshot") return handleNvr(req, res, url);\n\n    // A current still:',
+  `    if (kind === "nvr-stream" || kind === "nvr-snapshot" || kind === "nvr-preview-status") return handleNvr(req, res, url);
+    // E40 has one legacy camera entity; its normal snapshot route must use the
+    // same bounded still queue as the explicit S4 lens routes.
+    if (kind === "snapshot" && sn && url.searchParams.getAll("mode").length <= 1
+        && [null, "auto", "live"].includes(url.searchParams.get("mode"))) {
+      try {
+        const views = (await ctx.eufy.getDevice(sn)).describe().model;
+        if (views === "T8P00" || views === "T8E00") {
+          const sensor = views === "T8E00" ? 1 : 0;
+          return handleNvr(req, res, new URL(\`/nvr-snapshot/\${sn}/\${sensor}\`, url));
+        }
+      } catch { /* Preserve the original route's error handling. */ }
+    }
+
+    // A current still:`,
 );
 patch(
   "src/device-view.mjs",

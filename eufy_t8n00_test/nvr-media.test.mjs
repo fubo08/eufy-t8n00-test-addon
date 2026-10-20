@@ -11,7 +11,7 @@ import {
   fragmentClocks,
 } from "../src/nvr-media.mjs";
 
-test("a busy NVR is not retried by every lens and snapshot request", async () => {
+test("a busy NVR backs off live calls while a cached preview stays available", async () => {
   let opens = 0;
   const dev = {
     describe: () => ({ model: "T8E00" }),
@@ -26,6 +26,7 @@ test("a busy NVR is not retried by every lens and snapshot request", async () =>
     cfg: {},
     eufy: { getDevice: async () => dev },
     streamClientFor: async () => ({ getDevice: async () => dev }),
+    readSnapshot: async () => Buffer.from([255, 216, 255, 217]),
   });
   function response() {
     const res = new EventEmitter();
@@ -42,13 +43,15 @@ test("a busy NVR is not retried by every lens and snapshot request", async () =>
   for (const path of [
     "nvr-stream/CAM1/0",
     "nvr-stream/CAM1/1",
-    "nvr-snapshot/CAM1/0",
   ]) {
     const res = response();
     await handler({}, res, new URL(`http://bridge/${path}`));
     assert.equal(res.status, 503);
     assert.ok(Number(res.headers["retry-after"]) > 0);
   }
+  const still = response();
+  await handler({}, still, new URL("http://bridge/nvr-snapshot/CAM1/0"));
+  assert.equal(still.status, 200);
   assert.equal(opens, 1);
 });
 

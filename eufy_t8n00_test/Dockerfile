@@ -67,6 +67,9 @@ COPY nvr-start-queue.mjs /app/src/nvr-start-queue.mjs
 COPY nvr-start-queue.test.mjs /app/test/nvr-start-queue.test.mjs
 COPY nvr-media.mjs /app/src/nvr-media.mjs
 COPY nvr-snapshot.mjs /app/src/nvr-snapshot.mjs
+COPY nvr-preview-cache.mjs /app/src/nvr-preview-cache.mjs
+COPY nvr-preview-cache.test.mjs /app/test/nvr-preview-cache.test.mjs
+COPY nvr-preview-routes.test.mjs /app/test/nvr-preview-routes.test.mjs
 COPY nvr-playback.mjs /app/src/nvr-playback.mjs
 COPY nvr-snapshot.test.mjs /app/test/nvr-snapshot.test.mjs
 COPY nvr-media.test.mjs /app/test/nvr-media.test.mjs
@@ -112,7 +115,7 @@ RUN ln -s /app/node_modules /qualification/sdk/node_modules \
     && node --test /qualification/qualify-pr354.test.mjs \
     && node --input-type=module -e "const s=await import('/qualification/sdk/dist/index.js'); if(typeof s.EufyMega!=='function'||typeof s.isSessionValid!=='function')process.exit(1)"
 RUN chmod +x /run.sh && mkdir -p /data && sh -n /run.sh
-ENV BRIDGE_APP_DIR=/app BRIDGE_PORT=3000 BRIDGE_HOST=0.0.0.0 GO2RTC_CONFIG=/data/go2rtc.yaml EUFY_SESSION=/data/.eufy-session.json
+ENV BRIDGE_APP_DIR=/app BRIDGE_PORT=3000 BRIDGE_HOST=0.0.0.0 GO2RTC_CONFIG=/data/go2rtc.yaml EUFY_SESSION=/data/.eufy-session.json BRIDGE_PREVIEW_CACHE_DIR=/data/nvr-previews
 EXPOSE 3000 8554
 LABEL org.opencontainers.image.source="https://github.com/fubo08/eufy-t8n00-test-addon"
 CMD ["/run.sh"]
