@@ -11,6 +11,16 @@ const until = async predicate => {
   assert.ok(predicate());
 };
 
+test("one initial request per view survives the complete seven-camera capture round", async () => {
+  let clock = 100000, captures = 0;
+  const cache = createPreviewCache({ now: () => clock, releaseMs: 0, coldWaitMs: 1000,
+    read: async () => { captures++; clock += 25000; return jpeg(captures); } });
+  const ids = ["S4_A", "S4_A_fixed", "S4_B", "S4_B_fixed", "E40_A", "E40_B", "E40_C"];
+  const results = await Promise.all(ids.map(cache));
+  assert.equal(captures, 7);
+  assert.equal(results.length, 7);
+});
+
 test("seven requested lenses serialize acquisition and coalesce duplicate callers", async () => {
   let active = 0, peak = 0, calls = 0;
   const cache = createPreviewCache({ releaseMs: 8, coldWaitMs: 2000,

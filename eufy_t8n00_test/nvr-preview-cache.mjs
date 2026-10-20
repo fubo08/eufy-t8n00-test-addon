@@ -5,7 +5,7 @@ import { join } from "node:path";
 // immediately; only one decoder runs, with time for the native call to close
 // before opening a different lens. Live consumers retain the other call slots.
 export function createPreviewCache({ read, directory, now = Date.now,
-  freshMs = 120000, releaseMs = 15000, demandMs = 45000, coldWaitMs = 7500,
+  freshMs = 120000, releaseMs = 15000, demandMs = 300000, coldWaitMs = 7500,
   canRefresh = () => true, validImage = () => true, log = () => {} } = {}) {
   const entries = new Map(), queue = [];
   let running = false, timer, nextAt = 0;

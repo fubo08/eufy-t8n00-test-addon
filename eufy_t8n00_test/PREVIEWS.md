@@ -14,8 +14,10 @@ featureless/covered camera view; the old capture timestamp remains visible.
 
 Images become eligible for refresh after two minutes; seven requested views can
 take longer to complete a round. They are **previews, not synchronized video**.
-HA requests drive the queue; abandoned requests expire after 45 seconds. With no
-preview requests, no periodic capture continues. Last good images survive failed
+HA requests drive the queue; queued demand expires after five minutes, allowing
+one request per view to survive the entire initial seven-camera round. An already
+requested round may finish after closing the dashboard; with no new requests,
+no periodic capture continues. Last good images survive failed
 refreshes and restarts under `/data/nvr-previews`. JPEGs are private camera data,
 not diagnostics to publish. Maximum 32 entries, 8 MiB each. Cold requests wait at
 most 7.5 seconds and may return unavailable until the initial image is captured.
