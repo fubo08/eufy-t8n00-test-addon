@@ -50,3 +50,20 @@ patch('src/transport/rtc/__tests__/command-router.spec.ts',
       expect(sent(sessions[0]!.sent[0]!).body).toMatchObject({cmd: 1224, payload: {mode_type: 1}});
     } finally { router.close(); }
   });`);
+
+// Use the portal start defaults already merged in upstream SDK PR436.
+patch('src/transport/rtc/__tests__/video-stream.spec.ts',
+  'payload: { audio_chn: 3, chn_list: [{ chn: 3, sensor: 0 }] },',
+  `payload: {
+        entrytype: 0, msg_id: 116, audio_chn: 3, play_id: 1, station_video_type: 6,
+        pip_cord: { x1: 0, y1: 0, x2: 0, y2: 0 },
+        chn_list: [{ index: 0, chn: 3, sensor: 0, isUps: 0, isClicked: true }],
+      },`);
+patch('src/transport/rtc/video-stream.ts', '            entrytype: 1,', '            entrytype: 0,');
+patch('src/transport/rtc/video-stream.ts', '            msg_id: "",', '            msg_id: 116,');
+patch('src/transport/rtc/video-stream.ts',
+  '            chn_list: [{ index: 0, chn: channel, sensor }],',
+  `            chn_list: [{ index: 0, chn: channel, sensor, isUps: 0, isClicked: true }],
+            pip_cord: { x1: 0, y1: 0, x2: 0, y2: 0 },
+            station_video_type: 6,
+            play_id: 1,`);
