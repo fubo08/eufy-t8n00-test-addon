@@ -1,7 +1,15 @@
 FROM node:24-bookworm-slim AS mediaqualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /media-qualification/sdk
-RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/8e91397c01f455634d25c61943c3ab846e5a4386 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/079625672e606a50ba1954be7618a1eaf247333a | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts && npm pack node-datachannel@0.33.4 --pack-destination /tmp \
+    && mkdir -p node_modules/node-datachannel && tar -xzf /tmp/node-datachannel-0.33.4.tgz -C node_modules/node-datachannel --strip-components=1 \
+    && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/client/__tests__/nvr-media-routing.spec.ts src/model/capabilities/__tests__/mains-camera-power.spec.ts && npm run build && npm prune --omit=dev --ignore-scripts
+
+FROM node:24-bookworm-slim AS portalqualification
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
+WORKDIR /portal-qualification/sdk
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/38e0c73ee6a53730d573dbd04d7d701ba58031eb | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm pack node-datachannel@0.33.4 --pack-destination /tmp \
     && mkdir -p node_modules/node-datachannel && tar -xzf /tmp/node-datachannel-0.33.4.tgz -C node_modules/node-datachannel --strip-components=1 \
     && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/client/__tests__/nvr-media-routing.spec.ts src/model/capabilities/__tests__/mains-camera-power.spec.ts && npm run build && npm prune --omit=dev --ignore-scripts
@@ -72,6 +80,9 @@ COPY --from=ptzqualification /ptz-qualification/sdk/package.json /ptz-qualificat
 COPY qualify-ptz.mjs qualify-ptz.test.mjs /ptz-qualification/
 RUN ln -s /app/node_modules /ptz-qualification/sdk/node_modules && node --test /ptz-qualification/qualify-ptz.test.mjs
 COPY --from=mediaqualification /media-qualification/sdk /media-qualification/sdk
+COPY --from=portalqualification /portal-qualification/sdk /portal-qualification/sdk
+RUN rm -rf /portal-qualification/sdk/node_modules/node-datachannel \
+    && ln -s /app/node_modules/node-datachannel /portal-qualification/sdk/node_modules/node-datachannel
 COPY qualify-media.mjs qualify-media.test.mjs nvr-beta-live-feed.mjs nvr-beta-live-feed.test.mjs /media-qualification/
 RUN rm -rf /media-qualification/sdk/node_modules/node-datachannel \
     && ln -s /app/node_modules/node-datachannel /media-qualification/sdk/node_modules/node-datachannel \

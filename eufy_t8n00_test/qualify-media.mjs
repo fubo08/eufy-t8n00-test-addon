@@ -3,7 +3,8 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { openBetaLiveFeed } from './nvr-beta-live-feed.mjs';
-export const REVISION = '8e91397c01f455634d25c61943c3ab846e5a4386';
+export const REVISION = '079625672e606a50ba1954be7618a1eaf247333a';
+export const PORTAL_REVISION = '38e0c73ee6a53730d573dbd04d7d701ba58031eb';
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function measure(client, target, duration = 120000) {
@@ -80,6 +81,26 @@ export async function qualify(sdk, saved, options, report, save) {
     const find = model => devices.find(d => d.model === model && d.stationSn === nvr[0].sn);
     const e40 = find('T8P00'), s4 = find('T8E00');
     if (!e40 || !s4) throw new Error('missing_camera_models');
+    if (report.mode === 'portal-shard') {
+      report.phoneShard = client.mega.rtcShard;
+      report.resolvedShards = [];
+      const resolve = client.rtc.deps.shard;
+      client.rtc.deps.shard = async () => {
+        const shard = await resolve();
+        report.resolvedShards.push(shard);
+        save();
+        return shard;
+      };
+      for (let attempt=0; attempt<2; attempt++) {
+        report.stage = `portal-E40-start-${attempt+1}`; save();
+        report.runs.push(await measure(client,e40,60000)); save();
+        await delay(10000);
+      }
+      report.status = report.runs.every(r => r.validVideo && r.audioFrames > 0 && !r.streamFailed && !r.earlyStop)
+        && report.resolvedShards.length >= 2 ? 'media_observed' : 'failed';
+      report.limits = 'Combined PR450 plus PR436 route; DE account only. Decoding and packet evidence, not audible playback or other account countries.';
+      return;
+    }
     for (const target of [e40,s4]) {
       report.stage = `${target.model}-primary`; save();
       report.runs.push(await measure(client,target)); save();
@@ -98,18 +119,24 @@ export async function qualify(sdk, saved, options, report, save) {
 
 export async function main() {
   const options = JSON.parse(readFileSync('/data/options.json','utf8'));
-  if (options.qualify_pr436 !== true) return;
-  const path = `/data/qualification-media-${REVISION}.json`;
-  if (existsSync(path)) { console.info('[media-qualification] Exact revision already attempted; skipping.'); return; }
-  const report = { revision:REVISION, testBridgeVersion:'0.3.32', timestamp:new Date().toISOString(), status:'started', runs:[] };
-  const save = () => writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});
-  save();
-  const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },480000);
-  try {
-    const sdk = await import('/media-qualification/sdk/dist/index.js');
-    const saved = JSON.parse(readFileSync('/data/.eufy-session.json','utf8'));
-    await qualify(sdk,saved,options,report,save);
-  } catch { report.status='failed'; report.reason='qualification_failed_without_sensitive_details'; }
-  finally { clearTimeout(timer); save(); console.info('[media-qualification] '+JSON.stringify(report)); }
+  const jobs = [
+    { enabled:options.qualify_pr436, revision:REVISION, sdkPath:'/media-qualification/sdk/dist/index.js', mode:'primary', timeout:480000 },
+    { enabled:options.qualify_pr450, revision:PORTAL_REVISION, sdkPath:'/portal-qualification/sdk/dist/index.js', mode:'portal-shard', timeout:180000 },
+  ];
+  for (const job of jobs) {
+    if (job.enabled !== true) continue;
+    const path = `/data/qualification-media-${job.revision}.json`;
+    if (existsSync(path)) { console.info('[media-qualification] Exact revision already attempted; skipping.'); continue; }
+    const report = { revision:job.revision, mode:job.mode, testBridgeVersion:'0.3.33', timestamp:new Date().toISOString(), status:'started', runs:[] };
+    const save = () => writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});
+    save();
+    const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },job.timeout);
+    try {
+      const sdk = await import(job.sdkPath);
+      const saved = JSON.parse(readFileSync('/data/.eufy-session.json','utf8'));
+      await qualify(sdk,saved,options,report,save);
+    } catch { report.status='failed'; report.reason='qualification_failed_without_sensitive_details'; }
+    finally { clearTimeout(timer); save(); console.info('[media-qualification] '+JSON.stringify(report)); }
+  }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) { await main(); process.exit(0); }
