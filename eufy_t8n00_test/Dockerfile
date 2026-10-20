@@ -1,3 +1,8 @@
+FROM node:24-bookworm-slim AS capacityqualification
+WORKDIR /capacity-qualification/sdk
+RUN npm pack @mega-yfue/eufy-sdk@0.5.0-beta.74 --pack-destination /tmp \
+    && tar -xzf /tmp/mega-yfue-eufy-sdk-0.5.0-beta.74.tgz --strip-components=1 \
+    && node -e "if(require('./package.json').version!=='0.5.0-beta.74')process.exit(1)"
 FROM node:24-bookworm-slim AS mediaqualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /media-qualification/sdk
@@ -89,6 +94,11 @@ RUN rm -rf /media-qualification/sdk/node_modules/node-datachannel \
     && node --test /media-qualification/nvr-beta-live-feed.test.mjs \
     && node --test /media-qualification/qualify-media.test.mjs \
     && node --input-type=module -e "const m=await import('/media-qualification/sdk/dist/index.js'); if(typeof m.EufyMega!=='function')process.exit(1)"
+COPY --from=capacityqualification /capacity-qualification/sdk /capacity-qualification/sdk
+COPY qualify-capacity.mjs qualify-capacity.test.mjs /capacity-qualification/
+RUN ln -s /app/node_modules /capacity-qualification/sdk/node_modules \
+    && node --test /capacity-qualification/qualify-capacity.test.mjs \
+    && node --input-type=module -e "const s=await import('/capacity-qualification/sdk/dist/index.js'); if(typeof s.EufyMega!=='function')process.exit(1)"
 COPY run.sh /run.sh
 COPY --from=cameraqualification /camera-qualification/sdk /camera-qualification/sdk
 COPY qualify-camera.mjs qualify-camera.test.mjs /camera-qualification/
