@@ -99,8 +99,10 @@ RUN rm -rf /media-qualification/sdk/node_modules/node-datachannel \
     && node --input-type=module -e "const m=await import('/media-qualification/sdk/dist/index.js'); if(typeof m.EufyMega!=='function')process.exit(1)"
 COPY --from=capacityqualification /capacity-qualification/sdk /capacity-qualification/sdk
 COPY qualify-capacity.mjs qualify-capacity.test.mjs /capacity-qualification/
+COPY qualify-grid.mjs qualify-grid.test.mjs nvr-beta-live-feed.mjs /capacity-qualification/
 RUN ln -s /app/node_modules /capacity-qualification/sdk/node_modules \
     && node --test /capacity-qualification/qualify-capacity.test.mjs \
+    && node --test /capacity-qualification/qualify-grid.test.mjs \
     && node --input-type=module -e "const s=await import('/capacity-qualification/sdk/dist/index.js'); if(typeof s.EufyMega!=='function')process.exit(1)"
 COPY run.sh /run.sh
 COPY --from=cameraqualification /camera-qualification/sdk /camera-qualification/sdk

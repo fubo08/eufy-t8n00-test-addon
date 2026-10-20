@@ -157,7 +157,7 @@ export async function main() {
     if (job.enabled !== true) continue;
     const path = `/data/qualification-media-${job.revision}.json`;
     if (existsSync(path)) { console.info('[media-qualification] Exact revision already attempted; skipping.'); continue; }
-    const report = { revision:job.revision, mode:job.mode, testBridgeVersion:'0.3.37', timestamp:new Date().toISOString(), status:'started', runs:[] };
+    const report = { revision:job.revision, mode:job.mode, testBridgeVersion:'0.3.38', timestamp:new Date().toISOString(), status:'started', runs:[] };
     const save = () => writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});
     save();
     const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },job.timeout);
