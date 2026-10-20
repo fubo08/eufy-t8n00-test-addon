@@ -6,7 +6,7 @@ import { join } from "node:path";
 // before opening a different lens. Live consumers retain the other call slots.
 export function createPreviewCache({ read, directory, now = Date.now,
   freshMs = 120000, releaseMs = 15000, demandMs = 45000, coldWaitMs = 7500,
-  canRefresh = () => true, log = () => {} } = {}) {
+  canRefresh = () => true, validImage = () => true, log = () => {} } = {}) {
   const entries = new Map(), queue = [];
   let running = false, timer, nextAt = 0;
   function entry(id) {
@@ -18,7 +18,7 @@ export function createPreviewCache({ read, directory, now = Date.now,
     if (directory) {
       try {
         const file = join(directory, `${id}.jpg`), data = readFileSync(file);
-        if (validJpeg(data)) { item.data = data; item.at = statSync(file).mtimeMs; }
+        if (validJpeg(data) && validImage(data)) { item.data = data; item.at = statSync(file).mtimeMs; }
       } catch { /* First use has no persisted still. */ }
     }
     entries.set(id, item);
@@ -46,7 +46,7 @@ export function createPreviewCache({ read, directory, now = Date.now,
     running = true;
     try {
       const data = await read(item.id);
-      if (!validJpeg(data)) throw new Error("No complete preview JPEG");
+      if (!validJpeg(data) || !validImage(data)) throw new Error("No usable preview JPEG");
       item.data = data; item.at = now(); item.error = false;
       if (directory) {
         try {

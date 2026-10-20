@@ -8,6 +8,10 @@ native call to release. New still capture is deferred when two native live pulls
 are registered. This is a conservative workaround for the observed four-call
 limit, not a protocol fix or a guarantee for unlimited live consumers.
 
+Uniform concealed decoder frames are rejected, including persisted gray frames.
+This conservative quality check also retains the previous image for a genuinely
+featureless/covered camera view; the old capture timestamp remains visible.
+
 Images become eligible for refresh after two minutes; seven requested views can
 take longer to complete a round. They are **previews, not synchronized video**.
 HA requests drive the queue; abandoned requests expire after 45 seconds. With no

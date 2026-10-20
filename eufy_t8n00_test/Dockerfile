@@ -68,6 +68,8 @@ COPY nvr-start-queue.test.mjs /app/test/nvr-start-queue.test.mjs
 COPY nvr-media.mjs /app/src/nvr-media.mjs
 COPY nvr-snapshot.mjs /app/src/nvr-snapshot.mjs
 COPY nvr-preview-cache.mjs /app/src/nvr-preview-cache.mjs
+COPY nvr-preview-quality.mjs /app/src/nvr-preview-quality.mjs
+COPY nvr-preview-quality.test.mjs /app/test/nvr-preview-quality.test.mjs
 COPY nvr-preview-cache.test.mjs /app/test/nvr-preview-cache.test.mjs
 COPY nvr-preview-routes.test.mjs /app/test/nvr-preview-routes.test.mjs
 COPY nvr-playback.mjs /app/src/nvr-playback.mjs

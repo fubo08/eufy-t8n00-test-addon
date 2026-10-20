@@ -3,6 +3,7 @@ import { createMediaPacer } from "./media-pacer.mjs";
 import { createStartQueue, configuredStartSpacing } from "./nvr-start-queue.mjs";
 import { createSnapshotReader } from "./nvr-snapshot.mjs";
 import { createPreviewCache } from "./nvr-preview-cache.mjs";
+import { hasPreviewDetail } from "./nvr-preview-quality.mjs";
 
 // Read only MP4 container headers; never inspect or log encoded media bytes.
 export function fragmentClocks(data) {
@@ -102,6 +103,7 @@ export function createNvrHandler(ctx) {
   const viewers = new Map();
   const readSnapshot = ctx.readSnapshot ?? createPreviewCache({
     read: createSnapshotReader(),
+    validImage: hasPreviewDetail,
     directory: process.env.BRIDGE_PREVIEW_CACHE_DIR,
     canRefresh: () => [...viewers.values()].reduce((a, b) => a + b, 0) < 2,
     log: message => ctx.eventLog?.(`[nvr:preview] ${message}`),

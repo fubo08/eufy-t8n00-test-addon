@@ -9,7 +9,7 @@ export function createSnapshotReader({ spawnProcess = spawn, timeoutMs = 18000 }
     if (pending.has(id)) return pending.get(id);
     const result = new Promise((resolve, reject) => {
       const child = spawnProcess("ffmpeg", [
-        "-hide_banner", "-loglevel", "error", "-rtsp_transport", "tcp",
+        "-hide_banner", "-loglevel", "error", "-xerror", "-rtsp_transport", "tcp",
         // Codec parameters are supplied by RTSP SDP. Avoid the default multi-second
         // probe consuming Home Assistant's ten-second image request budget.
         "-analyzeduration", "500000", "-probesize", "262144",
