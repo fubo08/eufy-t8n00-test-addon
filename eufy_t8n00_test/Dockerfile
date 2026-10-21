@@ -6,10 +6,11 @@ RUN npm pack @mega-yfue/eufy-sdk@0.5.0-beta.74 --pack-destination /tmp \
 FROM node:24-bookworm-slim AS mediaqualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /media-qualification/sdk
-RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/2f3507092259b12e3180d7a5e141fa483a4071c1 | tar -xz --strip-components=1
+COPY verify-pr479.sh /tmp/verify-pr479.sh
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/dd35b27fc2eccbd318fcec671f8d806b6a8ed54f | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm pack node-datachannel@0.33.4 --pack-destination /tmp \
     && mkdir -p node_modules/node-datachannel && tar -xzf /tmp/node-datachannel-0.33.4.tgz -C node_modules/node-datachannel --strip-components=1 \
-    && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/client/__tests__/nvr-media-routing.spec.ts src/model/capabilities/__tests__/mains-camera-power.spec.ts && npm run build && npm prune --omit=dev --ignore-scripts
+    && bash /tmp/verify-pr479.sh && npm prune --omit=dev --ignore-scripts
 
 FROM node:24-bookworm-slim AS portalqualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*

@@ -1,3 +1,7 @@
+# 0.3.40
+
+I qualify the exact PR #479 review correction `dd35b27fc2eccbd318fcec671f8d806b6a8ed54f` through full Linux SDK verification and the existing opt-in optical-view hardware test. I keep the normal bridge media implementation unchanged. Created with Codex.
+
 # 0.3.28
 
 I explicitly requested a second observation trial: two left steps, five seconds apart, on the same selected S4 and unchanged PR #376 SDK revision. This trial has a separate once-only marker and remains opt-in. Created with Codex.
