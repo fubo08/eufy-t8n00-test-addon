@@ -1,3 +1,7 @@
+# 0.3.41
+
+I qualify the current-beta patch proposed for PR #450 at SDK `9260230de2367393ea880c87383ea5c978d55cdc` with full Linux verification and the existing opt-in portal-shard hardware test. My normal bridge media implementation is unchanged. Created with Codex.
+
 # 0.3.40
 
 I qualify the exact PR #479 review correction `dd35b27fc2eccbd318fcec671f8d806b6a8ed54f` through full Linux SDK verification and the existing opt-in optical-view hardware test. I keep the normal bridge media implementation unchanged. Created with Codex.

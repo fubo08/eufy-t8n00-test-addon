@@ -15,10 +15,11 @@ RUN npm ci --ignore-scripts && npm pack node-datachannel@0.33.4 --pack-destinati
 FROM node:24-bookworm-slim AS portalqualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /portal-qualification/sdk
-RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/38e0c73ee6a53730d573dbd04d7d701ba58031eb | tar -xz --strip-components=1
+COPY verify-pr450.sh /tmp/verify-pr450.sh
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/9260230de2367393ea880c87383ea5c978d55cdc | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm pack node-datachannel@0.33.4 --pack-destination /tmp \
     && mkdir -p node_modules/node-datachannel && tar -xzf /tmp/node-datachannel-0.33.4.tgz -C node_modules/node-datachannel --strip-components=1 \
-    && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/client/__tests__/nvr-media-routing.spec.ts src/model/capabilities/__tests__/mains-camera-power.spec.ts && npm run build && npm prune --omit=dev --ignore-scripts
+    && bash /tmp/verify-pr450.sh && npm prune --omit=dev --ignore-scripts
 
 FROM node:24-bookworm-slim AS ptzqualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
