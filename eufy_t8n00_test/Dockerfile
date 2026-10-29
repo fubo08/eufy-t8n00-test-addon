@@ -16,7 +16,7 @@ FROM node:24-bookworm-slim AS portalqualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /portal-qualification/sdk
 COPY verify-pr450.sh /tmp/verify-pr450.sh
-RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/9260230de2367393ea880c87383ea5c978d55cdc | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/e34c7cfe3f379c9286cf7a297b5b2fc1f1323eda | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm pack node-datachannel@0.33.4 --pack-destination /tmp \
     && mkdir -p node_modules/node-datachannel && tar -xzf /tmp/node-datachannel-0.33.4.tgz -C node_modules/node-datachannel --strip-components=1 \
     && bash /tmp/verify-pr450.sh && npm prune --omit=dev --ignore-scripts

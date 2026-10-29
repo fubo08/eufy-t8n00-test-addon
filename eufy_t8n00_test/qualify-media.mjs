@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { openBetaLiveFeed } from './nvr-beta-live-feed.mjs';
 export const REVISION = 'dd35b27fc2eccbd318fcec671f8d806b6a8ed54f';
-export const PORTAL_REVISION = '9260230de2367393ea880c87383ea5c978d55cdc';
+export const PORTAL_REVISION = 'e34c7cfe3f379c9286cf7a297b5b2fc1f1323eda';
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function measure(client, target, duration = 120000) {
@@ -157,7 +157,7 @@ export async function main() {
     if (job.enabled !== true) continue;
     const path = `/data/qualification-media-${job.revision}.json`;
     if (existsSync(path)) { console.info('[media-qualification] Exact revision already attempted; skipping.'); continue; }
-    const report = { revision:job.revision, mode:job.mode, testBridgeVersion:'0.3.41', timestamp:new Date().toISOString(), status:'started', runs:[] };
+    const report = { revision:job.revision, mode:job.mode, testBridgeVersion:'0.3.42', timestamp:new Date().toISOString(), status:'started', runs:[] };
     const save = () => writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});
     save();
     const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },job.timeout);

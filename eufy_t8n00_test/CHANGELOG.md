@@ -1,3 +1,9 @@
+# 0.3.42
+
+I refresh only the opt-in PR #450 qualification to SDK e34c7cfe3f379c9286cf7a297b5b2fc1f1323eda on beta-0.6.0 b7b111e. The Linux stage checks the before/after regressions and full verification; the bounded hardware test performs two E40 starts. My normal media SDK, ports and configuration defaults are unchanged.
+
+Created with Codex.
+
 # 0.3.41
 
 I qualify the current-beta patch proposed for PR #450 at SDK `9260230de2367393ea880c87383ea5c978d55cdc` with full Linux verification and the existing opt-in portal-shard hardware test. My normal bridge media implementation is unchanged. Created with Codex.

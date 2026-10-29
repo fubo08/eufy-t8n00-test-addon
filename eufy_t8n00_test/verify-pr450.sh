@@ -8,7 +8,7 @@ cp "$router" "$scratch/router"
 cp "$http" "$scratch/http"
 restore() { cp "$scratch/router" "$router"; cp "$scratch/http" "$http"; }
 trap restore EXIT
-base=https://raw.githubusercontent.com/mega-yfue/eufy-sdk/f2f6e6efa2a3c180d928d991f0a1c53cced379ed
+base=https://raw.githubusercontent.com/mega-yfue/eufy-sdk/b7b111e0d0dd3b0e7a0500070abbc388f0b5e955
 curl -fsSL "$base/$router" -o "$router"
 set +e
 NO_COLOR=1 npx vitest run src/transport/rtc/__tests__/command-router.spec.ts -t 'opens NVR camera media on the shard resolved asynchronously' > "$scratch/nvr-before.log" 2>&1
