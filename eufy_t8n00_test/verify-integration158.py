@@ -28,7 +28,7 @@ try:
             Path(name).write_bytes(response.read())
     before = run("python", "-m", "pytest", "tests/test_camera_views.py", "-q", "--junitxml=/tmp/integration-before.xml")
     counts = totals("/tmp/integration-before.xml")
-    assert before == 1 and counts["tests"] == "9" and counts["failures"] == "7" and counts["errors"] == "0", counts
+    assert before == 1 and counts["tests"] == "11" and counts["failures"] == "7" and counts["errors"] == "0", counts
 finally:
     for name, source in saved.items():
         Path(name).write_bytes(source)
