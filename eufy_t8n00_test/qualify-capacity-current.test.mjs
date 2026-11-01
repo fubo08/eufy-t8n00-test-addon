@@ -21,7 +21,7 @@ for(const [limit,stall,refuse] of [[4,false,false],[5,false,false],[5,true,false
       consumer.stop=()=>{clearInterval(ticker);active.delete(consumer);};
       if(active.size<limit){if(stall&&active.size===4)clearInterval(tickers.get([...active][0]));active.add(consumer);ticker=setInterval(()=>{
         consumer.emit('video',{codec:'h265',width:1920,height:1080});consumer.emit('audio',{});
-      },1);tickers.set(consumer,ticker);}else if(refuse)queueMicrotask(()=>consumer.emit('error',Object.assign(new Error('PRIVATE',{cause:new Error('RTC PRIVATE scall answered 486')}),{name:'LiveStreamStartError',reason:'source-error',stage:'awaiting-first-frame'})));
+      },1);tickers.set(consumer,ticker);}else if(refuse)setImmediate(()=>consumer.emit('error',Object.assign(new Error('PRIVATE',{cause:new Error('RTC PRIVATE scall answered 486')}),{name:'LiveStreamStartError',reason:'source-error',stage:'awaiting-first-frame'})));
       return consumer;
     }})};}
     async disconnect(){closed=true;}
