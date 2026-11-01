@@ -140,4 +140,7 @@ CMD ["/run.sh"]
 
 COPY qualify-capacity-current.mjs /app/
 COPY qualify-capacity-current.test.mjs /app/
-RUN node --check /app/qualify-capacity-current.mjs && node --test /app/qualify-capacity-current.test.mjs
+RUN node --check /app/qualify-capacity-current.mjs
+
+COPY capacity-diagnostics.mjs capacity-diagnostics.test.mjs /app/
+RUN node --test /app/capacity-diagnostics.test.mjs /app/qualify-capacity-current.test.mjs

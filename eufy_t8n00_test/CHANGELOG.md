@@ -1,3 +1,7 @@
+# 0.3.47
+
+- Capture allow-listed start-failure causes and signaling/peer phases for my bounded capacity test. No SDK or normal media changes.
+
 # 0.3.46
 
 - Add an opt-in current official SDK capacity recheck with concurrent observation deltas. Normal media paths remain unchanged.

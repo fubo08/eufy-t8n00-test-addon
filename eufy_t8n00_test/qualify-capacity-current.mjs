@@ -1,16 +1,21 @@
 // My bounded native-call capacity comparison against unmodified official SDK source. Created with Codex.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+import {failureMetadata,traceMetadata} from './capacity-diagnostics.mjs';
 export const REVISION='4f5d73f38e8bd62e74c1410ab510844a8b099307';
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
-export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=20000,releaseMs=9000,settleMs=8000}={}) {
+export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,releaseMs=9000,settleMs=8000}={}) {
   if (!sdk.isSessionValid(saved)) throw new Error('cached_session_unusable');
   const store=new sdk.MemorySessionStore(); store.save(structuredClone(saved));
+  const report={revision:REVISION,sdkSource:true,testBridgeVersion:'0.3.47',nodeVersion:process.version,runs:[],status:'started'};
+  report.trace=[];
+  let window={phase:'login'};
+  const began=performance.now();
+  const log=(message)=>{const event=traceMetadata(message);if(event&&report.trace.length<150)report.trace.push({ms:Math.round(performance.now()-began),window:{...window},...event});};
   const client=new sdk.EufyMega({email:options.email,countryCode:options.country,store,
-    autoRealtime:false,pollMs:0,storedSnapshotCache:false,logger:{debug(){},info(){},warn(){},error(){}}});
+    autoRealtime:false,pollMs:0,storedSnapshotCache:false,logger:{debug:log,info(){},warn:log,error(){}}});
   client.on('error',()=>{});
-  const report={revision:REVISION,sdkSource:true,testBridgeVersion:'0.3.46',nodeVersion:process.version,runs:[],status:'started'};
   const held=[];
   try {
     const login=await client.login();
@@ -24,19 +29,22 @@ export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=20000,rele
       const target=targets[index];
       const run={camera:index+1,model:target.model,view:0,phase,frames:0,audioFrames:0,firstVideoMs:null};
       report.runs.push(run);
+      window={camera:index+1,phase};
+      run.firstFrameDeadlineMs=firstFrameMs;
       const camera=(await client.getDevice(target.sn)).camera();
       const start=performance.now();
       const consumer=await camera.live();
       let finish;
       const ready=new Promise(resolve=>{finish=resolve;});
-      const timer=setTimeout(()=>finish(false),firstFrameMs);
+      const timer=setTimeout(()=>{run.harnessDeadline=true;finish(false);},firstFrameMs);
       const onVideo=frame=>{
         run.frames++; run.codec=frame.codec; run.width=frame.width; run.height=frame.height;
         if(run.firstVideoMs===null){run.firstVideoMs=Math.round(performance.now()-start);finish(true);}
       };
       consumer.on('video',onVideo);
       consumer.on('audio',()=>run.audioFrames++);
-      consumer.on('error',()=>{run.streamFailed=true;finish(false);});
+      consumer.on('error',error=>{run.streamFailed=true;run.failure=failureMetadata(error);run.errorAfterMs=Math.round(performance.now()-start);finish(false);});
+      consumer.on('stop',()=>{run.stopObserved=true;if(!run.frames)finish(false);});
       const handle={consumer,run}; held.push(handle);
       await ready; clearTimeout(timer);
       return handle;
@@ -64,15 +72,15 @@ export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=20000,rele
       report.status=report.observation.every(r=>r.video>1)&&remaining.every(h=>!h.run.streamFailed)
         ?'four_call_limit_observed':'failed';
     }
-    report.limits='Unmodified official SDK source 4f5d73f, primary views only; firmware not re-read. Public live video/audio packet counts; decoding, visual identity and browser playback not checked. Observed capacity belongs to this tested route, not a universal hardware claim.';
+    report.limits='Unmodified official SDK source 4f5d73f, primary views only; firmware not re-read. Public live video/audio packet counts and allow-listed error metadata; trace windows do not identify individual peer sessions; decoding, visual identity and browser playback not checked. Observed capacity belongs to this tested route, not a universal hardware claim.';
     return report;
-  } catch {report.status='failed';report.reason='capacity_sequence_failed';return report;} finally {for(const h of held) h.consumer.stop(); await client.disconnect();}
+  } catch(error) {report.status='failed';report.reason='capacity_sequence_failed';report.failure=failureMetadata(error);return report;} finally {for(const h of held) h.consumer.stop(); await client.disconnect();}
 }
 
 export async function main() {
   const options=JSON.parse(readFileSync('/data/options.json','utf8'));
   if(options.qualify_nvr_capacity_current!==true) return;
-  const path='/data/qualification-capacity-4f5d73f-current.json';
+  const path='/data/qualification-capacity-4f5d73f-diagnostic47.json';
   if(existsSync(path)){console.info('[capacity-current-qualification] Exact current-source test already attempted; skipping.');return;}
   let report={revision:REVISION,status:'started',timestamp:new Date().toISOString()};
   const save=()=>writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});save();
