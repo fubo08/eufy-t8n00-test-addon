@@ -1,3 +1,9 @@
+# 0.3.43
+
+I add an opt-in, bounded qualification for bridge optical-view candidate c5fed3bbafae782219f5f350ef2427bfcbffd848 with official SDK source 4f5d73f38e8bd62e74c1410ab510844a8b099307. Linux checks exercise the original pinned SDK and the current optical-view API. Hardware checks cover selected JPEGs and both generated go2rtc/RTSP sources; my normal media implementation and ports remain unchanged.
+
+Created with Codex.
+
 # 0.3.42
 
 I refresh only the opt-in PR #450 qualification to SDK e34c7cfe3f379c9286cf7a297b5b2fc1f1323eda on beta-0.6.0 b7b111e. The Linux stage checks the before/after regressions and full verification; the bounded hardware test performs two E40 starts. My normal media SDK, ports and configuration defaults are unchanged.

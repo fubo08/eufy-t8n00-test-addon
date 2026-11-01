@@ -5,7 +5,7 @@
 # wrapper adds on top of the bridge image. /data is the add-on's persistent volume, so the login token
 # survives restarts (eufy allows ONE session per account â€” re-auth escalates to 2FA).
 set -e
-echo '[addon] T8N00 RTC Test Bridge 0.3.42; PR441 independent optical-view qualification'
+echo '[addon] T8N00 RTC Test Bridge 0.3.43; PR441 independent optical-view qualification'
 
 OPTS=/data/options.json
 export EUFY_RTC_VIDEO_ICE_POLICY="$(jq -r '.rtc_video_ice_policy // "relay"' "$OPTS")"
@@ -140,6 +140,7 @@ wait_for_bridge() {
 # AND go2rtc. Start it first so HA's discovery flow can immediately validate the WebSocket.
 # Optional, bounded, once per exact revision; the normal bridge is not logged in concurrently.
 # The harness never writes the live session file. A failed qualification must not prevent normal startup.
+node /view-qualification/qualify-bridge-views.mjs || echo '[bridge-views-qualification] Process failed; starting the normal bridge.'
 node /capacity-qualification/qualify-grid.mjs || echo '[grid-qualification] Process failed; starting the normal bridge.'
 node /capacity-qualification/qualify-capacity.mjs || echo '[capacity-qualification] Process failed; starting the normal bridge.'
 node /media-qualification/qualify-media.mjs || echo '[media-qualification] Process failed; starting the normal bridge.'

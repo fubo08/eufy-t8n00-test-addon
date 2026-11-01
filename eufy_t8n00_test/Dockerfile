@@ -55,6 +55,15 @@ RUN node /tmp/patch-sdk.mjs
 RUN npm ci && npm run typecheck && npx vitest run src/transport/rtc/__tests__ src/transport/p2p/__tests__/fmp4.spec.ts src/transport/p2p/__tests__/fmp4-geometry.spec.ts src/client/__tests__/rtc-command-routing.spec.ts src/client/__tests__/rtc-video-routing.spec.ts src/model \
     && npm run build && npm pack --pack-destination /tmp
 
+FROM sdk AS viewqualification
+WORKDIR /view-qualification/sdk
+RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/4f5d73f38e8bd62e74c1410ab510844a8b099307 | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts && npm run build && npm prune --omit=dev --ignore-scripts
+WORKDIR /view-qualification/bridge
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/c5fed3bbafae782219f5f350ef2427bfcbffd848 | tar -xz --strip-components=1
+COPY verify-bridge158.sh /tmp/verify-bridge158.sh
+RUN npm ci && bash /tmp/verify-bridge158.sh
+
 FROM node:24-bookworm-slim
 ARG TARGETARCH
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl jq ffmpeg python3 make g++ cmake && rm -rf /var/lib/apt/lists/*
@@ -120,6 +129,9 @@ COPY qualify-pr354.mjs qualify-pr354.test.mjs /qualification/
 RUN ln -s /app/node_modules /qualification/sdk/node_modules \
     && node --test /qualification/qualify-pr354.test.mjs \
     && node --input-type=module -e "const s=await import('/qualification/sdk/dist/index.js'); if(typeof s.EufyMega!=='function'||typeof s.isSessionValid!=='function')process.exit(1)"
+COPY --from=viewqualification /view-qualification/bridge /view-qualification/bridge
+COPY qualify-bridge-views.mjs /view-qualification/
+RUN node --check /view-qualification/qualify-bridge-views.mjs
 RUN chmod +x /run.sh && mkdir -p /data && sh -n /run.sh
 ENV BRIDGE_APP_DIR=/app BRIDGE_PORT=3000 BRIDGE_HOST=0.0.0.0 GO2RTC_CONFIG=/data/go2rtc.yaml EUFY_SESSION=/data/.eufy-session.json BRIDGE_PREVIEW_CACHE_DIR=/data/nvr-previews
 EXPOSE 3000 8554
