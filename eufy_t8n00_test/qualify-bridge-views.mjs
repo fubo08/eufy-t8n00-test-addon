@@ -25,7 +25,7 @@ async function measure(url, seconds) {
   const result = { seconds, frames: 0, warnings: 0, firstFrameMs: null };
   const started = performance.now();
   const proc = spawn('ffmpeg', ['-hide_banner','-loglevel','warning','-rtsp_transport','tcp',
-    '-rw_timeout','20000000','-i',url,'-t',String(seconds),'-an','-progress','pipe:1','-f','null','-'],
+    '-i',url,'-t',String(seconds),'-an','-progress','pipe:1','-f','null','-'],
     { stdio: ['ignore','pipe','pipe'] });
   children.add(proc);
   let buffer = '';
@@ -52,9 +52,9 @@ async function measure(url, seconds) {
 async function main() {
   const options = JSON.parse(await fs.readFile('/data/options.json','utf8'));
   if (options.qualify_bridge_views !== true) return;
-  const reportPath = `/data/qualification-bridge-views-${BRIDGE}-diagnostic.json`;
+  const reportPath = `/data/qualification-bridge-views-${BRIDGE}-decoder-fixed.json`;
   if (existsSync(reportPath)) { console.info('[bridge-views-qualification] Already attempted; skipping.'); return; }
-  const report = { bridge: BRIDGE, sdk: SDK, version: '0.3.44', timestamp: new Date().toISOString(), status:'started' };
+  const report = { bridge: BRIDGE, sdk: SDK, version: '0.3.45', timestamp: new Date().toISOString(), status:'started' };
   const save = () => fs.writeFile(reportPath, JSON.stringify(report,null,2), {mode:0o600});
   await save();
   let client, server, dir;

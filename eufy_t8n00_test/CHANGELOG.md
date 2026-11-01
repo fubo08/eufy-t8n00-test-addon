@@ -1,3 +1,7 @@
+# 0.3.45
+
+- Remove an unsupported RTSP input option from my decoder test; retain the bounded process deadline. The bridge and SDK candidates are unchanged.
+
 # 0.3.44
 
 - Retain bounded sanitized decoder and go2rtc diagnostics for my optical-view qualification; the bridge candidate and normal media source are unchanged.
