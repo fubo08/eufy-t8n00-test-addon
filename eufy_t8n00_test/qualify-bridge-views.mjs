@@ -18,6 +18,7 @@ const BRIDGE = 'c5fed3bbafae782219f5f350ef2427bfcbffd848';
 const SDK = '4f5d73f38e8bd62e74c1410ab510844a8b099307';
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const children = new Set();
+const sanitize = (s) => s.replace(/rtsp:\/\/\S+/g, '[rtsp-source]').replace(/http:\/\/\S+/g, '[http-source]').replace(/T[A-Z0-9]{10,}/g, '[device]').replace(/[\w.+-]+@[\w.-]+\.\w+/g, '[email]').replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g, '[address]').slice(-2000);
 
 /** Count decoded frames without logging private source URLs or captured video. */
 async function measure(url, seconds) {
@@ -36,7 +37,7 @@ async function measure(url, seconds) {
       if (result.frames > 0) result.firstFrameMs ??= Math.round(performance.now()-started);
     }
   });
-  proc.stderr.on('data', (chunk) => { result.warnings += chunk.toString().split('\n').filter(Boolean).length; });
+  proc.stderr.on('data', (chunk) => { result.warnings += chunk.toString().split('\n').filter(Boolean).length; result.diagnostics = sanitize((result.diagnostics ?? '') + chunk.toString()); });
   const done = new Promise((resolve) => {
     proc.once('error', () => { result.error = true; resolve(); });
     proc.once('close', (code) => { result.exit = code; resolve(); });
@@ -51,9 +52,9 @@ async function measure(url, seconds) {
 async function main() {
   const options = JSON.parse(await fs.readFile('/data/options.json','utf8'));
   if (options.qualify_bridge_views !== true) return;
-  const reportPath = `/data/qualification-bridge-views-${BRIDGE}.json`;
+  const reportPath = `/data/qualification-bridge-views-${BRIDGE}-diagnostic.json`;
   if (existsSync(reportPath)) { console.info('[bridge-views-qualification] Already attempted; skipping.'); return; }
-  const report = { bridge: BRIDGE, sdk: SDK, version: '0.3.43', timestamp: new Date().toISOString(), status:'started' };
+  const report = { bridge: BRIDGE, sdk: SDK, version: '0.3.44', timestamp: new Date().toISOString(), status:'started' };
   const save = () => fs.writeFile(reportPath, JSON.stringify(report,null,2), {mode:0o600});
   await save();
   let client, server, dir;
@@ -116,7 +117,9 @@ async function main() {
     const invalid = await fetch(base+`/stream/${target.sn}?view=99`); await invalid.arrayBuffer();
     report.invalidViewStatus = invalid.status;
     await writeGo2rtcConfig(ctx.cfg,[summary]);
-    const go = spawn('go2rtc',['-config',ctx.cfg.go2rtcConfig],{stdio:'ignore'});
+    const go = spawn('go2rtc',['-config',ctx.cfg.go2rtcConfig],{stdio:['ignore','pipe','pipe']});
+    const goLog = (chunk) => { report.go2rtcDiagnostics = sanitize((report.go2rtcDiagnostics ?? '') + chunk.toString()); };
+    go.stdout.on('data',goLog); go.stderr.on('data',goLog);
     children.add(go); go.on('error',()=>{report.go2rtcError=true;});
     let ready = false;
     for (let i=0;i<50;i++) {

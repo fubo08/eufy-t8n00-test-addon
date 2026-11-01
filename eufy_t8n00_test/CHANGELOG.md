@@ -1,3 +1,7 @@
+# 0.3.44
+
+- Retain bounded sanitized decoder and go2rtc diagnostics for my optical-view qualification; the bridge candidate and normal media source are unchanged.
+
 # 0.3.43
 
 I add an opt-in, bounded qualification for bridge optical-view candidate c5fed3bbafae782219f5f350ef2427bfcbffd848 with official SDK source 4f5d73f38e8bd62e74c1410ab510844a8b099307. Linux checks exercise the original pinned SDK and the current optical-view API. Hardware checks cover selected JPEGs and both generated go2rtc/RTSP sources; my normal media implementation and ports remain unchanged.
