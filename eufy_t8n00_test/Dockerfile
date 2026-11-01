@@ -64,6 +64,14 @@ RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/c5fe
 COPY verify-bridge158.sh /tmp/verify-bridge158.sh
 RUN npm ci && bash /tmp/verify-bridge158.sh
 
+FROM python:3.14-slim AS integrationqualification
+WORKDIR /integration
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl libturbojpeg0 && rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk/tar.gz/3b0c48dc39e29df6cef99ce1bebeeba5c3918d7f | tar -xz --strip-components=1
+RUN python -m pip install --no-cache-dir -r requirements_common.txt -r requirements_dev.txt pytest
+COPY verify-integration158.py /tmp/verify-integration158.py
+RUN python /tmp/verify-integration158.py
+
 FROM node:24-bookworm-slim
 ARG TARGETARCH
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl jq ffmpeg python3 make g++ cmake && rm -rf /var/lib/apt/lists/*
@@ -137,3 +145,5 @@ ENV BRIDGE_APP_DIR=/app BRIDGE_PORT=3000 BRIDGE_HOST=0.0.0.0 GO2RTC_CONFIG=/data
 EXPOSE 3000 8554
 LABEL org.opencontainers.image.source="https://github.com/fubo08/eufy-t8n00-test-addon"
 CMD ["/run.sh"]
+
+COPY --from=integrationqualification /integration-validation-result.json /integration-validation-result.json
