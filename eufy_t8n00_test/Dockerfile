@@ -137,3 +137,7 @@ ENV BRIDGE_APP_DIR=/app BRIDGE_PORT=3000 BRIDGE_HOST=0.0.0.0 GO2RTC_CONFIG=/data
 EXPOSE 3000 8554
 LABEL org.opencontainers.image.source="https://github.com/fubo08/eufy-t8n00-test-addon"
 CMD ["/run.sh"]
+
+COPY qualify-capacity-current.mjs /app/
+COPY qualify-capacity-current.test.mjs /app/
+RUN node --check /app/qualify-capacity-current.mjs && node --test /app/qualify-capacity-current.test.mjs

@@ -1,3 +1,7 @@
+# 0.3.46
+
+- Add an opt-in current official SDK capacity recheck with concurrent observation deltas. Normal media paths remain unchanged.
+
 # 0.3.45
 
 - Remove an unsupported RTSP input option from my decoder test; retain the bounded process deadline. The bridge and SDK candidates are unchanged.
