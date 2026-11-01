@@ -1,3 +1,7 @@
+# 0.3.48
+
+- I add a bounded, per-session call/scall signaling comparison with sanitized milestones, disabled by default. Created with Codex.
+
 # 0.3.47
 
 - Capture allow-listed start-failure causes and signaling/peer phases for my bounded capacity test. No SDK or normal media changes.

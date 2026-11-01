@@ -142,5 +142,5 @@ COPY qualify-capacity-current.mjs /app/
 COPY qualify-capacity-current.test.mjs /app/
 RUN node --check /app/qualify-capacity-current.mjs
 
-COPY capacity-diagnostics.mjs capacity-diagnostics.test.mjs /app/
-RUN node --test /app/capacity-diagnostics.test.mjs /app/qualify-capacity-current.test.mjs
+COPY capacity-diagnostics.mjs capacity-diagnostics.test.mjs capacity-signaling.mjs capacity-signaling.test.mjs /app/
+RUN node --test /app/capacity-diagnostics.test.mjs /app/qualify-capacity-current.test.mjs /app/capacity-signaling.test.mjs

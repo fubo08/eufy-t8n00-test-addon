@@ -2,13 +2,14 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import {failureMetadata,traceMetadata} from './capacity-diagnostics.mjs';
+import {observeSessions} from './capacity-signaling.mjs';
 export const REVISION='4f5d73f38e8bd62e74c1410ab510844a8b099307';
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
-export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,releaseMs=9000,settleMs=8000}={}) {
+export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,releaseMs=9000,settleMs=8000,signalingMode,afterOpen}={}) {
   if (!sdk.isSessionValid(saved)) throw new Error('cached_session_unusable');
   const store=new sdk.MemorySessionStore(); store.save(structuredClone(saved));
-  const report={revision:REVISION,sdkSource:true,testBridgeVersion:'0.3.47',nodeVersion:process.version,runs:[],status:'started'};
+  const report={revision:REVISION,sdkSource:true,testBridgeVersion:'0.3.48',nodeVersion:process.version,runs:[],status:'started'};
   report.trace=[];
   let window={phase:'login'};
   const began=performance.now();
@@ -16,6 +17,9 @@ export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,rele
   const client=new sdk.EufyMega({email:options.email,countryCode:options.country,store,
     autoRealtime:false,pollMs:0,storedSnapshotCache:false,logger:{debug:log,info(){},warn:log,error(){}}});
   client.on('error',()=>{});
+  report.signaling=[];
+  const restore=signalingMode?observeSessions(client,signalingMode,event=>{if(report.signaling.length<500)report.signaling.push({ms:Math.round(performance.now()-began),...event});}):()=>{};
+  report.diagnosticMode=signalingMode??'sdk-default';
   const held=[];
   try {
     const login=await client.login();
@@ -47,6 +51,7 @@ export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,rele
       consumer.on('stop',()=>{run.stopObserved=true;if(!run.frames)finish(false);});
       const handle={consumer,run}; held.push(handle);
       await ready; clearTimeout(timer);
+      if(afterOpen)await afterOpen(run);
       return handle;
     }
     async function observe(handles) {
@@ -74,21 +79,27 @@ export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,rele
     }
     report.limits='Unmodified official SDK source 4f5d73f, primary views only; firmware not re-read. Public live video/audio packet counts and allow-listed error metadata; trace windows do not identify individual peer sessions; decoding, visual identity and browser playback not checked. Observed capacity belongs to this tested route, not a universal hardware claim.';
     return report;
-  } catch(error) {report.status='failed';report.reason='capacity_sequence_failed';report.failure=failureMetadata(error);return report;} finally {for(const h of held) h.consumer.stop(); await client.disconnect();}
+  } catch(error) {report.status='failed';report.reason='capacity_sequence_failed';report.failure=failureMetadata(error);return report;} finally {for(const h of held) h.consumer.stop(); await client.disconnect();restore();}
 }
 
 export async function main() {
   const options=JSON.parse(readFileSync('/data/options.json','utf8'));
   if(options.qualify_nvr_capacity_current!==true) return;
-  const path='/data/qualification-capacity-4f5d73f-diagnostic47.json';
+  const path='/data/qualification-capacity-4f5d73f-signaling48.json';
   if(existsSync(path)){console.info('[capacity-current-qualification] Exact current-source test already attempted; skipping.');return;}
   let report={revision:REVISION,status:'started',timestamp:new Date().toISOString()};
   const save=()=>writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});save();
-  const timer=setTimeout(()=>{report.status='timeout';save();console.info('[capacity-current-qualification] '+JSON.stringify(report));process.exit(1);},180000);
+  const timer=setTimeout(()=>{report.status='timeout';save();console.info('[capacity-current-qualification] '+JSON.stringify(report));process.exit(1);},300000);
   try {
     const sdk=await import('/view-qualification/bridge/node_modules/@mega-yfue/eufy-sdk/dist/index.js');
     const saved=JSON.parse(readFileSync('/data/.eufy-session.json','utf8'));
-    report={...report,...await qualifyCapacity(sdk,saved,options)};
+    report.comparisons=[];
+    for(const signalingMode of ['scall','call']) {
+      report.comparisons.push(await qualifyCapacity(sdk,saved,options,{signalingMode}));
+      await pause(12000);
+    }
+    report.status='comparison_completed';
+    report.instrumentation='Test-only internal session factory interception; SDK files unchanged. Mode explicitly overridden; peer ICE policy unchanged. No raw payload retained.';
   } catch {report.status='failed';report.reason='qualification_failed_without_sensitive_details';}
   finally {clearTimeout(timer);save();console.info('[capacity-current-qualification] '+JSON.stringify(report));}
 }
