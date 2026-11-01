@@ -1,3 +1,7 @@
+# 0.3.49
+
+- I observe signaling before parsing and release a held consumer while the fifth call is still pending. Created with Codex.
+
 # 0.3.48
 
 - I add a bounded, per-session call/scall signaling comparison with sanitized milestones, disabled by default. Created with Codex.

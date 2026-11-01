@@ -1,6 +1,13 @@
 // My test-only observation at the RTC session boundary. Created with Codex.
 // No wire payload, credential, address or persistent device identifier is retained.
 const types=new Set(['call','scall','info','ack','hangup']);
+export function wireMetadata(raw){
+  let value;
+  try{value=JSON.parse(typeof raw==='string'?raw:Buffer.isBuffer(raw)?raw.toString('utf8'):'null');}catch{return {shape:'unparsed'};}
+  if(!value||typeof value!=='object')return {shape:'non-object'};
+  if(typeof value.data!=='string')return {shape:'non-string-envelope-data'};
+  try{const inner=JSON.parse(value.data);return {shape:'sdk-envelope',...signalMetadata(inner)};}catch{return {shape:'unparsed-inner'};}
+}
 export function signalMetadata(inner) {
   if(!inner||typeof inner!=='object')return {};
   const result={type:types.has(inner.dataType)?inner.dataType:'other'};
@@ -28,6 +35,12 @@ export function observeSessions(client, mode, record) {
     const signal=session.signaling;
     if(!signal?.on||typeof signal.sendSession!=='function')throw Error('diagnostic_signaling_boundary_changed');
     record({session:id,direction:'session',mode});
+    const factory=signal.createSocket;
+    if(typeof factory==='function')signal.createSocket=function(...args){
+      const socket=factory.apply(this,args);
+      socket.addEventListener('message',event=>record({session:id,direction:'wire-in',...wireMetadata(event.data)}));
+      return socket;
+    };
     const onMessage=inner=>record({session:id,direction:'in',...signalMetadata(inner)});
     signal.on('message',onMessage);
     const send=signal.sendSession;

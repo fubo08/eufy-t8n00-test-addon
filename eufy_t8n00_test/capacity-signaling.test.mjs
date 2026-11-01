@@ -2,7 +2,14 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {EventEmitter} from 'node:events';
-import {signalMetadata,observeSessions} from './capacity-signaling.mjs';
+import {signalMetadata,observeSessions,wireMetadata} from './capacity-signaling.mjs';
+test('classifies raw envelopes before SDK parsing without retaining payloads',()=>{
+  const raw=JSON.stringify({msgid:'PRIVATE',data:JSON.stringify({dataType:'call',data:JSON.stringify({status:100,turn:{secret:'PRIVATE'}})})});
+  assert.deepEqual(wireMetadata(raw),{shape:'sdk-envelope',type:'call',status:100,hasTurn:true});
+  assert.deepEqual(wireMetadata(Buffer.from(raw)),wireMetadata(raw));
+  assert.deepEqual(wireMetadata('{'),{shape:'unparsed'});
+  assert.deepEqual(wireMetadata(JSON.stringify({data:{secret:'PRIVATE'}})),{shape:'non-string-envelope-data'});
+});
 test('retains status and presence only, dropping secrets and malformed payloads',()=>{
   const inner={dataType:'call',action:3,code:200,isResponse:1,sn:'PRIVATE',data:JSON.stringify({status:100,turn:{password:'PRIVATE'},token:'PRIVATE'})};
   assert.deepEqual(signalMetadata(inner),{type:'call',action:3,code:200,isResponse:1,status:100,hasTurn:true});

@@ -6,10 +6,10 @@ import {observeSessions} from './capacity-signaling.mjs';
 export const REVISION='4f5d73f38e8bd62e74c1410ab510844a8b099307';
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
-export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,releaseMs=9000,settleMs=8000,signalingMode,afterOpen}={}) {
+export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,releaseMs=9000,settleMs=8000,signalingMode,pendingReleaseMs,afterOpen}={}) {
   if (!sdk.isSessionValid(saved)) throw new Error('cached_session_unusable');
   const store=new sdk.MemorySessionStore(); store.save(structuredClone(saved));
-  const report={revision:REVISION,sdkSource:true,testBridgeVersion:'0.3.48',nodeVersion:process.version,runs:[],status:'started'};
+  const report={revision:REVISION,sdkSource:true,testBridgeVersion:'0.3.49',nodeVersion:process.version,runs:[],status:'started'};
   report.trace=[];
   let window={phase:'login'};
   const began=performance.now();
@@ -50,7 +50,12 @@ export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,rele
       consumer.on('error',error=>{run.streamFailed=true;run.failure=failureMetadata(error);run.errorAfterMs=Math.round(performance.now()-start);finish(false);});
       consumer.on('stop',()=>{run.stopObserved=true;if(!run.frames)finish(false);});
       const handle={consumer,run}; held.push(handle);
-      await ready; clearTimeout(timer);
+      let releaseTimer;
+      if(index===4&&phase==='fifth_while_four_held'&&pendingReleaseMs!==undefined)releaseTimer=setTimeout(()=>{
+        report.pendingRelease={requestedAfterMs:Math.round(performance.now()-start),releasedCamera:1};
+        held[0].consumer.stop();
+      },pendingReleaseMs);
+      await ready; clearTimeout(timer);clearTimeout(releaseTimer);
       if(afterOpen)await afterOpen(run);
       return handle;
     }
@@ -66,8 +71,9 @@ export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,rele
     }
     const fifth=await open(4,'fifth_while_four_held');
     if(fifth.run.frames) {
-      report.observation = await observe(held);
-      report.status=report.observation.every(r=>r.video>1)&&held.every(h=>!h.run.streamFailed)?'five_streams_observed':'failed';
+      const observing=pendingReleaseMs===undefined?held:held.slice(1);
+      report.observation = await observe(observing);
+      report.status=report.observation.every(r=>r.video>1)&&observing.every(h=>!h.run.streamFailed)?(pendingReleaseMs===undefined?'five_streams_observed':'pending_call_started_after_release'):'failed';
     } else {
       fifth.consumer.stop(); held[0].consumer.stop();
       await pause(releaseMs);
@@ -85,7 +91,7 @@ export async function qualifyCapacity(sdk,saved,options,{firstFrameMs=25000,rele
 export async function main() {
   const options=JSON.parse(readFileSync('/data/options.json','utf8'));
   if(options.qualify_nvr_capacity_current!==true) return;
-  const path='/data/qualification-capacity-4f5d73f-signaling48.json';
+  const path='/data/qualification-capacity-4f5d73f-pending49.json';
   if(existsSync(path)){console.info('[capacity-current-qualification] Exact current-source test already attempted; skipping.');return;}
   let report={revision:REVISION,status:'started',timestamp:new Date().toISOString()};
   const save=()=>writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});save();
@@ -94,13 +100,26 @@ export async function main() {
     const sdk=await import('/view-qualification/bridge/node_modules/@mega-yfue/eufy-sdk/dist/index.js');
     const saved=JSON.parse(readFileSync('/data/.eufy-session.json','utf8'));
     report.comparisons=[];
-    for(const signalingMode of ['scall','call']) {
-      report.comparisons.push(await qualifyCapacity(sdk,saved,options,{signalingMode}));
+    for(const signalingMode of ['call']) {
+      report.comparisons.push(await qualifyCapacity(sdk,saved,options,{signalingMode,pendingReleaseMs:1000}));
       await pause(12000);
     }
-    report.status='comparison_completed';
+    report.status='pending_comparison_completed';
     report.instrumentation='Test-only internal session factory interception; SDK files unchanged. Mode explicitly overridden; peer ICE policy unchanged. No raw payload retained.';
   } catch {report.status='failed';report.reason='qualification_failed_without_sensitive_details';}
-  finally {clearTimeout(timer);save();console.info('[capacity-current-qualification] '+JSON.stringify(report));}
+  finally {
+    clearTimeout(timer);save();
+    const compact={...report,comparisons:report.comparisons?.map(({trace,signaling,...c})=>({...c,
+      signaling:signaling.filter(e=>e.session===5),
+      sessionSummary:[...new Set(signaling.map(e=>e.session))].map(session=>{
+        const events=signaling.filter(e=>e.session===session);
+        return {session,rawCount:events.filter(e=>e.direction==='wire-in').length,parsedCount:events.filter(e=>e.direction==='in').length,
+          statuses:events.filter(e=>e.direction==='in'&&e.status!==undefined).map(e=>({ms:e.ms,type:e.type,status:e.status})),
+          offerMs:events.find(e=>e.direction==='wire-in'&&e.hasSdp)?.ms,
+          sentCallMs:events.find(e=>e.direction==='out'&&e.type==='call')?.ms,
+          closedMs:events.find(e=>e.direction==='closed')?.ms};
+      })}))};
+    console.info('[capacity-current-qualification] '+JSON.stringify(compact));
+  }
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){await main();process.exit(0);}
