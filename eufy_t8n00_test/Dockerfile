@@ -57,10 +57,10 @@ RUN npm ci && npm run typecheck && npx vitest run src/transport/rtc/__tests__ sr
 
 FROM sdk AS viewqualification
 WORKDIR /view-qualification/sdk
-RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/4f5d73f38e8bd62e74c1410ab510844a8b099307 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/98abbc7183cd2401846d56c951f0728555c8c583 | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm run build && npm prune --omit=dev --ignore-scripts
 WORKDIR /view-qualification/bridge
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/c5fed3bbafae782219f5f350ef2427bfcbffd848 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/15a554dcbd6a9fb81e1df58ea3f505a0b526fcc5 | tar -xz --strip-components=1
 COPY verify-bridge158.sh /tmp/verify-bridge158.sh
 RUN npm ci && bash /tmp/verify-bridge158.sh
 

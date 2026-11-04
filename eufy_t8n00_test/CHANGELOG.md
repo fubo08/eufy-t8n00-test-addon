@@ -1,3 +1,7 @@
+# 0.3.50
+
+- I qualify the current-dev optical-view rebase with production HTTP routes, selected snapshots and non-default go2rtc ports. Created with Codex.
+
 # 0.3.49
 
 - I observe signaling before parsing and release a held consumer while the fifth call is still pending. Created with Codex.

@@ -14,8 +14,8 @@ import { writeGo2rtcConfig } from './bridge/go2rtc-config.mjs';
 import { closeStreamClients } from './bridge/streams.mjs';
 import * as sdk from './bridge/node_modules/@mega-yfue/eufy-sdk/dist/index.js';
 
-const BRIDGE = 'c5fed3bbafae782219f5f350ef2427bfcbffd848';
-const SDK = '4f5d73f38e8bd62e74c1410ab510844a8b099307';
+const BRIDGE = '15a554dcbd6a9fb81e1df58ea3f505a0b526fcc5';
+const SDK = '98abbc7183cd2401846d56c951f0728555c8c583';
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const children = new Set();
 const sanitize = (s) => s.replace(/rtsp:\/\/\S+/g, '[rtsp-source]').replace(/http:\/\/\S+/g, '[http-source]').replace(/T[A-Z0-9]{10,}/g, '[device]').replace(/[\w.+-]+@[\w.-]+\.\w+/g, '[email]').replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g, '[address]').slice(-2000);
@@ -54,7 +54,7 @@ async function main() {
   if (options.qualify_bridge_views !== true) return;
   const reportPath = `/data/qualification-bridge-views-${BRIDGE}-decoder-fixed.json`;
   if (existsSync(reportPath)) { console.info('[bridge-views-qualification] Already attempted; skipping.'); return; }
-  const report = { bridge: BRIDGE, sdk: SDK, version: '0.3.45', timestamp: new Date().toISOString(), status:'started' };
+  const report = { bridge: BRIDGE, sdk: SDK, version: '0.3.50', timestamp: new Date().toISOString(), status:'started' };
   const save = () => fs.writeFile(reportPath, JSON.stringify(report,null,2), {mode:0o600});
   await save();
   let client, server, dir;
@@ -85,7 +85,7 @@ async function main() {
     await fs.writeFile(session,JSON.stringify(saved),{mode:0o600});
     const config = loadConfig({EUFY_EMAIL:options.email, EUFY_COUNTRY:options.country, EUFY_SESSION:session,
       BRIDGE_HOST:'127.0.0.1', BRIDGE_SELF_HOST:'127.0.0.1', BRIDGE_POLL_MS:'0',
-      GO2RTC_CONFIG:path.join(dir,'go2rtc.yaml')});
+      GO2RTC_CONFIG:path.join(dir,'go2rtc.yaml'), GO2RTC_API_PORT:'11984', GO2RTC_RTSP_PORT:'18554', GO2RTC_WEBRTC_PORT:'18555'});
     const state = createState(); state.flags.ready = true;
     const ctx = {...config, eufy:client, state, eventImageDir:dir,
       authStatus:()=>({state:'ok'}), eventLog(){}, dbg(){}, broadcast(){}, SCHEMA_VERSION:1};
@@ -100,7 +100,11 @@ async function main() {
       Buffer.from(JSON.stringify({id:1,cmd:'device.state',sn:target.sn})));
     const summary = messages[0]?.device;
     report.views = summary?.views?.map((v)=>v.view);
+    report.go2rtcPorts = {api:ctx.cfg.go2rtcApiPort,rtsp:ctx.cfg.go2rtcRtspPort,webrtc:ctx.cfg.go2rtcWebrtcPort};
     if (JSON.stringify(report.views)!=='[0,1]') throw new Error('views not advertised');
+    await ws.handleMessage({readyState:1,OPEN:1,send:(s)=>messages.push(JSON.parse(s))},
+      Buffer.from(JSON.stringify({id:2,cmd:'stream.start',sn:target.sn,view:1})));
+    report.wsSelectedRtsp = messages.at(-1)?.rtsp === `rtsp://127.0.0.1:18554/${summary.views[1].id}`;
     const base = `http://127.0.0.1:${ctx.cfg.port}`;
     report.snapshots = [];
     for (const view of summary.views) {
@@ -124,7 +128,7 @@ async function main() {
     let ready = false;
     for (let i=0;i<50;i++) {
       try {
-        const listed = await (await fetch('http://127.0.0.1:1984/api/streams')).json();
+        const listed = await (await fetch('http://127.0.0.1:11984/api/streams')).json();
         if (summary.views.every((v)=>Object.hasOwn(listed,v.id))) {ready=true;break;}
       } catch {}
       await sleep(100);
@@ -132,15 +136,15 @@ async function main() {
     report.sourcesRegistered = ready;
     if (!ready) throw new Error('go2rtc unavailable');
     report.stage = 'RTSP primary and secondary'; await save();
-    const primary = measure(`rtsp://127.0.0.1:8554/${summary.views[0].id}`,30);
+    const primary = measure(`rtsp://127.0.0.1:18554/${summary.views[0].id}`,30);
     await sleep(4000);
-    const moving = measure(`rtsp://127.0.0.1:8554/${secondary.id}`,50);
+    const moving = measure(`rtsp://127.0.0.1:18554/${secondary.id}`,50);
     report.primary = await primary;
     report.otherStillStreaming = state.streaming.has(target.sn);
     report.secondary = await moving;
     report.status = report.primary.ok && report.secondary.ok && report.otherStillStreaming
       && report.snapshots.every((s)=>s.status===200 && s.jpeg) && report.secondaryCache.status===200
-      && report.secondaryCache.jpeg && report.invalidViewStatus===404 ? 'media_observed' : 'failed';
+      && report.secondaryCache.jpeg && report.invalidViewStatus===404 && report.wsSelectedRtsp ? 'media_observed' : 'failed';
     report.limits = 'Exact bridge source, official SDK beta source and bundled go2rtc; decoded RTSP video and JPEG checks. No audio support, visual physical lens identification, browser playback or other station topology is established by this run.';
   } catch {
     report.status = 'failed'; report.reason = 'qualification_failed_without_sensitive_details';

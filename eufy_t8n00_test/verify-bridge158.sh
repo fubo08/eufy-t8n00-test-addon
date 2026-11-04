@@ -7,7 +7,7 @@ for file in "${files[@]}"; do mkdir -p "$scratch/$(dirname "$file")"; cp "$file"
 restore() { for file in "${files[@]}"; do cp "$scratch/$file" "$file"; done; }
 trap restore EXIT
 for file in "${files[@]}"; do
-  curl -fsSL "https://raw.githubusercontent.com/mega-yfue/ha-eufy-sdk-bridge/1866700e7b8a4d567dbe69130263d70aebacce05/$file" -o "$file"
+  curl -fsSL "https://raw.githubusercontent.com/mega-yfue/ha-eufy-sdk-bridge/669eb417a9552f5784f2c3e3d1b5b34d5dc971c3/$file" -o "$file"
 done
 set +e
 node --test test/optical-views.test.mjs > "$scratch/before.log" 2>&1
@@ -15,7 +15,7 @@ result=$?
 set -e
 cat "$scratch/before.log"
 test "$result" -eq 1
-grep -q 'fail 11' "$scratch/before.log"
+grep -q 'fail 13' "$scratch/before.log"
 grep -q 'pass 1' "$scratch/before.log"
 restore
 npm run lint
