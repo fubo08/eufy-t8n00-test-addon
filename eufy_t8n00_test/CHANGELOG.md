@@ -1,3 +1,9 @@
+# 0.3.51
+
+I refresh my opt-in #450 qualification to SDK 07fd012e6ed85be79c368bae12cd7cbbe474fcf2 on beta-0.6.0 a082fa6. I reproduce three regressions before restoring the candidate and running full Linux verification, including the public S4 secondary live caller. My bounded hardware test performs two E40 starts; the normal media implementation, ports and default options remain unchanged. DE hardware evidence cannot validate the UK/CH shard mismatch.
+
+Created with Codex.
+
 # 0.3.50
 
 - I qualify the current-dev optical-view rebase with production HTTP routes, selected snapshots and non-default go2rtc ports. Created with Codex.

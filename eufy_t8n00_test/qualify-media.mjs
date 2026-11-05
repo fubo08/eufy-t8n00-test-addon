@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { openBetaLiveFeed } from './nvr-beta-live-feed.mjs';
 export const REVISION = 'dd35b27fc2eccbd318fcec671f8d806b6a8ed54f';
-export const PORTAL_REVISION = 'e34c7cfe3f379c9286cf7a297b5b2fc1f1323eda';
+export const PORTAL_REVISION = '07fd012e6ed85be79c368bae12cd7cbbe474fcf2';
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function measure(client, target, duration = 120000) {
@@ -127,7 +127,7 @@ export async function qualify(sdk, saved, options, report, save) {
       }
       report.status = report.runs.every(r => r.validVideo && r.audioFrames > 0 && !r.streamFailed && !r.earlyStop)
         && report.resolvedShards.length >= 2 ? 'media_observed' : 'failed';
-      report.limits = 'Combined PR450 plus PR436 route; DE account only. Decoding and packet evidence, not audible playback or other account countries.';
+      report.limits = 'Exact PR450 candidate on beta-0.6.0 a082fa6; DE account only, where PHONE and WEB shards coincide. This does not validate UK/CH accounts or distinguish WEB lookup success from its fallback. Decoding and packet evidence, not audible playback or other account countries.';
       return;
     }
     for (const target of [e40,s4]) {
@@ -157,7 +157,7 @@ export async function main() {
     if (job.enabled !== true) continue;
     const path = `/data/qualification-media-${job.revision}.json`;
     if (existsSync(path)) { console.info('[media-qualification] Exact revision already attempted; skipping.'); continue; }
-    const report = { revision:job.revision, mode:job.mode, testBridgeVersion:'0.3.42', timestamp:new Date().toISOString(), status:'started', runs:[] };
+    const report = { revision:job.revision, mode:job.mode, testBridgeVersion:'0.3.51', timestamp:new Date().toISOString(), status:'started', runs:[] };
     const save = () => writeFileSync(path,JSON.stringify(report,null,2),{mode:0o600});
     save();
     const timer = setTimeout(() => { report.status='timeout'; save(); console.info('[media-qualification] '+JSON.stringify(report)); process.exit(1); },job.timeout);
