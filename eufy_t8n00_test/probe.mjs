@@ -6,9 +6,9 @@ import {setTimeout as delay} from 'node:timers/promises';
 import * as sdk from '/app/node_modules/@mega-yfue/eufy-sdk/dist/index.js';
 import {selectCamera} from './select-camera.mjs';
 
-const reportPath='/data/profile-probe-0.3.56.json';
+const reportPath='/data/profile-probe-0.3.57.json';
 if(existsSync(reportPath)){console.info('[profile-probe] Already attempted; refusing repeated hardware run.');process.exit(0);}
-const report={artifact:'0.3.56',sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
+const report={artifact:'0.3.57',interCasePauseMs:12000,sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
 let client,consumer;
 const save=()=>fs.writeFile(reportPath,JSON.stringify(report,null,2),{mode:0o600});
 const deadline=setTimeout(()=>{report.status='deadline';consumer?.stop();void save().finally(()=>process.exit(1));},360000);
@@ -45,7 +45,7 @@ async function measure(camera,label,view,request1080) {
   for(const match of detail.matchAll(/\bs:(\d+x\d+)\b/g))m.decodedFrameGeometry[match[1]]=(m.decodedFrameGeometry[match[1]]??0)+1;
   await fs.unlink(file);
  }
- report.cases.push(m);await save();console.info('[profile-probe] '+JSON.stringify(m));await delay(6000);
+ report.cases.push(m);await save();console.info('[profile-probe] '+JSON.stringify(m));await delay(12000);
 }
 try{
  await save();
