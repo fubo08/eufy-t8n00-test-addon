@@ -4,10 +4,11 @@ import {existsSync} from 'node:fs';
 import {spawn} from 'node:child_process';
 import {setTimeout as delay} from 'node:timers/promises';
 import * as sdk from '/app/node_modules/@mega-yfue/eufy-sdk/dist/index.js';
+import {selectCamera} from './select-camera.mjs';
 
-const reportPath='/data/profile-probe-0.3.52.json';
+const reportPath='/data/profile-probe-0.3.53.json';
 if(existsSync(reportPath)){console.info('[profile-probe] Already attempted; refusing repeated hardware run.');process.exit(0);}
-const report={artifact:'0.3.52',sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
+const report={artifact:'0.3.53',sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
 let client,consumer;
 const save=()=>fs.writeFile(reportPath,JSON.stringify(report,null,2),{mode:0o600});
 const deadline=setTimeout(()=>{report.status='deadline';consumer?.stop();void save().finally(()=>process.exit(1));},240000);
@@ -49,10 +50,7 @@ try{
  client.on('error',()=>{});
  const login=await client.login();if(login.status!==sdk.LoginStatus.Ok||login.session?.raw?.restored!==true)throw new Error('session not restored');
  report.restored=true;
- const devices=await client.getDevices();const nvr=devices.find(d=>d.model==='T8N00');
- const d=devices.find(d=>d.model==='T8E00'&&d.stationSn===nvr?.sn);
- if(!d)throw new Error('attached S4 missing');
- const camera=d.camera();report.model=d.model;report.views=camera.views();
+ const {camera,model}=await selectCamera(client);report.model=model;report.views=camera.views();
  await measure(camera,'native-before',0,false);
  await measure(camera,'request1080-fixed',0,true);
  await measure(camera,'request1080-movable',1,true);
