@@ -6,9 +6,9 @@ import {setTimeout as delay} from 'node:timers/promises';
 import * as sdk from '/app/node_modules/@mega-yfue/eufy-sdk/dist/index.js';
 import {selectCamera} from './select-camera.mjs';
 
-const reportPath='/data/profile-probe-0.3.53.json';
+const reportPath='/data/profile-probe-0.3.54.json';
 if(existsSync(reportPath)){console.info('[profile-probe] Already attempted; refusing repeated hardware run.');process.exit(0);}
-const report={artifact:'0.3.53',sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
+const report={artifact:'0.3.54',sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
 let client,consumer;
 const save=()=>fs.writeFile(reportPath,JSON.stringify(report,null,2),{mode:0o600});
 const deadline=setTimeout(()=>{report.status='deadline';consumer?.stop();void save().finally(()=>process.exit(1));},240000);
@@ -46,15 +46,16 @@ try{
  const saved=JSON.parse(await fs.readFile('/data/.eufy-session.json','utf8'));
  if(!sdk.isSessionValid(saved))throw new Error('cached session not valid');
  const store=new sdk.MemorySessionStore();store.save(structuredClone(saved));
- client=new sdk.EufyMega({email:options.email,countryCode:options.country,store,autoRealtime:false,pollMs:0,storedSnapshotCache:false,logger});
+ client=new sdk.EufyMega({email:options.email,password:options.password,countryCode:options.country,store,autoRealtime:false,pollMs:0,storedSnapshotCache:false,logger});
  client.on('error',()=>{});
  const login=await client.login();if(login.status!==sdk.LoginStatus.Ok||login.session?.raw?.restored!==true)throw new Error('session not restored');
  report.restored=true;
- const {camera,model}=await selectCamera(client);report.model=model;report.views=camera.views();
+ const {camera,model}=await selectCamera(client,s=>report.stage=s);report.model=model;report.stage='view-inventory';report.views=camera.views();
+ report.stage='media-measurement';
  await measure(camera,'native-before',0,false);
  await measure(camera,'request1080-fixed',0,true);
  await measure(camera,'request1080-movable',1,true);
  await measure(camera,'native-after',0,false);
  report.status='complete';
-}catch(e){report.status='failed';report.failure=['already attempted; refusing repeated hardware run','cached session not valid','session not restored','attached S4 missing'].includes(e.message)?e.message:'media probe failed';}
+}catch(e){report.status='failed';report.failureType=e.name;report.failure=String(e.message).replace(/https?:\/\/\S+/g,'[url]').replace(/T[A-Z0-9]{10,}/g,'[device]').replace(/[\w.+-]+@[\w.-]+\.\w+/g,'[email]').replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g,'[address]').slice(0,240);}
 finally{consumer?.stop();await client?.disconnect();clearTimeout(deadline);report.finished=new Date().toISOString();await save();console.info('[profile-probe-result] '+JSON.stringify(report));}
