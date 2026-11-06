@@ -1,0 +1,11 @@
+# Full-HD output qualification — 6 November 2026
+
+Created with Codex.
+
+I built and deployed the exact sources recorded in summary.json, through test app 0.3.58 at a4cb4ac994db31879db285df5d1de1251bb33812. Both architecture builds ran the SDK verify gate, 262 bridge tests and 255 integration tests plus 149 subtests, with explicit before/after regressions. The same container build succeeded locally on my HA host.
+
+I exercised the actual SDK implementation, without the earlier experimental protocol override: native/Full-HD/native/Full-HD for both S4 optics and a Full-HD pull on each of three E40 cameras. I then deployed the exact four integration runtime files and the exact bridge/SDK sources, selected Full HD through the native HA options flow and observed its real camera player at 1920×1080 with advancing playback time and no media error. All seven optical RTSP sources decoded sequentially at 1920×1080, and all seven HA preview requests returned JPEG/HTTP 200. The preview check does not prove freshness or Full-HD stored-image dimensions.
+
+These are short samples, not a sustained stability or audible playback test. The browser observation covers the in-app Chromium frontend only. I did not qualify Edge, Android, true 4K output, seven simultaneous independent calls, or a physical-camera substream. Some native-size samples begin with older-size frames and decode fewer frames than received; neither exit status alone nor frame metadata proves smooth playback. Timings include warm starts and are not cold-start guarantees. Concurrent default/1080p selections can consume distinct NVR calls; the previously reported capacity issue is unchanged.
+
+The SDK hardware report's restored=true means its cached login session was restored. Normal-service restoration is a separate guard result summarized in summary.json: original integration files restored byte-for-byte, normal bridge started, test bridge stopped and all seven cameras available. The restart request timed out while HA actually restarted; I verified the loaded integration afterward instead of repeating the request. Temporary SSH was stopped. No raw media, images, addresses, credentials, serials or household names are included here. Camera numbers in the RTSP report are anonymous inventory-order labels.

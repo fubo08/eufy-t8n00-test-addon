@@ -1,0 +1,79 @@
+{
+  "artifact": "a4cb4ac994db31879db285df5d1de1251bb33812",
+  "started": "2026-11-06T19:25:32.401565+00:00",
+  "selection": "1080p",
+  "sequential": true,
+  "cases": [
+    {
+      "camera": 1,
+      "model": "T8P00",
+      "view": 0,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 136
+      },
+      "elapsedSeconds": 9.58
+    },
+    {
+      "camera": 2,
+      "model": "T8P00",
+      "view": 0,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 122
+      },
+      "elapsedSeconds": 10.52
+    },
+    {
+      "camera": 3,
+      "model": "T8P00",
+      "view": 0,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 125
+      },
+      "elapsedSeconds": 10.39
+    },
+    {
+      "camera": 4,
+      "model": "T8E00",
+      "view": 0,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 128
+      },
+      "elapsedSeconds": 10.38
+    },
+    {
+      "camera": 4,
+      "model": "T8E00",
+      "view": 1,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 128
+      },
+      "elapsedSeconds": 9.64
+    },
+    {
+      "camera": 5,
+      "model": "T8E00",
+      "view": 0,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 131
+      },
+      "elapsedSeconds": 9.81
+    },
+    {
+      "camera": 5,
+      "model": "T8E00",
+      "view": 1,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 125
+      },
+      "elapsedSeconds": 9.51
+    }
+  ],
+  "finished": "2026-11-06T19:28:06.271118+00:00"
+}

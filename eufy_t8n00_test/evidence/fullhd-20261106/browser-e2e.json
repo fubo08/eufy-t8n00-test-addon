@@ -1,0 +1,13 @@
+{
+  "artifact": "a4cb4ac994db31879db285df5d1de1251bb33812",
+  "sdk": "c1d7668a899b803ff97ef648ce4873f516aedad9",
+  "bridge": "a55051981db0f7301a235ceb6ce72a656b30df97",
+  "integration": "b8f4b22af15d696a56dddaee7fbd1410fec6bffc",
+  "path": "Actual Home Assistant camera more-info player, S4 primary view",
+  "optionsFlow": "live_output_resolution=1080p, integration loaded after native options reload",
+  "observations": [
+    {"width":1920,"height":1080,"readyState":4,"currentTime":0,"paused":true,"error":null},
+    {"width":1920,"height":1080,"readyState":4,"currentTime":14.775018,"paused":false,"error":null}
+  ],
+  "limits": "In-app Chromium only; not an audible playback test, an Android/Edge test, or a sustained stability test. First observation was paused; only the second demonstrates playback. Browser tab closed afterward."
+}

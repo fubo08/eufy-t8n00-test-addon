@@ -1,0 +1,30 @@
+{
+  "artifact": "a4cb4ac994db31879db285df5d1de1251bb33812",
+  "sdk": "c1d7668a899b803ff97ef648ce4873f516aedad9",
+  "bridge": "a55051981db0f7301a235ceb6ce72a656b30df97",
+  "integration": "b8f4b22af15d696a56dddaee7fbd1410fec6bffc",
+  "ci": "https://github.com/fubo08/eufy-t8n00-test-addon/actions/runs/42276018808",
+  "haVersion": "2026.11.0",
+  "haOs": "18.4",
+  "haPreviews": {
+    "count": 7,
+    "http200": 7,
+    "jpegSignatures": 7
+  },
+  "afterRollback": {
+    "stableApp": "0.8.2",
+    "stableStarted": true,
+    "testAppStopped": true,
+    "allSevenCamerasAvailable": true,
+    "originalIntegrationFilesByteEqual": true,
+    "temporarySshStopped": true,
+    "coreRestartRequestTimedOut": true,
+    "coreObservedRestartedAndIntegrationLoaded": true
+  },
+  "qualifiedIntegrationFileHashes": {
+    "camera.py": "8843687862415dcedd80852606ab2270bce4d05b7eba89a70c63f6f16f643b15",
+    "config_flow.py": "6202618e204d1a5d7c1a22abdd8e6768c8faf56f40488296c76079b648ef50b8",
+    "const.py": "ab54a0c2aaa274f9d4c12f3ab7fce57369f046fef018c44332cfc04c2e025699",
+    "translations/en.json": "94d2d26227e4bdb2fa11863a753dc4463992e56acf75ed381d26ca90109e5fcf"
+  }
+}

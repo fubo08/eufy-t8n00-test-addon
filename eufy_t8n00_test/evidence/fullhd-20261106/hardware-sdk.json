@@ -1,0 +1,336 @@
+{
+  "artifact": "0.3.58",
+  "interCasePauseMs": 1000,
+  "sdk": {
+    "sdk": {
+      "source": "c1d7668a899b803ff97ef648ce4873f516aedad9",
+      "base": "bbe56ed53b8ec95323d1cbc86a44e740aa9090b1"
+    },
+    "bridge": {
+      "source": "a55051981db0f7301a235ceb6ce72a656b30df97",
+      "base": "a59616902f6694feca69ead8bc6d9dd6962ffb90"
+    },
+    "integration": {
+      "source": "b8f4b22af15d696a56dddaee7fbd1410fec6bffc",
+      "base": "3302c4d70e5d380b868773f140f4dfb30b3d6c89"
+    },
+    "kind": "exact-source feature qualification, no protocol override"
+  },
+  "started": "2026-11-06T19:12:22.747Z",
+  "cases": [
+    {
+      "label": "native-a-view0",
+      "view": 0,
+      "requestedWidth": null,
+      "frames": 211,
+      "audioFrames": 149,
+      "bytes": 1197245,
+      "geometry": {
+        "1920x1080": 1,
+        "2688x1520": 210
+      },
+      "firstFrameMs": 2648,
+      "error": false,
+      "elapsedMs": 12648,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "128"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 1,
+        "2688x1520": 127
+      }
+    },
+    {
+      "label": "fullhd-a-view0",
+      "view": 0,
+      "requestedWidth": 1920,
+      "frames": 216,
+      "audioFrames": 156,
+      "bytes": 441453,
+      "geometry": {
+        "1920x1080": 216
+      },
+      "firstFrameMs": 1707,
+      "error": false,
+      "elapsedMs": 11707,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "212"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 212
+      }
+    },
+    {
+      "label": "native-b-view0",
+      "view": 0,
+      "requestedWidth": null,
+      "frames": 196,
+      "audioFrames": 151,
+      "bytes": 1081792,
+      "geometry": {
+        "1920x1080": 1,
+        "2688x1520": 195
+      },
+      "firstFrameMs": 1636,
+      "error": false,
+      "elapsedMs": 11637,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "141"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 1,
+        "2688x1520": 140
+      }
+    },
+    {
+      "label": "fullhd-b-view0",
+      "view": 0,
+      "requestedWidth": 1920,
+      "frames": 200,
+      "audioFrames": 156,
+      "bytes": 329672,
+      "geometry": {
+        "1920x1080": 200
+      },
+      "firstFrameMs": 1597,
+      "error": false,
+      "elapsedMs": 11597,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "200"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 200
+      }
+    },
+    {
+      "label": "native-a-view1",
+      "view": 1,
+      "requestedWidth": null,
+      "frames": 231,
+      "audioFrames": 155,
+      "bytes": 1168813,
+      "geometry": {
+        "1920x1080": 2,
+        "2688x1520": 229
+      },
+      "firstFrameMs": 1672,
+      "error": false,
+      "elapsedMs": 11673,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "204"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 2,
+        "2688x1520": 202
+      }
+    },
+    {
+      "label": "fullhd-a-view1",
+      "view": 1,
+      "requestedWidth": 1920,
+      "frames": 223,
+      "audioFrames": 157,
+      "bytes": 279225,
+      "geometry": {
+        "1920x1080": 223
+      },
+      "firstFrameMs": 1617,
+      "error": false,
+      "elapsedMs": 11617,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "223"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 223
+      }
+    },
+    {
+      "label": "native-b-view1",
+      "view": 1,
+      "requestedWidth": null,
+      "frames": 193,
+      "audioFrames": 149,
+      "bytes": 1380349,
+      "geometry": {
+        "1920x1080": 1,
+        "2688x1520": 192
+      },
+      "firstFrameMs": 1766,
+      "error": false,
+      "elapsedMs": 11767,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "132"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 1,
+        "2688x1520": 131
+      }
+    },
+    {
+      "label": "fullhd-b-view1",
+      "view": 1,
+      "requestedWidth": 1920,
+      "frames": 209,
+      "audioFrames": 155,
+      "bytes": 275094,
+      "geometry": {
+        "1920x1080": 209
+      },
+      "firstFrameMs": 1582,
+      "error": false,
+      "elapsedMs": 11582,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "178"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 178
+      }
+    },
+    {
+      "label": "e40-1-fullhd",
+      "view": 0,
+      "requestedWidth": 1920,
+      "frames": 218,
+      "audioFrames": 156,
+      "bytes": 368230,
+      "geometry": {
+        "1920x1080": 218
+      },
+      "firstFrameMs": 1898,
+      "error": false,
+      "elapsedMs": 11899,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "218"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 218
+      }
+    },
+    {
+      "label": "e40-2-fullhd",
+      "view": 0,
+      "requestedWidth": 1920,
+      "frames": 217,
+      "audioFrames": 157,
+      "bytes": 338814,
+      "geometry": {
+        "1920x1080": 217
+      },
+      "firstFrameMs": 1639,
+      "error": false,
+      "elapsedMs": 11640,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "217"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 217
+      }
+    },
+    {
+      "label": "e40-3-fullhd",
+      "view": 0,
+      "requestedWidth": 1920,
+      "frames": 232,
+      "audioFrames": 157,
+      "bytes": 317069,
+      "geometry": {
+        "1920x1080": 232
+      },
+      "firstFrameMs": 1687,
+      "error": false,
+      "elapsedMs": 11687,
+      "decoderExit": 0,
+      "decoded": [
+        {
+          "codec_name": "hevc",
+          "width": 1920,
+          "height": 1080,
+          "nb_read_frames": "193"
+        }
+      ],
+      "frameDecoderExit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 193
+      }
+    }
+  ],
+  "restored": true,
+  "stage": "media-measurement",
+  "model": "T8E00",
+  "views": [
+    0,
+    1
+  ],
+  "status": "complete",
+  "finished": "2026-11-06T19:15:16.041Z"
+}
