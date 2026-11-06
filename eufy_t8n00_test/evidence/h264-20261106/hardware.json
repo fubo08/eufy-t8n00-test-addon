@@ -1,0 +1,86 @@
+{
+  "artifact": "602ca92286e903f6e8fa2c86979fe97765899d49",
+  "bridge": "afc03ba699dae95b27e03502d2324296710ce760",
+  "started": "2026-11-06T20:52:37.613323+00:00",
+  "sequential": true,
+  "cases": [
+    {
+      "camera": 1,
+      "model": "T8P00",
+      "view": 0,
+      "exit": 0,
+      "h264": true,
+      "decodedGeometry": {
+        "1920x1080": 42
+      },
+      "elapsedSeconds": 8.59
+    },
+    {
+      "camera": 2,
+      "model": "T8P00",
+      "view": 0,
+      "exit": 0,
+      "h264": true,
+      "decodedGeometry": {
+        "1920x1080": 122
+      },
+      "elapsedSeconds": 6.77
+    },
+    {
+      "camera": 3,
+      "model": "T8P00",
+      "view": 0,
+      "exit": 0,
+      "h264": true,
+      "decodedGeometry": {
+        "1920x1080": 82
+      },
+      "elapsedSeconds": 7.06
+    },
+    {
+      "camera": 4,
+      "model": "T8E00",
+      "view": 0,
+      "exit": 0,
+      "h264": true,
+      "decodedGeometry": {
+        "1920x1080": 82
+      },
+      "elapsedSeconds": 10.03
+    },
+    {
+      "camera": 4,
+      "model": "T8E00",
+      "view": 1,
+      "exit": 0,
+      "h264": true,
+      "decodedGeometry": {
+        "1920x1080": 82
+      },
+      "elapsedSeconds": 10.97
+    },
+    {
+      "camera": 5,
+      "model": "T8E00",
+      "view": 0,
+      "exit": 0,
+      "h264": true,
+      "decodedGeometry": {
+        "1920x1086": 42
+      },
+      "elapsedSeconds": 7.44
+    },
+    {
+      "camera": 5,
+      "model": "T8E00",
+      "view": 1,
+      "exit": 0,
+      "h264": true,
+      "decodedGeometry": {
+        "1920x1086": 82
+      },
+      "elapsedSeconds": 10.47
+    }
+  ],
+  "finished": "2026-11-06T20:54:48.966974+00:00"
+}
