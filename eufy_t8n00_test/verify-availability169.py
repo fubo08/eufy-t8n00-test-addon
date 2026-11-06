@@ -6,7 +6,8 @@ import subprocess
 import urllib.request
 import xml.etree.ElementTree as ET
 
-CANDIDATE = "e84d7fc145b7ca0f574c9a0f889ccfa7ba272305"
+CANDIDATE = "6acb8235eccb185c3662b44354b975637f5d6d62"
+PREVIOUS = "e84d7fc145b7ca0f574c9a0f889ccfa7ba272305"
 BASE = "215f66b5b9d15b0758d8a7e2b4173b0588b052fb"
 
 def run(*args):
@@ -20,6 +21,11 @@ def totals(path):
 before = run("python", "-m", "pytest", "tests/test_nvr_availability_qualification.py", "-q", "--junitxml=/tmp/before.xml")
 counts = totals('/tmp/before.xml')
 assert before == 1 and counts['failures'] == '1' and counts['errors'] == '0', counts
+with urllib.request.urlopen(f'https://raw.githubusercontent.com/danymexi/ha-eufy-sdk/{PREVIOUS}/custom_components/eufy_sdk/entity.py') as response:
+    Path('custom_components/eufy_sdk/entity.py').write_bytes(response.read())
+previous = run("python", "-m", "pytest", "tests/test_nvr_availability_qualification.py", "-q", "--junitxml=/tmp/previous.xml")
+previous_counts = totals('/tmp/previous.xml')
+assert previous == 1 and previous_counts['failures'] == '1' and previous_counts['errors'] == '0', previous_counts
 hashes = {}
 for name in ['custom_components/eufy_sdk/entity.py', 'tests/test_device_online.py']:
     with urllib.request.urlopen(f'https://raw.githubusercontent.com/danymexi/ha-eufy-sdk/{CANDIDATE}/{name}') as response:
@@ -29,6 +35,6 @@ for name in ['custom_components/eufy_sdk/entity.py', 'tests/test_device_online.p
 assert run('python', '-m', 'ruff', 'check', 'custom_components/eufy_sdk/entity.py', 'tests/test_device_online.py') == 0
 assert run('python', '-m', 'ruff', 'format', '--check', 'custom_components/eufy_sdk/entity.py', 'tests/test_device_online.py') == 0
 assert run('python', '-m', 'pytest', 'tests/', '-q', '--junitxml=/tmp/full.xml') == 0
-result = {'base': BASE, 'candidate': CANDIDATE, 'before': counts, 'after': totals('/tmp/full.xml'), 'hashes': hashes}
+result = {'base': BASE, 'previous': PREVIOUS, 'candidate': CANDIDATE, 'before': counts, 'previous_result': previous_counts, 'after': totals('/tmp/full.xml'), 'hashes': hashes}
 Path('/qualification-result.json').write_text(json.dumps(result))
 print('[availability169-qualification] ' + json.dumps(result), flush=True)
