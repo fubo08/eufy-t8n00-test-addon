@@ -1,69 +1,18 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-const root = process.env.SDK_PATCH_ROOT ?? '/sdk';
-function patch(file, before, after) {
-  const path = `${root}/${file}`;
-  const source = readFileSync(path, 'utf8');
-  if (source.split(before).length !== 2) throw new Error(`Unexpected ${file}; review command transport patch`);
-  writeFileSync(path, source.replace(before, after));
+// Diagnostic-only change to the exact published SDK. Created with Codex.
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+export function patchSource(source) {
+  const needle = 'audio_chn: nvr ? this.opts.channel : -1,\n          streamtype: 2,\n          stitch_mode: 1,';
+  assert.equal(source.split(needle).length, 2, 'one exact NVR live-start target required');
+  return source.replace(needle, needle + '\n          ...(nvr && process.env.EUFY_PROBE_1080 === "1" ? {stitch_resolution: {width: 1920, height: 1080}} : {}),');
 }
-patch('src/client/types.ts',
-  '  /** Experimental media ICE selection. Control sessions remain relay-only. */',
-  `  /** RTC command ICE selection. Defaults to relay. */
-  rtcCommandIcePolicy?: "relay" | "all";
-  /** RTC command signaling. Defaults to the compact scall exchange. */
-  rtcCommandSignalingMode?: "call" | "scall";
-  /** Experimental media ICE selection, independent of command sessions. */`);
-patch('src/client/eufy-mega.ts',
-  '    this.rtc = new RtcCommandRouter({',
-  `    this.rtc = new RtcCommandRouter({
-      iceTransportPolicy: opts.rtcCommandIcePolicy,
-      signalingMode: opts.rtcCommandSignalingMode,`);
-patch('src/transport/rtc/command-router.ts',
-  'export interface RtcCommandRouterDeps {',
-  `export interface RtcCommandRouterDeps {
-  /** ICE candidate policy for command sessions; defaults to relay. */
-  iceTransportPolicy?: "relay" | "all";
-  /** Signaling exchange for command sessions; defaults to scall. */
-  signalingMode?: "call" | "scall";`);
-patch('src/transport/rtc/command-router.ts',
-  '      peer: { logger: this.deps.logger },',
-  `      signalingMode: this.deps.signalingMode,
-      peer: { logger: this.deps.logger, iceTransportPolicy: this.deps.iceTransportPolicy },`);
-patch('src/transport/rtc/session.ts',
-  'this.logger.debug(`[rtc] ${this.opts.stationSn} authenticated — scall`);',
-  'this.logger.debug(`[rtc] ${this.opts.stationSn} authenticated — ${this.opts.signalingMode ?? "scall"}`);');
-patch('src/transport/rtc/__tests__/command-router.spec.ts',
-  'describe("RtcCommandRouter", () => {',
-  `describe("RtcCommandRouter", () => {
-  it.each([
-    [undefined, undefined],
-    ["call", "all"],
-    ["call", "relay"],
-    ["scall", "relay"],
-  ] as const)("negotiates commands with signaling=%s and ICE=%s without changing the command", async (signalingMode, iceTransportPolicy) => {
-    const { router, sessions } = makeRouter({ signalingMode, iceTransportPolicy });
-    try {
-      await router.dispatchCommand(ST, arming(1));
-      expect(sessions[0]!.opts.signalingMode).toBe(signalingMode);
-      expect(sessions[0]!.opts.peer?.iceTransportPolicy).toBe(iceTransportPolicy);
-      expect(sessions[0]!.sent).toHaveLength(1);
-      expect(sent(sessions[0]!.sent[0]!).body).toMatchObject({cmd: 1224, payload: {mode_type: 1}});
-    } finally { router.close(); }
-  });`);
-
-// Use the portal start defaults already merged in upstream SDK PR436.
-patch('src/transport/rtc/__tests__/video-stream.spec.ts',
-  'payload: { audio_chn: 3, chn_list: [{ chn: 3, sensor: 0 }] },',
-  `payload: {
-        entrytype: 0, msg_id: 116, audio_chn: 3, play_id: 1, station_video_type: 6,
-        pip_cord: { x1: 0, y1: 0, x2: 0, y2: 0 },
-        chn_list: [{ index: 0, chn: 3, sensor: 0, isUps: 0, isClicked: true }],
-      },`);
-patch('src/transport/rtc/video-stream.ts', '            entrytype: 1,', '            entrytype: 0,');
-patch('src/transport/rtc/video-stream.ts', '            msg_id: "",', '            msg_id: 116,');
-patch('src/transport/rtc/video-stream.ts',
-  '            chn_list: [{ index: 0, chn: channel, sensor }],',
-  `            chn_list: [{ index: 0, chn: channel, sensor, isUps: 0, isClicked: true }],
-            pip_cord: { x1: 0, y1: 0, x2: 0, y2: 0 },
-            station_video_type: 6,
-            play_id: 1,`);
+if (process.argv[1]?.endsWith('/patch-sdk.mjs')) {
+  const file='/app/node_modules/@mega-yfue/eufy-sdk/dist/index.js';
+  const source=fs.readFileSync(file,'utf8');
+  const hash=createHash('sha256').update(source).digest('hex');
+  assert.equal(hash,'1fda8bc8096011164399300810afd80e42eaec48e0cb9132b92d1598ac4ad7c0','exact npm SDK 0.5.0 required');
+  const patched=patchSource(source);
+  fs.writeFileSync(file,patched);
+  fs.writeFileSync('/profile-probe-sdk.json', JSON.stringify({sdk:'0.5.0',source:'5f92bea559fa1a5b619a84a9966ccc90a541735e',originalSha256:hash,patchedSha256:createHash('sha256').update(patched).digest('hex')}));
+}
