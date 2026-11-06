@@ -1,0 +1,203 @@
+{
+  "bridge": "9520ee71ade9ed11a4e2c5d7757e6292815662a6",
+  "artifact": "99d9aaaf0d90fcd8ae283ca2fd548d2d35dd8f14",
+  "started": "2026-11-06T21:22:04.548408+00:00",
+  "cases": [
+    {
+      "label": "cold S4 primary AAC",
+      "model": "T8E00",
+      "view": 0,
+      "transport": "http",
+      "requestedAudio": "native",
+      "exit": 0,
+      "decodedAudioFrames": 95,
+      "decodedAudioSeconds": 6.08,
+      "sampleRates": [
+        16000
+      ],
+      "aacLC": true,
+      "opus": false,
+      "meanVolumeDb": "-61.3",
+      "elapsedSeconds": 9.25,
+      "firstAudioPtsSeconds": 0.0,
+      "lastAudioPtsSeconds": 6.016,
+      "audioPtsSpanSeconds": 6.016,
+      "medianPtsStepSeconds": 0.064
+    },
+    {
+      "label": "cold S4 secondary AAC",
+      "model": "T8E00",
+      "view": 1,
+      "transport": "http",
+      "requestedAudio": "native",
+      "exit": 0,
+      "decodedAudioFrames": 95,
+      "decodedAudioSeconds": 6.08,
+      "sampleRates": [
+        16000
+      ],
+      "aacLC": true,
+      "opus": false,
+      "meanVolumeDb": "-66.1",
+      "elapsedSeconds": 8.797,
+      "firstAudioPtsSeconds": 0.0,
+      "lastAudioPtsSeconds": 6.016,
+      "audioPtsSpanSeconds": 6.016,
+      "medianPtsStepSeconds": 0.064
+    },
+    {
+      "label": "cold E40 AAC",
+      "model": "T8P00",
+      "view": 0,
+      "transport": "http",
+      "requestedAudio": "native",
+      "exit": 0,
+      "decodedAudioFrames": 95,
+      "decodedAudioSeconds": 6.08,
+      "sampleRates": [
+        16000
+      ],
+      "aacLC": true,
+      "opus": false,
+      "meanVolumeDb": "-62.8",
+      "elapsedSeconds": 8.407,
+      "firstAudioPtsSeconds": 0.0,
+      "lastAudioPtsSeconds": 6.016,
+      "audioPtsSpanSeconds": 6.016,
+      "medianPtsStepSeconds": 0.064
+    },
+    {
+      "label": "join existing S4 video",
+      "model": "T8E00",
+      "view": 0,
+      "transport": "http",
+      "requestedAudio": "native",
+      "exit": 0,
+      "decodedAudioFrames": 95,
+      "decodedAudioSeconds": 6.08,
+      "sampleRates": [
+        16000
+      ],
+      "aacLC": true,
+      "opus": false,
+      "meanVolumeDb": "-63.9",
+      "elapsedSeconds": 8.547,
+      "firstAudioPtsSeconds": 0.0,
+      "lastAudioPtsSeconds": 6.016,
+      "audioPtsSpanSeconds": 6.016,
+      "medianPtsStepSeconds": 0.064
+    },
+    {
+      "label": "video during audio join",
+      "model": "T8E00",
+      "view": 0,
+      "terminatedByProbe": true,
+      "decodedVideoFrames": 234,
+      "elapsedSeconds": 14.609
+    },
+    {
+      "label": "S4 RTSP AAC",
+      "model": "T8E00",
+      "view": 0,
+      "transport": "rtsp",
+      "requestedAudio": "native",
+      "exit": 0,
+      "decodedAudioFrames": 20,
+      "decodedAudioSeconds": 1.28,
+      "sampleRates": [
+        16000
+      ],
+      "aacLC": true,
+      "opus": false,
+      "meanVolumeDb": "-67.4",
+      "elapsedSeconds": 4.125,
+      "firstAudioPtsSeconds": 0.0,
+      "lastAudioPtsSeconds": 6.211625,
+      "audioPtsSpanSeconds": 6.211625,
+      "medianPtsStepSeconds": 0.357313
+    },
+    {
+      "label": "S4 secondary RTSP Opus",
+      "model": "T8E00",
+      "view": 1,
+      "transport": "rtsp",
+      "requestedAudio": "opus",
+      "exit": 0,
+      "decodedAudioFrames": 401,
+      "decodedAudioSeconds": 8.02,
+      "sampleRates": [
+        48000
+      ],
+      "aacLC": false,
+      "opus": true,
+      "meanVolumeDb": "-59.0",
+      "elapsedSeconds": 11.75,
+      "firstAudioPtsSeconds": 0.0,
+      "lastAudioPtsSeconds": 8.0,
+      "audioPtsSpanSeconds": 8.0,
+      "medianPtsStepSeconds": 0.02
+    },
+    {
+      "label": "E40 RTSP Opus",
+      "model": "T8P00",
+      "view": 0,
+      "transport": "rtsp",
+      "requestedAudio": "opus",
+      "exit": 0,
+      "decodedAudioFrames": 401,
+      "decodedAudioSeconds": 8.02,
+      "sampleRates": [
+        48000
+      ],
+      "aacLC": false,
+      "opus": true,
+      "meanVolumeDb": "-68.0",
+      "elapsedSeconds": 10.812,
+      "firstAudioPtsSeconds": 0.0,
+      "lastAudioPtsSeconds": 8.0,
+      "audioPtsSpanSeconds": 8.0,
+      "medianPtsStepSeconds": 0.02
+    }
+  ],
+  "cleanup": [
+    {
+      "afterSeconds": 10,
+      "delay": 10,
+      "streamingCount": 0
+    },
+    {
+      "afterSeconds": 20,
+      "delay": 10,
+      "streamingCount": 0
+    },
+    {
+      "afterSeconds": 30,
+      "delay": 10,
+      "streamingCount": 0
+    }
+  ],
+  "finished": "2026-11-06T21:24:54.491145+00:00",
+  "audibleCheck": {
+    "transport": "HTTP ADTS AAC",
+    "browser": "Brave",
+    "model": "T8E00",
+    "confirmedByListener": true,
+    "scope": "Audible outdoor sound confirmed; not WebRTC playback or A/V synchronization."
+  },
+  "restoration": {
+    "officialBridge": "0.8.2",
+    "officialState": "started",
+    "officialBoot": "auto",
+    "officialWatchdog": true,
+    "testState": "stopped",
+    "temporarySshState": "stopped",
+    "guardStableRestored": true,
+    "guardRestoreError": null
+  },
+  "limits": [
+    "Short sequential tests of one S4 (both optics) and one E40; not all cameras or seven concurrent sources.",
+    "Cold media starts, not NVR power cycles.",
+    "No exact-source WebRTC audible playback, A/V synchronization, Android, long-duration or microphone-off hardware validation.",
+    "Native RTSP AAC timestamps are abnormal; successful decoding is not a smooth/realtime playback pass."
+  ]
+}
