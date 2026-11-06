@@ -17,6 +17,12 @@ test('bind the discovered descriptor before accessing the public camera API',asy
  const result=await selectCamera({
   getDevices:async()=>[{sn:'T8000P0000000000',model:'T8N00'},{sn:'T8000P0000000001',model:'T8E00',stationSn:'T8000P0000000000'}],
   getDevice:async(sn)=>{selected=sn;return {camera:()=>camera};},
- });
+ },()=>{},'T8000P0000000001');
  assert.equal(selected,'T8000P0000000001');assert.equal(result.camera,camera);assert.deepEqual(result.camera.views(),[0,1]);
+});
+
+test('refuse missing or nonmatching targets rather than measure another S4',async()=>{
+ const client={getDevices:async()=>[{sn:'NVR',model:'T8N00'},{sn:'OTHER',model:'T8E00',stationSn:'NVR'}],getDevice:async()=>{throw new Error('must not bind');}};
+ await assert.rejects(selectCamera(client),/explicit diagnostic target/);
+ await assert.rejects(selectCamera(client,()=>{},'MISSING'),/attached S4 missing/);
 });
