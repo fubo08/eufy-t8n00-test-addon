@@ -1,0 +1,15 @@
+{
+  "sdk": {
+    "source": "aac674c095363125ab4da6f6c1a8546b19617ed8",
+    "base": "bbe56ed53b8ec95323d1cbc86a44e740aa9090b1"
+  },
+  "bridge": {
+    "source": "bd9dc8a316da3e779a616ebffe6f4d986209b940",
+    "base": "a59616902f6694feca69ead8bc6d9dd6962ffb90"
+  },
+  "integration": {
+    "source": "b8f4b22af15d696a56dddaee7fbd1410fec6bffc",
+    "base": "3302c4d70e5d380b868773f140f4dfb30b3d6c89"
+  },
+  "kind": "exact-source feature qualification, no protocol override"
+}

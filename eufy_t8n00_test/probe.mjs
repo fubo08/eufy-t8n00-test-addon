@@ -6,19 +6,19 @@ import {setTimeout as delay} from 'node:timers/promises';
 import * as sdk from '/app/node_modules/@mega-yfue/eufy-sdk/dist/index.js';
 import {selectCamera} from './select-camera.mjs';
 
-const reportPath='/data/profile-probe-0.3.57.json';
+const reportPath='/data/profile-probe-0.3.58.json';
 if(existsSync(reportPath)){console.info('[profile-probe] Already attempted; refusing repeated hardware run.');process.exit(0);}
-const report={artifact:'0.3.57',interCasePauseMs:12000,sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
+const report={artifact:'0.3.58',interCasePauseMs:1000,sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
 let client,consumer;
 const save=()=>fs.writeFile(reportPath,JSON.stringify(report,null,2),{mode:0o600});
 const deadline=setTimeout(()=>{report.status='deadline';consumer?.stop();void save().finally(()=>process.exit(1));},360000);
 const logger={debug(){},info(){},warn(){},error(){}};
 async function measure(camera,label,view,request1080) {
- process.env.EUFY_PROBE_1080=request1080===true?'1':'0';
- process.env.EUFY_PROBE_4K=request1080===3840?'1':'0';
+ 
+ 
  const m={label,view,requestedWidth:request1080===true?1920:request1080===3840?3840:null,frames:0,audioFrames:0,bytes:0,geometry:{},firstFrameMs:null};
  const started=performance.now();const chunks=[];let lastError=false;
- consumer=await camera.live({view});
+ consumer=await camera.live({view,...(request1080 ? {outputResolution:'1080p'} : {})});
  consumer.on('error',()=>{lastError=true;});
  consumer.on('audio',()=>m.audioFrames++);
  let firstResolve;const first=new Promise(r=>firstResolve=r);
@@ -45,7 +45,7 @@ async function measure(camera,label,view,request1080) {
   for(const match of detail.matchAll(/\bs:(\d+x\d+)\b/g))m.decodedFrameGeometry[match[1]]=(m.decodedFrameGeometry[match[1]]??0)+1;
   await fs.unlink(file);
  }
- report.cases.push(m);await save();console.info('[profile-probe] '+JSON.stringify(m));await delay(12000);
+ report.cases.push(m);await save();console.info('[profile-probe] '+JSON.stringify(m));await delay(1000);
 }
 try{
  await save();
@@ -63,6 +63,14 @@ try{
   for(const [label,request] of [['native-a',false],['fullhd-a',true],['native-b',false],['fullhd-b',true]]){
    await measure(camera,`${label}-view${view}`,view,request);
   }
+ }
+ const records=await client.getDevices();
+ const nvr=records.find(d=>d.model==='T8N00');
+ const e40=records.filter(d=>d.model==='T8P00'&&d.stationSn===nvr?.sn);
+ let index=0;
+ for(const record of e40){
+  const bound=await client.getDevice(record.sn);
+  await measure(bound.camera(),`e40-${++index}-fullhd`,0,true);
  }
  report.status='complete';
 }catch(e){report.status='failed';report.failureType=e.name;report.failure=String(e.message).replace(/https?:\/\/\S+/g,'[url]').replace(/T[A-Z0-9]{10,}/g,'[device]').replace(/[\w.+-]+@[\w.-]+\.\w+/g,'[email]').replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g,'[address]').slice(0,240);}
