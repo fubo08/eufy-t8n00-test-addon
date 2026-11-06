@@ -6,16 +6,17 @@ import {setTimeout as delay} from 'node:timers/promises';
 import * as sdk from '/app/node_modules/@mega-yfue/eufy-sdk/dist/index.js';
 import {selectCamera} from './select-camera.mjs';
 
-const reportPath='/data/profile-probe-0.3.54.json';
+const reportPath='/data/profile-probe-0.3.55.json';
 if(existsSync(reportPath)){console.info('[profile-probe] Already attempted; refusing repeated hardware run.');process.exit(0);}
-const report={artifact:'0.3.54',sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
+const report={artifact:'0.3.55',sdk:JSON.parse(await fs.readFile('/profile-probe-sdk.json','utf8')),started:new Date().toISOString(),cases:[]};
 let client,consumer;
 const save=()=>fs.writeFile(reportPath,JSON.stringify(report,null,2),{mode:0o600});
 const deadline=setTimeout(()=>{report.status='deadline';consumer?.stop();void save().finally(()=>process.exit(1));},240000);
 const logger={debug(){},info(){},warn(){},error(){}};
 async function measure(camera,label,view,request1080) {
- process.env.EUFY_PROBE_1080=request1080?'1':'0';
- const m={label,view,request1080,frames:0,audioFrames:0,bytes:0,geometry:{},firstFrameMs:null};
+ process.env.EUFY_PROBE_1080=request1080===true?'1':'0';
+ process.env.EUFY_PROBE_4K=request1080===3840?'1':'0';
+ const m={label,view,requestedWidth:request1080===true?1920:request1080===3840?3840:null,frames:0,audioFrames:0,bytes:0,geometry:{},firstFrameMs:null};
  const started=performance.now();const chunks=[];let lastError=false;
  consumer=await camera.live({view});
  consumer.on('error',()=>{lastError=true;});
@@ -52,8 +53,9 @@ try{
  report.restored=true;
  const {camera,model}=await selectCamera(client,s=>report.stage=s);report.model=model;report.stage='view-inventory';report.views=camera.views();
  report.stage='media-measurement';
- await measure(camera,'native-before',0,false);
+ await measure(camera,'request4k-fixed',0,3840);
  await measure(camera,'request1080-fixed',0,true);
+ await measure(camera,'request4k-movable',1,3840);
  await measure(camera,'request1080-movable',1,true);
  await measure(camera,'native-after',0,false);
  report.status='complete';

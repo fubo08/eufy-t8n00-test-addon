@@ -8,6 +8,7 @@ test('only the NVR start gains the opt-in per-call 1080p request',()=>{
  const result=patchSource(fixture);
  assert.ok(result.includes('nvr && process.env.EUFY_PROBE_1080 === "1"'));
  assert.ok(result.includes('stitch_resolution: {width: 1920, height: 1080}'));
+ assert.ok(result.includes('stitch_resolution: {width: 3840, height: 2160}'));
  assert.throws(()=>patchSource('changed upstream shape'));
  assert.throws(()=>patchSource(fixture+fixture));
 });
