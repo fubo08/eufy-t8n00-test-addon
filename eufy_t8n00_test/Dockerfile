@@ -1,7 +1,7 @@
 FROM node:24-bookworm-slim AS sdk
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git && rm -rf /var/lib/apt/lists/*
 WORKDIR /qualification/sdk
-RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/aac674c095363125ab4da6f6c1a8546b19617ed8 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/fubo08/eufy-sdk/tar.gz/c1d7668a899b803ff97ef648ce4873f516aedad9 | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm run verify
 RUN mkdir /qualification/sdk-before && curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/bbe56ed53b8ec95323d1cbc86a44e740aa9090b1 | tar -xz -C /qualification/sdk-before --strip-components=1 \
     && cp src/client/__tests__/nvr-media-routing.spec.ts /qualification/sdk-before/src/client/__tests__/nvr-media-routing.spec.ts \
@@ -11,7 +11,7 @@ RUN cd /qualification/sdk-before; set +e; node node_modules/vitest/vitest.mjs ru
 FROM node:24-bookworm-slim AS bridge
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /qualification/bridge
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/bd9dc8a316da3e779a616ebffe6f4d986209b940 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/a55051981db0f7301a235ceb6ce72a656b30df97 | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm run lint && npm test
 RUN mkdir /qualification/bridge-before && curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/a59616902f6694feca69ead8bc6d9dd6962ffb90 | tar -xz -C /qualification/bridge-before --strip-components=1 \
     && cp test/optical-views.test.mjs /qualification/bridge-before/test/optical-views.test.mjs \

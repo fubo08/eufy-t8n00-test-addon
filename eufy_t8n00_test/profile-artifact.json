@@ -1,10 +1,10 @@
 {
   "sdk": {
-    "source": "aac674c095363125ab4da6f6c1a8546b19617ed8",
+    "source": "c1d7668a899b803ff97ef648ce4873f516aedad9",
     "base": "bbe56ed53b8ec95323d1cbc86a44e740aa9090b1"
   },
   "bridge": {
-    "source": "bd9dc8a316da3e779a616ebffe6f4d986209b940",
+    "source": "a55051981db0f7301a235ceb6ce72a656b30df97",
     "base": "a59616902f6694feca69ead8bc6d9dd6962ffb90"
   },
   "integration": {

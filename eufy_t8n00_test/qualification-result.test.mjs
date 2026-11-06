@@ -8,5 +8,5 @@ test('contains exact candidates and recorded before/after results',()=>{
  assert.ok(fs.readFileSync('/qualification/integration-after.xml','utf8').includes('failures="0"'));
  assert.ok(fs.readFileSync('/qualification/integration-before.xml','utf8').includes('failures="1"'));
  const artifact=JSON.parse(fs.readFileSync('/profile-probe-sdk.json','utf8'));
- assert.equal(artifact.sdk.source,'aac674c095363125ab4da6f6c1a8546b19617ed8');
+ assert.equal(artifact.sdk.source,'c1d7668a899b803ff97ef648ce4873f516aedad9');
 });
