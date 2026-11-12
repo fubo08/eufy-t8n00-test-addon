@@ -1,0 +1,16 @@
+{
+  "date":"2026-11-12",
+  "artifact":"9b18fed67ceaff190769e63946a676e39d5060aa",
+  "bridge":"f0c61df2d022148d6e8edb29083ee3cb085b9593",
+  "sdk":"0.5.0",
+  "integration":"original installation restored after the Full-HD test",
+  "player":"normal HA camera dialog in in-app Chromium",
+  "model":"T8E00",
+  "view":1,
+  "width":1920,
+  "height":1086,
+  "timeSamples":[0.407062,43.676588,73.242619],
+  "paused":false,
+  "mediaError":null,
+  "limits":["no audible audio check", "no Android/Edge/Brave run", "no browser packet-loss or freeze-counter measurement", "no comparison against an uncapped build"]
+}

@@ -1,0 +1,52 @@
+{
+  "artifact": "9b18fed67ceaff190769e63946a676e39d5060aa",
+  "bridge": "f0c61df2d022148d6e8edb29083ee3cb085b9593",
+  "sdk": "0.5.0",
+  "requestedWidth": 1920,
+  "started": "2026-11-12T07:47:30.468Z",
+  "cases": [
+    {
+      "model": "T8E00",
+      "view": 0,
+      "concurrent": true,
+      "exit": 0,
+      "codec": "h264",
+      "decodedFrameGeometry": {
+        "1920x1086": 445
+      },
+      "frames": 445,
+      "backwardsPts": 0,
+      "maxPtsGapSeconds": 0.10170000000000101,
+      "elapsedSeconds": 48.6
+    },
+    {
+      "model": "T8E00",
+      "view": 1,
+      "concurrent": true,
+      "exit": 0,
+      "codec": "h264",
+      "decodedFrameGeometry": {
+        "1920x1086": 902
+      },
+      "frames": 902,
+      "backwardsPts": 0,
+      "maxPtsGapSeconds": 0.05000000000000426,
+      "elapsedSeconds": 53.5
+    },
+    {
+      "model": "T8P00",
+      "view": 0,
+      "concurrent": false,
+      "exit": 0,
+      "codec": "h264",
+      "decodedFrameGeometry": {
+        "1920x1080": 899
+      },
+      "frames": 899,
+      "backwardsPts": 0,
+      "maxPtsGapSeconds": 0.05021200000000192,
+      "elapsedSeconds": 48.2
+    }
+  ],
+  "finished": "2026-11-12T07:49:24.208Z"
+}
