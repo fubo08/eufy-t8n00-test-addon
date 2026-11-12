@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-12",
+  "artifact": "b548d58bf378600ba6e907fe2e098c4244982921",
+  "bridge": "8b6d485b926b0207eb6e209cfa1a477f697eb6d4",
+  "sdk": "0.6.0-beta.35",
+  "integration": "b8f4b22af15d696a56dddaee7fbd1410fec6bffc",
+  "runtimeFiles": ["camera.py", "config_flow.py", "const.py", "translations/en.json"],
+  "optionsFlow": {"savedFullHd": true, "restoredDefault": true},
+  "players": [
+    {"model":"T8E00", "view":1, "width":1920, "height":1080, "timeSamples":[0.522913,12.330992], "paused":false, "mediaError":null},
+    {"model":"T8P00", "view":0, "width":1920, "height":1080, "timeSamples":[4.543982,14.019392], "paused":false, "mediaError":null, "startupObservation":"A media-error placeholder appeared initially, followed by automatic recovery to live playback."}
+  ],
+  "validationLimits": ["in-app Chromium only", "short sequential playback", "audible audio not checked", "no seven-concurrent-call claim"],
+  "restore": {"originalFilesComparedByteForByte":true}
+}

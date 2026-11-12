@@ -1,0 +1,115 @@
+{
+  "artifact": "b548d58bf378600ba6e907fe2e098c4244982921",
+  "bridge": "8b6d485b926b0207eb6e209cfa1a477f697eb6d4",
+  "sdk": "0.6.0-beta.35",
+  "started": "2026-11-12T07:32:06.910Z",
+  "cases": [
+    {
+      "camera": 1,
+      "model": "T8P00",
+      "view": 0,
+      "advertised": true,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 88
+      },
+      "decodedFrames": 88,
+      "backwardsPts": 0,
+      "elapsedSeconds": 15.1
+    },
+    {
+      "camera": 2,
+      "model": "T8P00",
+      "view": 0,
+      "advertised": true,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 83
+      },
+      "decodedFrames": 83,
+      "backwardsPts": 0,
+      "elapsedSeconds": 15.3
+    },
+    {
+      "camera": 3,
+      "model": "T8P00",
+      "view": 0,
+      "advertised": true,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 86
+      },
+      "decodedFrames": 86,
+      "backwardsPts": 0,
+      "elapsedSeconds": 14.4
+    },
+    {
+      "camera": 4,
+      "model": "T8E00",
+      "view": 0,
+      "advertised": true,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 165
+      },
+      "decodedFrames": 165,
+      "backwardsPts": 0,
+      "elapsedSeconds": 13.2
+    },
+    {
+      "camera": 4,
+      "model": "T8E00",
+      "view": 1,
+      "advertised": true,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 166
+      },
+      "decodedFrames": 166,
+      "backwardsPts": 0,
+      "elapsedSeconds": 12.2
+    },
+    {
+      "camera": 5,
+      "model": "T8E00",
+      "view": 0,
+      "advertised": true,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 162
+      },
+      "decodedFrames": 162,
+      "backwardsPts": 0,
+      "elapsedSeconds": 15.5
+    },
+    {
+      "camera": 5,
+      "model": "T8E00",
+      "view": 1,
+      "advertised": true,
+      "exit": 0,
+      "decodedFrameGeometry": {
+        "1920x1080": 165
+      },
+      "decodedFrames": 165,
+      "backwardsPts": 0,
+      "elapsedSeconds": 12.3
+    }
+  ],
+  "auth": "ok",
+  "physicalCameras": 5,
+  "screen": {
+    "beforeStatus": 200,
+    "beforeSavedAt": "2026-11-06T20:53:40.725Z",
+    "take": {
+      "ok": true,
+      "bytes": 300133
+    },
+    "afterStatus": 200,
+    "afterSavedAt": "2026-11-12T07:35:14.572Z",
+    "jpeg": true,
+    "bytes": 300133
+  },
+  "status": "complete",
+  "finished": "2026-11-12T07:35:14.552Z"
+}
