@@ -5,7 +5,7 @@ RUN curl -fsSL https://codeload.github.com/jhasner/ha-eufy-sdk-bridge/tar.gz/f0c
 RUN npm ci --ignore-scripts && npm run lint && npm test
 RUN find src test -name '*.mjs' -exec node --check {} \;
 RUN mkdir /qualification/before && curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/841f47b | tar -xz -C /qualification/before --strip-components=1 && cp test/go2rtc-config.test.mjs /qualification/before/test/go2rtc-config.test.mjs && ln -s /qualification/bridge/node_modules /qualification/before/node_modules
-RUN cd /qualification/before; set +e; node --test --test-name-pattern='configured H.264 conversion' test/go2rtc-config.test.mjs >/before.log 2>&1; code=$?; set -e; cat /before.log; test "$code" = 1; grep -q 'configured H.264 conversion through' /before.log
+RUN cd /qualification/before; set +e; node --test --test-name-pattern='every optical view converted' test/go2rtc-config.test.mjs >/before.log 2>&1; code=$?; set -e; cat /before.log; test "$code" = 1; grep -q 'every optical view converted' /before.log
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2
 WORKDIR /app
 RUN apk add --no-cache jq
