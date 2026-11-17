@@ -1,0 +1,839 @@
+{
+  "date": "2026-11-17",
+  "artifact": "b3819194e9d64f77470bc09ae143e9468d53152c",
+  "testApp": "0.3.64",
+  "bridge": "8b6d485b926b0207eb6e209cfa1a477f697eb6d4",
+  "ci": "https://github.com/fubo08/eufy-t8n00-test-addon/actions/runs/44144395442",
+  "sdk35": {
+    "version": "0.6.0-beta.35",
+    "gitHead": "38744bdec7604dd470fa994daa05337d03293063"
+  },
+  "sdk63": {
+    "version": "0.6.0-beta.63",
+    "gitHead": "561d65cab77e92fda8515c28fa67e2d47c7a683b"
+  },
+  "limits": [
+    "Short decoder measurements, not browser smoothness or audible audio",
+    "First decoded output may be a bridge primer, not the first actual camera frame",
+    "One sequential A/B run with the same fixed physical devices, not repeated randomized latency samples",
+    "No physical setting writes, seven-call capacity test or all-platform qualification",
+    "SDK packages share the unchanged dependency requirements and the fixed bridge lockfile dependency tree"
+  ],
+  "reports": [
+    {
+      "label": "stable",
+      "started": "2026-11-17T18:08:15.506Z",
+      "cases": [
+        {
+          "model": "T8P00",
+          "view": 0,
+          "output": "default",
+          "exit": 0,
+          "firstFrameSeconds": 6.726,
+          "elapsedSeconds": 26.001,
+          "codec": "hevc",
+          "geometry": {
+            "2560x1440": 402
+          },
+          "decodedFrames": 402,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.1636999999999995,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 0,
+          "output": "default",
+          "exit": 0,
+          "firstFrameSeconds": 4.345,
+          "elapsedSeconds": 24.057,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 411
+          },
+          "decodedFrames": 411,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.21513400000000082,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 1,
+          "output": "default",
+          "exit": 0,
+          "firstFrameSeconds": 7.562,
+          "elapsedSeconds": 27.002,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 400
+          },
+          "decodedFrames": 400,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.28956599999999977,
+          "decoderErrors": 1
+        }
+      ],
+      "auth": "ok",
+      "inventory": [
+        {
+          "camera": 1,
+          "model": "T8P00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0
+            }
+          ]
+        },
+        {
+          "camera": 2,
+          "model": "T8P00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0
+            }
+          ]
+        },
+        {
+          "camera": 3,
+          "model": "T8P00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0
+            }
+          ]
+        },
+        {
+          "camera": 4,
+          "model": "T8E00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "ptz",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0
+            },
+            {
+              "view": 1
+            }
+          ]
+        },
+        {
+          "camera": 5,
+          "model": "T8E00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "ptz",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0
+            },
+            {
+              "view": 1
+            }
+          ]
+        }
+      ],
+      "status": "complete",
+      "finished": "2026-11-17T18:10:03.337Z"
+    },
+    {
+      "label": "beta35",
+      "started": "2026-11-17T18:16:38.989Z",
+      "cases": [
+        {
+          "model": "T8P00",
+          "view": 0,
+          "output": "default",
+          "exit": 0,
+          "firstFrameSeconds": 3.017,
+          "elapsedSeconds": 22.861,
+          "codec": "hevc",
+          "geometry": {
+            "2560x1440": 412
+          },
+          "decodedFrames": 412,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.14512300000000167,
+          "decoderErrors": 3
+        },
+        {
+          "model": "T8E00",
+          "view": 0,
+          "output": "default",
+          "exit": 0,
+          "firstFrameSeconds": 2.869,
+          "elapsedSeconds": 23.049,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 428
+          },
+          "decodedFrames": 428,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.27383299999999977,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 1,
+          "output": "default",
+          "exit": 0,
+          "firstFrameSeconds": 4.76,
+          "elapsedSeconds": 24.252,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 404
+          },
+          "decodedFrames": 404,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.2091220000000007,
+          "decoderErrors": 1
+        },
+        {
+          "model": "T8P00",
+          "view": 0,
+          "output": "1080p",
+          "advertised": true,
+          "exit": 0,
+          "firstFrameSeconds": 5.246,
+          "elapsedSeconds": 14.628,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 201
+          },
+          "decodedFrames": 201,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.16226699999999994,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 0,
+          "output": "1080p",
+          "advertised": true,
+          "exit": 0,
+          "firstFrameSeconds": 4.27,
+          "elapsedSeconds": 14.138,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 213
+          },
+          "decodedFrames": 213,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.20732199999999956,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 1,
+          "output": "1080p",
+          "advertised": true,
+          "exit": 0,
+          "firstFrameSeconds": 3.88,
+          "elapsedSeconds": 13.731,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 209
+          },
+          "decodedFrames": 209,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.25863400000000025,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 0,
+          "output": "default",
+          "concurrent": true,
+          "exit": 0,
+          "firstFrameSeconds": 11.178,
+          "elapsedSeconds": 33.027,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 267
+          },
+          "decodedFrames": 267,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.5935889999999999,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 1,
+          "output": "default",
+          "concurrent": true,
+          "exit": 0,
+          "firstFrameSeconds": 4.849,
+          "elapsedSeconds": 34.19,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 600
+          },
+          "decodedFrames": 600,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.2258230000000001,
+          "decoderErrors": 1
+        }
+      ],
+      "auth": "ok",
+      "inventory": [
+        {
+          "camera": 1,
+          "model": "T8E00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "ptz",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            },
+            {
+              "view": 1,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        },
+        {
+          "camera": 2,
+          "model": "T8E00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "ptz",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            },
+            {
+              "view": 1,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        },
+        {
+          "camera": 3,
+          "model": "T8P00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        },
+        {
+          "camera": 4,
+          "model": "T8P00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        },
+        {
+          "camera": 5,
+          "model": "T8P00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "audio",
+            "siren",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        }
+      ],
+      "screenBefore": {
+        "status": 200,
+        "savedAt": "2026-11-17T18:20:05.616Z"
+      },
+      "screenAfter": {
+        "ack": true,
+        "status": 200,
+        "savedAt": "2026-11-17T18:20:11.711Z",
+        "bytes": 145271,
+        "jpeg": true
+      },
+      "status": "complete",
+      "finished": "2026-11-17T18:20:11.672Z"
+    },
+    {
+      "label": "beta63",
+      "started": "2026-11-17T18:20:48.290Z",
+      "cases": [
+        {
+          "model": "T8P00",
+          "view": 0,
+          "output": "default",
+          "exit": 0,
+          "firstFrameSeconds": 3.238,
+          "elapsedSeconds": 23.019,
+          "codec": "hevc",
+          "geometry": {
+            "2560x1440": 414,
+            "1920x1080": 2
+          },
+          "decodedFrames": 416,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.16031099999999832,
+          "decoderErrors": 1
+        },
+        {
+          "model": "T8E00",
+          "view": 0,
+          "output": "default",
+          "exit": 0,
+          "firstFrameSeconds": 3.23,
+          "elapsedSeconds": 22.946,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 424
+          },
+          "decodedFrames": 424,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.3535889999999995,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 1,
+          "output": "default",
+          "exit": 0,
+          "firstFrameSeconds": 5.481,
+          "elapsedSeconds": 25.026,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 401
+          },
+          "decodedFrames": 401,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.3528669999999998,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8P00",
+          "view": 0,
+          "output": "1080p",
+          "advertised": true,
+          "exit": 0,
+          "firstFrameSeconds": 4.764,
+          "elapsedSeconds": 14.34,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 205
+          },
+          "decodedFrames": 205,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.12922300000000142,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 0,
+          "output": "1080p",
+          "advertised": true,
+          "exit": 0,
+          "firstFrameSeconds": 4.333,
+          "elapsedSeconds": 14.135,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 212
+          },
+          "decodedFrames": 212,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.17803400000000025,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 1,
+          "output": "1080p",
+          "advertised": true,
+          "exit": 0,
+          "firstFrameSeconds": 7.378,
+          "elapsedSeconds": 16.786,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 201
+          },
+          "decodedFrames": 201,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.20889999999999986,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 0,
+          "output": "default",
+          "concurrent": true,
+          "exit": 0,
+          "firstFrameSeconds": 11.209,
+          "elapsedSeconds": 32.925,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 246
+          },
+          "decodedFrames": 246,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.5922109999999999,
+          "decoderErrors": 0
+        },
+        {
+          "model": "T8E00",
+          "view": 1,
+          "output": "default",
+          "concurrent": true,
+          "exit": 0,
+          "firstFrameSeconds": 4.451,
+          "elapsedSeconds": 34.166,
+          "codec": "hevc",
+          "geometry": {
+            "1920x1080": 609
+          },
+          "decodedFrames": 609,
+          "backwardsPts": 0,
+          "largestPtsGap": 0.2753889999999999,
+          "decoderErrors": 0
+        }
+      ],
+      "auth": "ok",
+      "inventory": [
+        {
+          "camera": 1,
+          "model": "T8E00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "ptz",
+            "audio",
+            "siren",
+            "link",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            },
+            {
+              "view": 1,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        },
+        {
+          "camera": 2,
+          "model": "T8E00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "ptz",
+            "audio",
+            "siren",
+            "link",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            },
+            {
+              "view": 1,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        },
+        {
+          "camera": 3,
+          "model": "T8P00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "audio",
+            "siren",
+            "link",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        },
+        {
+          "camera": 4,
+          "model": "T8P00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "audio",
+            "siren",
+            "link",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        },
+        {
+          "camera": 5,
+          "model": "T8P00",
+          "capabilities": [
+            "video",
+            "snapshot",
+            "motion",
+            "person_detection",
+            "camera",
+            "rtsp",
+            "battery",
+            "light",
+            "audio",
+            "siren",
+            "link",
+            "info"
+          ],
+          "power": "wired",
+          "canReboot": false,
+          "views": [
+            {
+              "view": 0,
+              "outputs": [
+                "1080p"
+              ]
+            }
+          ]
+        }
+      ],
+      "screenBefore": {
+        "status": 200,
+        "savedAt": "2026-11-17T18:24:18.180Z"
+      },
+      "screenAfter": {
+        "ack": true,
+        "status": 200,
+        "savedAt": "2026-11-17T18:24:24.482Z",
+        "bytes": 147131,
+        "jpeg": true
+      },
+      "status": "complete",
+      "finished": "2026-11-17T18:24:24.433Z"
+    }
+  ],
+  "restoration": {
+    "stableApp": "0.8.2",
+    "stableState": "started",
+    "stableWatchdog": true,
+    "stableBoot": "auto",
+    "testApp": "0.3.64",
+    "testState": "stopped",
+    "testWatchdog": false,
+    "testBoot": "manual",
+    "originalOptionsRestored": true,
+    "healthOk": true,
+    "auth": "ok",
+    "streaming": 0
+  }
+}
