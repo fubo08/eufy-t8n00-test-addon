@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-18T11:05:42.102Z",
+  "stable": {
+    "version": "0.8.2",
+    "state": "started",
+    "watchdog": true,
+    "boot": "auto",
+    "optionsRestored": true
+  },
+  "test": {
+    "version": "0.3.65",
+    "state": "stopped",
+    "watchdog": false,
+    "boot": "manual",
+    "optionsRestored": true
+  },
+  "limits": "Options compared to pre-test snapshots; no secrets or option contents exported."
+}

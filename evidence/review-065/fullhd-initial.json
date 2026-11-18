@@ -1,0 +1,166 @@
+{
+  "profile": "fullhd",
+  "artifact": "f5492a29c3a9a65bc0e25619bfe8636861978893",
+  "bridge": "451487d92dc50b815f4d3af6a7db3f92abc4dff4",
+  "sdk": "0.6.0-beta.70",
+  "started": "2026-11-18T11:02:27.399Z",
+  "cases": [
+    {
+      "model": "T8E00",
+      "view": 0,
+      "output": "1080p",
+      "exit": 0,
+      "elapsedSeconds": 20.278,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 301
+      },
+      "video": {
+        "frames": 301,
+        "backwardsPts": 0,
+        "ptsSpan": 15.005189
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "ptsSpan": 15,
+        "sampleFrames": 720960,
+        "sampleRate": 48000
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 5\r"
+      ]
+    },
+    {
+      "model": "T8E00",
+      "view": 1,
+      "output": "1080p",
+      "exit": 0,
+      "elapsedSeconds": 20.665,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 304
+      },
+      "video": {
+        "frames": 304,
+        "backwardsPts": 0,
+        "ptsSpan": 15.0277
+      },
+      "audio": {
+        "frames": 750,
+        "backwardsPts": 0,
+        "ptsSpan": 15,
+        "sampleFrames": 720000,
+        "sampleRate": 48000
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 5\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    },
+    {
+      "model": "T8P00",
+      "view": 0,
+      "output": "1080p",
+      "exit": 0,
+      "elapsedSeconds": 22.502,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 188
+      },
+      "video": {
+        "frames": 188,
+        "backwardsPts": 0,
+        "ptsSpan": 15.023011
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "ptsSpan": 15,
+        "sampleFrames": 720960,
+        "sampleRate": 48000
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 2\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    },
+    {
+      "model": "T8E00",
+      "view": 0,
+      "concurrent": true,
+      "exit": 0,
+      "elapsedSeconds": 24.515,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 404
+      },
+      "video": {
+        "frames": 405,
+        "backwardsPts": 1,
+        "ptsSpan": 20.056333
+      },
+      "audio": {
+        "frames": 1000,
+        "backwardsPts": 0,
+        "ptsSpan": 20,
+        "sampleFrames": 960000,
+        "sampleRate": 48000
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 7\r"
+      ]
+    },
+    {
+      "model": "T8E00",
+      "view": 1,
+      "concurrent": true,
+      "exit": 0,
+      "elapsedSeconds": 24.466,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 401
+      },
+      "video": {
+        "frames": 404,
+        "backwardsPts": 1,
+        "ptsSpan": 20.011822
+      },
+      "audio": {
+        "frames": 998,
+        "backwardsPts": 0,
+        "ptsSpan": 20,
+        "sampleFrames": 958080,
+        "sampleRate": 48000
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 7\r",
+        "[hevc @ [decoder]] Could not find ref with POC 29\r",
+        "[hevc @ [decoder]] Could not find ref with POC 31\r",
+        "[hevc @ [decoder]] Could not find ref with POC 37\r"
+      ]
+    }
+  ],
+  "auth": "ok",
+  "release": [
+    {
+      "seconds": 10,
+      "streaming": 0
+    },
+    {
+      "seconds": 20,
+      "streaming": 0
+    },
+    {
+      "seconds": 30,
+      "streaming": 0
+    }
+  ],
+  "status": "complete",
+  "finished": "2026-11-18T11:04:50.294Z"
+}

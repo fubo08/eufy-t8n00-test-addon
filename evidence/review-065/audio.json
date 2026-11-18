@@ -1,0 +1,163 @@
+{
+  "profile": "audio",
+  "artifact": "f5492a29c3a9a65bc0e25619bfe8636861978893",
+  "bridge": "22f18a74b1d6ddf64ab7ebbd258a0b79b06a3d08",
+  "sdk": "0.5.0",
+  "started": "2026-11-18T10:58:00.128Z",
+  "cases": [
+    {
+      "model": "T8E00",
+      "view": 0,
+      "output": "default",
+      "exit": 0,
+      "elapsedSeconds": 18.838,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 345
+      },
+      "video": {
+        "frames": 348,
+        "backwardsPts": 1,
+        "ptsSpan": 15.016056
+      },
+      "audio": {
+        "frames": 748,
+        "backwardsPts": 0,
+        "ptsSpan": 15,
+        "sampleFrames": 718080,
+        "sampleRate": 48000
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 0\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    },
+    {
+      "model": "T8E00",
+      "view": 1,
+      "output": "default",
+      "exit": 0,
+      "elapsedSeconds": 20.719,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 302
+      },
+      "video": {
+        "frames": 302,
+        "backwardsPts": 0,
+        "ptsSpan": 15.003211
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "ptsSpan": 15,
+        "sampleFrames": 720960,
+        "sampleRate": 48000
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 5\r",
+        "[hevc @ [decoder]] Could not find ref with POC 14\r",
+        "[hevc @ [decoder]] Could not find ref with POC 16\r",
+        "[hevc @ [decoder]] Could not find ref with POC 18\r"
+      ]
+    },
+    {
+      "model": "T8P00",
+      "view": 0,
+      "output": "default",
+      "exit": 0,
+      "elapsedSeconds": 18.682,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "2560x1440": 172,
+        "1920x1080": 2
+      },
+      "video": {
+        "frames": 174,
+        "backwardsPts": 0,
+        "ptsSpan": 15.168044
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "ptsSpan": 15,
+        "sampleFrames": 720960,
+        "sampleRate": 48000
+      },
+      "errors": []
+    },
+    {
+      "model": "T8E00",
+      "view": 0,
+      "concurrent": true,
+      "exit": 3199971767,
+      "elapsedSeconds": 20.291,
+      "geometry": {},
+      "video": {
+        "frames": 0,
+        "backwardsPts": 0,
+        "ptsSpan": null
+      },
+      "audio": {
+        "frames": 0,
+        "backwardsPts": 0,
+        "ptsSpan": null,
+        "sampleFrames": 0,
+        "sampleRate": 0
+      },
+      "errors": [
+        "[in#0 @ [decoder]] Error opening input: Invalid data found when processing input\r",
+        "Error opening input file rtsp://[host]:8554/[source]?video&audio=opus.\r",
+        "Error opening input files: Invalid data found when processing input\r"
+      ]
+    },
+    {
+      "model": "T8E00",
+      "view": 1,
+      "concurrent": true,
+      "exit": 0,
+      "elapsedSeconds": 24.112,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 400
+      },
+      "video": {
+        "frames": 402,
+        "backwardsPts": 1,
+        "ptsSpan": 20.007411
+      },
+      "audio": {
+        "frames": 999,
+        "backwardsPts": 0,
+        "ptsSpan": 20,
+        "sampleFrames": 959040,
+        "sampleRate": 48000
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 7\r",
+        "[hevc @ [decoder]] Could not find ref with POC 16\r"
+      ]
+    }
+  ],
+  "auth": "ok",
+  "release": [
+    {
+      "seconds": 10,
+      "streaming": 0
+    },
+    {
+      "seconds": 20,
+      "streaming": 0
+    },
+    {
+      "seconds": 30,
+      "streaming": 0
+    }
+  ],
+  "status": "complete",
+  "finished": "2026-11-18T11:00:17.364Z"
+}

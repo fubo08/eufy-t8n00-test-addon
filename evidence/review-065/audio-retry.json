@@ -1,0 +1,78 @@
+{
+  "profile": "audio",
+  "artifact": "f5492a29c3a9a65bc0e25619bfe8636861978893",
+  "bridge": "22f18a74b1d6ddf64ab7ebbd258a0b79b06a3d08",
+  "sdk": "0.5.0",
+  "started": "2026-11-18T11:00:34.477Z",
+  "cases": [
+    {
+      "model": "T8E00",
+      "view": 0,
+      "concurrent": true,
+      "exit": 0,
+      "elapsedSeconds": 23.774,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 438
+      },
+      "video": {
+        "frames": 438,
+        "backwardsPts": 0,
+        "ptsSpan": 20.003089
+      },
+      "audio": {
+        "frames": 1001,
+        "backwardsPts": 0,
+        "ptsSpan": 20,
+        "sampleFrames": 960960,
+        "sampleRate": 48000
+      },
+      "errors": []
+    },
+    {
+      "model": "T8E00",
+      "view": 1,
+      "concurrent": true,
+      "exit": 0,
+      "elapsedSeconds": 26.155,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 401
+      },
+      "video": {
+        "frames": 402,
+        "backwardsPts": 1,
+        "ptsSpan": 20.035178
+      },
+      "audio": {
+        "frames": 1000,
+        "backwardsPts": 0,
+        "ptsSpan": 20,
+        "sampleFrames": 960000,
+        "sampleRate": 48000
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 5\r"
+      ]
+    }
+  ],
+  "auth": "ok",
+  "release": [
+    {
+      "seconds": 10,
+      "streaming": 0
+    },
+    {
+      "seconds": 20,
+      "streaming": 0
+    },
+    {
+      "seconds": 30,
+      "streaming": 0
+    }
+  ],
+  "status": "complete",
+  "finished": "2026-11-18T11:01:31.546Z"
+}
