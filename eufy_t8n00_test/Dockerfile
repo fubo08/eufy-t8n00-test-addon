@@ -19,7 +19,7 @@ RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/3
 RUN npm ci --ignore-scripts
 RUN curl -fsSL https://raw.githubusercontent.com/fubo08/ha-eufy-sdk-bridge/33d98dbc8824e5299c7dc11d23856534b9856664/test/optical-views.test.mjs -o test/optical-views.test.mjs
 RUN set +e; node --test --test-reporter=tap --test-name-pattern='screen.take and|last-screen rejects' test/optical-views.test.mjs > /bridge-screen-before.tap 2>&1; code=$?; set -e; test "$code" = 1; grep -q '# fail 2' /bridge-screen-before.tap
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/33d98dbc8824e5299c7dc11d23856534b9856664 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/012eacce0534570af25fcfa938ab482704fa4868 | tar -xz --strip-components=1
 RUN npm run lint && npm test
 RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test
 RUN rm -rf node_modules
@@ -45,6 +45,10 @@ RUN npm ci --omit=dev --no-audit --no-fund
 WORKDIR /profiles/combined78
 RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
 RUN cp -a /profiles/combined78 /profiles/combined70 && rm -rf /profiles/combined70/node_modules/@mega-yfue/eufy-sdk && cp -a /sdk70 /profiles/combined70/node_modules/@mega-yfue/eufy-sdk
+RUN cp -a /profiles/combined78 /profiles/audio78
+COPY audio-timing-diagnostic.mjs /profiles/audio78/audio-timing-diagnostic.mjs
+RUN node --input-type=module -e 'import fs from "node:fs"; const file="/profiles/audio78/node_modules/@mega-yfue/eufy-sdk/dist/index.js";let s=fs.readFileSync(file,"utf8");const target="const audio = { codec, data: body.subarray(AUDIO_HEADER_LEN) };";if(s.split(target).length!==2)throw Error("RTC audio probe anchor changed");s=s.replace(target,"globalThis.__nvrAudioTiming?.(body);\n      "+target);fs.writeFileSync(file,s);'
+RUN node --check /profiles/audio78/audio-timing-diagnostic.mjs && node --check /profiles/audio78/node_modules/@mega-yfue/eufy-sdk/dist/index.js
 WORKDIR /profiles/optical78
 RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
 RUN rm -rf /app && ln -s /profiles/combined78 /app
