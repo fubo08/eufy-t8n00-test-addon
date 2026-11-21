@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 profile="$(jq -r '.qualification_profile // "combined78"' /data/options.json)"
-case "$profile" in audio) profile=primer05 ;; fullhd) profile=combined78 ;; primer05|registry05|combined70|combined78) ;; *) echo 'Unsupported qualification profile' >&2; exit 1 ;; esac
+case "$profile" in audio) profile=primer05 ;; fullhd) profile=combined78 ;; primer05|registry05|combined70|combined78|optical78) ;; *) echo 'Unsupported qualification profile' >&2; exit 1 ;; esac
 cd "/profiles/$profile"
 node -e 'console.log("Qualification profile",process.argv[1],"SDK",require("./node_modules/@mega-yfue/eufy-sdk/package.json").version,"datachannel",require("./node_modules/node-datachannel/package.json").version)' "$profile"
 export EUFY_EMAIL="$(jq -r '.email' /data/options.json)"

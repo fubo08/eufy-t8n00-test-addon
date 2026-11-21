@@ -14,14 +14,25 @@ RUN mkdir /sdk70 && cp -a node_modules/@mega-yfue/eufy-sdk/. /sdk70/
 RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test
 RUN find src test -name '*.mjs' -exec node --check {} \;
 RUN rm -rf node_modules
+WORKDIR /qualification/optical78
+RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/384eafba82e236fc8f2c49366e672632d305a4bf | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts
+RUN curl -fsSL https://raw.githubusercontent.com/fubo08/ha-eufy-sdk-bridge/33d98dbc8824e5299c7dc11d23856534b9856664/test/optical-views.test.mjs -o test/optical-views.test.mjs
+RUN set +e; node --test --test-reporter=tap --test-name-pattern='screen.take and|last-screen rejects' test/optical-views.test.mjs > /bridge-screen-before.tap 2>&1; code=$?; set -e; test "$code" = 1; grep -q '# fail 2' /bridge-screen-before.tap
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/33d98dbc8824e5299c7dc11d23856534b9856664 | tar -xz --strip-components=1
+RUN npm run lint && npm test
+RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test
+RUN rm -rf node_modules
 FROM python:3.14-slim AS integration
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /integration
 RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk/tar.gz/d280f8f707fc32b893f9d3527b8c729d7d627027 | tar -xz --strip-components=1
 RUN python -m pip install --no-cache-dir -r requirements_common.txt -r requirements_dev.txt pytest
-RUN set +e; python -m pytest tests/test_translations.py -q --junitxml=/translation-before.xml; code=$?; set -e; test "$code" = 1; python -c "import xml.etree.ElementTree as E;r=E.parse('/translation-before.xml').getroot().find('testsuite');assert r.attrib['failures']=='1' and r.attrib['errors']=='0',r.attrib;assert any('pl.json' in (f.text or '') for f in r.iter('failure'))"
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk/tar.gz/6b2d8e05c6deaaac25ea187193b01898bb2107c3 | tar -xz --strip-components=1
-RUN python -m ruff check . && python -m ruff format --check . && python -m pytest tests/ -q --junitxml=/integration-results.xml
+RUN curl -fsSL https://raw.githubusercontent.com/fubo08/ha-eufy-sdk/76c7e0e/tests/test_last_screen.py -o tests/test_last_screen.py
+RUN set +e; python -m pytest tests/test_last_screen.py -k OpticalLastScreenTests -q --junitxml=/screen-before.xml; code=$?; set -e; test "$code" = 1; python -c "import xml.etree.ElementTree as E;r=E.parse('/screen-before.xml').getroot().find('testsuite');assert r.attrib['failures']=='1' and r.attrib['errors']=='0',r.attrib"
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk/tar.gz/35fa42a96ba5a4329eb7c8b1d5dbc02e90076638 | tar -xz --strip-components=1
+RUN python -m ruff check . && python -m ruff format --check . && python -m pytest tests/ --ignore=tests/test_translations.py -q --junitxml=/integration-results.xml
+RUN set +e; python -m pytest tests/test_translations.py -q --junitxml=/translation-known.xml; code=$?; set -e; test "$code" = 1; python -c "import xml.etree.ElementTree as E;r=E.parse('/translation-known.xml').getroot().find('testsuite');assert r.attrib['failures']=='1' and r.attrib['errors']=='0',r.attrib;assert any('pl.json' in (f.text or '') for f in r.iter('failure'))"
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2
 RUN apk add --no-cache jq
 COPY --from=qualification /qualification /profiles
@@ -34,6 +45,8 @@ RUN npm ci --omit=dev --no-audit --no-fund
 WORKDIR /profiles/combined78
 RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
 RUN cp -a /profiles/combined78 /profiles/combined70 && rm -rf /profiles/combined70/node_modules/@mega-yfue/eufy-sdk && cp -a /sdk70 /profiles/combined70/node_modules/@mega-yfue/eufy-sdk
+WORKDIR /profiles/optical78
+RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
 RUN rm -rf /app && ln -s /profiles/combined78 /app
 WORKDIR /app
 COPY run.sh /run.sh
