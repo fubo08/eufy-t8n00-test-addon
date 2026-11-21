@@ -14,6 +14,10 @@ RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/4f4e
 RUN npm ci --ignore-scripts && npm run lint
 RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test && rm -rf node_modules
 
+WORKDIR /qualification/realtime78
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/50830ea39d51f8d22b880ef8256031e7529c2f55 | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts && npm run lint
+RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test && rm -rf node_modules
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2
 RUN apk add --no-cache jq
 COPY --from=qualification /qualification /profiles
@@ -25,10 +29,15 @@ RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @
 WORKDIR /profiles/combinedPacing78
 RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
 RUN cmp /profiles/pacing78/src/adts-pacer.mjs /profiles/combinedPacing78/src/adts-pacer.mjs && for f in streams.mjs go2rtc-config.mjs src/live-feed.mjs src/live-still.mjs src/camera-views.mjs; do cmp "/profiles/combined78/$f" "/profiles/combinedPacing78/$f"; done
+WORKDIR /profiles/realtime78
+RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
+RUN for f in streams.mjs src/live-feed.mjs src/live-still.mjs src/camera-views.mjs src/live-audio.mjs src/http-routes.mjs; do cmp "/profiles/combined78/$f" "/profiles/realtime78/$f"; done
 RUN rm -rf /app && ln -s /profiles/combined78 /app
 WORKDIR /app
 COPY sync-probe.mjs /qualification/sync-probe.mjs
 RUN SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc SYNC_BUFFER_MS=384 node /qualification/sync-probe.mjs /profiles/pacing78
+COPY ffmpeg-pacing-probe.mjs /qualification/ffmpeg-pacing-probe.mjs
+RUN SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc node /qualification/ffmpeg-pacing-probe.mjs /profiles/realtime78
 COPY run.sh /run.sh
 RUN chmod +x /run.sh && sh -n /run.sh
 CMD ["/run.sh"]
