@@ -1,0 +1,62 @@
+{
+  "artifact": "675154423dbdd89f9cd0217b132c9e55a484fc41",
+  "source": "012eacce0534570af25fcfa938ab482704fa4868",
+  "profile": "optical78",
+  "sdk": "0.6.0-beta.78",
+  "started": "2026-11-21T16:07:08.731Z",
+  "cases": [
+    {
+      "deviceIndex": 0,
+      "model": "T8E00",
+      "primary": {
+        "status": 200,
+        "bytes": 139811,
+        "sha256": "f4ee30fb111dc603f590a66a9314d7396daa7cded51fa5ef5e2c2ee5b1a19abb",
+        "savedAt": "2026-11-21T16:07:14.932Z",
+        "decodeExit": 0,
+        "width": 1920,
+        "height": 1080
+      },
+      "secondary": {
+        "status": 200,
+        "bytes": 125315,
+        "sha256": "290a92ea0cd92610646e7b55037d12ca9e5d9e4d29b9d60cd97ccdd84fc8351d",
+        "savedAt": "2026-11-21T16:07:19.507Z",
+        "decodeExit": 0,
+        "width": 1920,
+        "height": 1080
+      },
+      "primaryUnchanged": true,
+      "secondaryEvent": true,
+      "distinctImages": true
+    },
+    {
+      "deviceIndex": 1,
+      "model": "T8E00",
+      "primary": {
+        "status": 200,
+        "bytes": 140996,
+        "sha256": "52ee642056942911c1317e7e739be0367395dfbc22a6adac80a10d7ac3b0dd8b",
+        "savedAt": "2026-11-21T16:07:23.224Z",
+        "decodeExit": 0,
+        "width": 2688,
+        "height": 1520
+      },
+      "secondary": {
+        "status": 200,
+        "bytes": 159416,
+        "sha256": "af79701bbd935a36b2e9ca71997a69b515709954e394b22fb4e4cc3c481e5c6f",
+        "savedAt": "2026-11-21T16:07:26.830Z",
+        "decodeExit": 0,
+        "width": 2688,
+        "height": 1520
+      },
+      "primaryUnchanged": true,
+      "secondaryEvent": true,
+      "distinctImages": true
+    }
+  ],
+  "scope": "Exact extracted bridge source with SDK beta.78; real NVR captures and retained JPEG decode, not HA entity UI or audio qualification",
+  "pass": true,
+  "finished": "2026-11-21T16:07:26.682Z"
+}

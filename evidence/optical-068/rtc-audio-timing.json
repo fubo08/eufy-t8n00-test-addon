@@ -1,0 +1,24 @@
+{
+  "artifact": "675154423dbdd89f9cd0217b132c9e55a484fc41",
+  "profile": "audio78",
+  "bridgeSource": "a72e983ac429a7e1e8c4e22ed2a7648b0646d54e",
+  "sdk": "0.6.0-beta.78",
+  "diagnostic": "Passive audio-header observer added to a separate diagnostic SDK copy; not production or optical PR validation",
+  "scope": "Passive RTC audio-header observer; no media payload retained or changed",
+  "frames": 934,
+  "invalidClocks": 0,
+  "arrivalSpanMs": 59896,
+  "sourceSpan": 59972,
+  "maxArrivalGapMs": 242,
+  "p95ArrivalGapMs": 118,
+  "gapsOver250ms": 0,
+  "gapsOver1000ms": 0,
+  "sourceRegressions": 0,
+  "sourceSteps": {
+    "0": 1,
+    "64": 927,
+    "108": 1,
+    "128": 3,
+    "152": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "scope": "Offline replay of observed HTTP AAC arrival times using a sample-count clock, not NVR source timestamps, not synchronized AV or a hardware fix",
+  "historicalPacerCommit": "7e04bf36c5ef97f63ce1b859358df32b915116c3",
+  "baseline": {
+    "delayMs": 0,
+    "frames": 901,
+    "rebuffers": 0,
+    "errors": [],
+    "maxGapMs": 446,
+    "gapsOver250ms": 15
+  },
+  "buffered": {
+    "delayMs": 1500,
+    "frames": 901,
+    "rebuffers": 0,
+    "errors": [],
+    "maxGapMs": 64,
+    "gapsOver250ms": 0
+  }
+}

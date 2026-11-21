@@ -1,0 +1,3631 @@
+{
+  "artifact": "e777f1aac7bb85b1a4687dba37667a1ec95b8e2a",
+  "profile": "combined78",
+  "model": "T8E00",
+  "view": 1,
+  "started": "2026-11-21T15:43:57.310Z",
+  "scope": "AAC HTTP arrival cadence alongside RTSP Opus decoding; no source timestamps and no listening test",
+  "aac": {
+    "frames": 901,
+    "bytes": 173035,
+    "firstMs": 2359,
+    "observedMs": 57596,
+    "mediaMs": 57664,
+    "maxGapMs": 496,
+    "p95GapMs": 130,
+    "gapsOver250ms": 18,
+    "gapsOver1000ms": 0,
+    "windows": [
+      {
+        "at": 2359,
+        "samplesMs": 64
+      },
+      {
+        "at": 2621,
+        "samplesMs": 128
+      },
+      {
+        "at": 2653,
+        "samplesMs": 192
+      },
+      {
+        "at": 2671,
+        "samplesMs": 256
+      },
+      {
+        "at": 2734,
+        "samplesMs": 320
+      },
+      {
+        "at": 2818,
+        "samplesMs": 384
+      },
+      {
+        "at": 2838,
+        "samplesMs": 448
+      },
+      {
+        "at": 2912,
+        "samplesMs": 512
+      },
+      {
+        "at": 2928,
+        "samplesMs": 576
+      },
+      {
+        "at": 2993,
+        "samplesMs": 640
+      },
+      {
+        "at": 3058,
+        "samplesMs": 704
+      },
+      {
+        "at": 3137,
+        "samplesMs": 768
+      },
+      {
+        "at": 3137,
+        "samplesMs": 832
+      },
+      {
+        "at": 3153,
+        "samplesMs": 896
+      },
+      {
+        "at": 3281,
+        "samplesMs": 960
+      },
+      {
+        "at": 3297,
+        "samplesMs": 1024
+      },
+      {
+        "at": 3364,
+        "samplesMs": 1088
+      },
+      {
+        "at": 3377,
+        "samplesMs": 1152
+      },
+      {
+        "at": 3443,
+        "samplesMs": 1216
+      },
+      {
+        "at": 3522,
+        "samplesMs": 1280
+      },
+      {
+        "at": 3539,
+        "samplesMs": 1344
+      },
+      {
+        "at": 3603,
+        "samplesMs": 1408
+      },
+      {
+        "at": 3683,
+        "samplesMs": 1472
+      },
+      {
+        "at": 3715,
+        "samplesMs": 1536
+      },
+      {
+        "at": 3811,
+        "samplesMs": 1600
+      },
+      {
+        "at": 3875,
+        "samplesMs": 1664
+      },
+      {
+        "at": 3939,
+        "samplesMs": 1728
+      },
+      {
+        "at": 4037,
+        "samplesMs": 1792
+      },
+      {
+        "at": 4053,
+        "samplesMs": 1856
+      },
+      {
+        "at": 4117,
+        "samplesMs": 1920
+      },
+      {
+        "at": 4166,
+        "samplesMs": 1984
+      },
+      {
+        "at": 4213,
+        "samplesMs": 2048
+      },
+      {
+        "at": 4581,
+        "samplesMs": 2112
+      },
+      {
+        "at": 4581,
+        "samplesMs": 2176
+      },
+      {
+        "at": 4629,
+        "samplesMs": 2240
+      },
+      {
+        "at": 4677,
+        "samplesMs": 2304
+      },
+      {
+        "at": 4758,
+        "samplesMs": 2368
+      },
+      {
+        "at": 4758,
+        "samplesMs": 2432
+      },
+      {
+        "at": 4826,
+        "samplesMs": 2496
+      },
+      {
+        "at": 4870,
+        "samplesMs": 2560
+      },
+      {
+        "at": 4919,
+        "samplesMs": 2624
+      },
+      {
+        "at": 4983,
+        "samplesMs": 2688
+      },
+      {
+        "at": 4998,
+        "samplesMs": 2752
+      },
+      {
+        "at": 5079,
+        "samplesMs": 2816
+      },
+      {
+        "at": 5158,
+        "samplesMs": 2880
+      },
+      {
+        "at": 5158,
+        "samplesMs": 2944
+      },
+      {
+        "at": 5239,
+        "samplesMs": 3008
+      },
+      {
+        "at": 5303,
+        "samplesMs": 3072
+      },
+      {
+        "at": 5336,
+        "samplesMs": 3136
+      },
+      {
+        "at": 5416,
+        "samplesMs": 3200
+      },
+      {
+        "at": 5432,
+        "samplesMs": 3264
+      },
+      {
+        "at": 5513,
+        "samplesMs": 3328
+      },
+      {
+        "at": 5625,
+        "samplesMs": 3392
+      },
+      {
+        "at": 5642,
+        "samplesMs": 3456
+      },
+      {
+        "at": 5706,
+        "samplesMs": 3520
+      },
+      {
+        "at": 5770,
+        "samplesMs": 3584
+      },
+      {
+        "at": 5884,
+        "samplesMs": 3648
+      },
+      {
+        "at": 5915,
+        "samplesMs": 3712
+      },
+      {
+        "at": 5963,
+        "samplesMs": 3776
+      },
+      {
+        "at": 6027,
+        "samplesMs": 3840
+      },
+      {
+        "at": 6059,
+        "samplesMs": 3904
+      },
+      {
+        "at": 6172,
+        "samplesMs": 3968
+      },
+      {
+        "at": 6316,
+        "samplesMs": 4032
+      },
+      {
+        "at": 6332,
+        "samplesMs": 4096
+      },
+      {
+        "at": 6670,
+        "samplesMs": 4160
+      },
+      {
+        "at": 6718,
+        "samplesMs": 4224
+      },
+      {
+        "at": 6784,
+        "samplesMs": 4288
+      },
+      {
+        "at": 6813,
+        "samplesMs": 4352
+      },
+      {
+        "at": 6845,
+        "samplesMs": 4416
+      },
+      {
+        "at": 6943,
+        "samplesMs": 4480
+      },
+      {
+        "at": 6959,
+        "samplesMs": 4544
+      },
+      {
+        "at": 7025,
+        "samplesMs": 4608
+      },
+      {
+        "at": 7089,
+        "samplesMs": 4672
+      },
+      {
+        "at": 7105,
+        "samplesMs": 4736
+      },
+      {
+        "at": 7172,
+        "samplesMs": 4800
+      },
+      {
+        "at": 7172,
+        "samplesMs": 4864
+      },
+      {
+        "at": 7248,
+        "samplesMs": 4928
+      },
+      {
+        "at": 7329,
+        "samplesMs": 4992
+      },
+      {
+        "at": 7329,
+        "samplesMs": 5056
+      },
+      {
+        "at": 7410,
+        "samplesMs": 5120
+      },
+      {
+        "at": 7490,
+        "samplesMs": 5184
+      },
+      {
+        "at": 7490,
+        "samplesMs": 5248
+      },
+      {
+        "at": 7570,
+        "samplesMs": 5312
+      },
+      {
+        "at": 7635,
+        "samplesMs": 5376
+      },
+      {
+        "at": 7650,
+        "samplesMs": 5440
+      },
+      {
+        "at": 7683,
+        "samplesMs": 5504
+      },
+      {
+        "at": 7782,
+        "samplesMs": 5568
+      },
+      {
+        "at": 7844,
+        "samplesMs": 5632
+      },
+      {
+        "at": 7861,
+        "samplesMs": 5696
+      },
+      {
+        "at": 8005,
+        "samplesMs": 5760
+      },
+      {
+        "at": 8038,
+        "samplesMs": 5824
+      },
+      {
+        "at": 8086,
+        "samplesMs": 5888
+      },
+      {
+        "at": 8150,
+        "samplesMs": 5952
+      },
+      {
+        "at": 8199,
+        "samplesMs": 6016
+      },
+      {
+        "at": 8311,
+        "samplesMs": 6080
+      },
+      {
+        "at": 8455,
+        "samplesMs": 6144
+      },
+      {
+        "at": 8535,
+        "samplesMs": 6208
+      },
+      {
+        "at": 8567,
+        "samplesMs": 6272
+      },
+      {
+        "at": 8647,
+        "samplesMs": 6336
+      },
+      {
+        "at": 8712,
+        "samplesMs": 6400
+      },
+      {
+        "at": 8729,
+        "samplesMs": 6464
+      },
+      {
+        "at": 8826,
+        "samplesMs": 6528
+      },
+      {
+        "at": 8858,
+        "samplesMs": 6592
+      },
+      {
+        "at": 8858,
+        "samplesMs": 6656
+      },
+      {
+        "at": 8937,
+        "samplesMs": 6720
+      },
+      {
+        "at": 8970,
+        "samplesMs": 6784
+      },
+      {
+        "at": 9109,
+        "samplesMs": 6848
+      },
+      {
+        "at": 9163,
+        "samplesMs": 6912
+      },
+      {
+        "at": 9226,
+        "samplesMs": 6976
+      },
+      {
+        "at": 9292,
+        "samplesMs": 7040
+      },
+      {
+        "at": 9372,
+        "samplesMs": 7104
+      },
+      {
+        "at": 9435,
+        "samplesMs": 7168
+      },
+      {
+        "at": 9500,
+        "samplesMs": 7232
+      },
+      {
+        "at": 9580,
+        "samplesMs": 7296
+      },
+      {
+        "at": 9596,
+        "samplesMs": 7360
+      },
+      {
+        "at": 9660,
+        "samplesMs": 7424
+      },
+      {
+        "at": 9787,
+        "samplesMs": 7488
+      },
+      {
+        "at": 9804,
+        "samplesMs": 7552
+      },
+      {
+        "at": 9901,
+        "samplesMs": 7616
+      },
+      {
+        "at": 9933,
+        "samplesMs": 7680
+      },
+      {
+        "at": 10013,
+        "samplesMs": 7744
+      },
+      {
+        "at": 10108,
+        "samplesMs": 7808
+      },
+      {
+        "at": 10156,
+        "samplesMs": 7872
+      },
+      {
+        "at": 10221,
+        "samplesMs": 7936
+      },
+      {
+        "at": 10242,
+        "samplesMs": 8000
+      },
+      {
+        "at": 10526,
+        "samplesMs": 8064
+      },
+      {
+        "at": 10592,
+        "samplesMs": 8128
+      },
+      {
+        "at": 10607,
+        "samplesMs": 8192
+      },
+      {
+        "at": 10703,
+        "samplesMs": 8256
+      },
+      {
+        "at": 10768,
+        "samplesMs": 8320
+      },
+      {
+        "at": 10768,
+        "samplesMs": 8384
+      },
+      {
+        "at": 10864,
+        "samplesMs": 8448
+      },
+      {
+        "at": 10928,
+        "samplesMs": 8512
+      },
+      {
+        "at": 10929,
+        "samplesMs": 8576
+      },
+      {
+        "at": 11007,
+        "samplesMs": 8640
+      },
+      {
+        "at": 11073,
+        "samplesMs": 8704
+      },
+      {
+        "at": 11073,
+        "samplesMs": 8768
+      },
+      {
+        "at": 11169,
+        "samplesMs": 8832
+      },
+      {
+        "at": 11233,
+        "samplesMs": 8896
+      },
+      {
+        "at": 11249,
+        "samplesMs": 8960
+      },
+      {
+        "at": 11281,
+        "samplesMs": 9024
+      },
+      {
+        "at": 11361,
+        "samplesMs": 9088
+      },
+      {
+        "at": 11425,
+        "samplesMs": 9152
+      },
+      {
+        "at": 11488,
+        "samplesMs": 9216
+      },
+      {
+        "at": 11537,
+        "samplesMs": 9280
+      },
+      {
+        "at": 11632,
+        "samplesMs": 9344
+      },
+      {
+        "at": 11681,
+        "samplesMs": 9408
+      },
+      {
+        "at": 11729,
+        "samplesMs": 9472
+      },
+      {
+        "at": 11809,
+        "samplesMs": 9536
+      },
+      {
+        "at": 11825,
+        "samplesMs": 9600
+      },
+      {
+        "at": 11921,
+        "samplesMs": 9664
+      },
+      {
+        "at": 12000,
+        "samplesMs": 9728
+      },
+      {
+        "at": 12033,
+        "samplesMs": 9792
+      },
+      {
+        "at": 12129,
+        "samplesMs": 9856
+      },
+      {
+        "at": 12162,
+        "samplesMs": 9920
+      },
+      {
+        "at": 12339,
+        "samplesMs": 9984
+      },
+      {
+        "at": 12580,
+        "samplesMs": 10048
+      },
+      {
+        "at": 12595,
+        "samplesMs": 10112
+      },
+      {
+        "at": 12644,
+        "samplesMs": 10176
+      },
+      {
+        "at": 12724,
+        "samplesMs": 10240
+      },
+      {
+        "at": 12773,
+        "samplesMs": 10304
+      },
+      {
+        "at": 12822,
+        "samplesMs": 10368
+      },
+      {
+        "at": 12933,
+        "samplesMs": 10432
+      },
+      {
+        "at": 12965,
+        "samplesMs": 10496
+      },
+      {
+        "at": 12965,
+        "samplesMs": 10560
+      },
+      {
+        "at": 13045,
+        "samplesMs": 10624
+      },
+      {
+        "at": 13109,
+        "samplesMs": 10688
+      },
+      {
+        "at": 13124,
+        "samplesMs": 10752
+      },
+      {
+        "at": 13195,
+        "samplesMs": 10816
+      },
+      {
+        "at": 13206,
+        "samplesMs": 10880
+      },
+      {
+        "at": 13286,
+        "samplesMs": 10944
+      },
+      {
+        "at": 13351,
+        "samplesMs": 11008
+      },
+      {
+        "at": 13351,
+        "samplesMs": 11072
+      },
+      {
+        "at": 13429,
+        "samplesMs": 11136
+      },
+      {
+        "at": 13429,
+        "samplesMs": 11200
+      },
+      {
+        "at": 13526,
+        "samplesMs": 11264
+      },
+      {
+        "at": 13605,
+        "samplesMs": 11328
+      },
+      {
+        "at": 13638,
+        "samplesMs": 11392
+      },
+      {
+        "at": 13734,
+        "samplesMs": 11456
+      },
+      {
+        "at": 13782,
+        "samplesMs": 11520
+      },
+      {
+        "at": 13846,
+        "samplesMs": 11584
+      },
+      {
+        "at": 13927,
+        "samplesMs": 11648
+      },
+      {
+        "at": 13975,
+        "samplesMs": 11712
+      },
+      {
+        "at": 14056,
+        "samplesMs": 11776
+      },
+      {
+        "at": 14104,
+        "samplesMs": 11840
+      },
+      {
+        "at": 14168,
+        "samplesMs": 11904
+      },
+      {
+        "at": 14201,
+        "samplesMs": 11968
+      },
+      {
+        "at": 14586,
+        "samplesMs": 12032
+      },
+      {
+        "at": 14649,
+        "samplesMs": 12096
+      },
+      {
+        "at": 14665,
+        "samplesMs": 12160
+      },
+      {
+        "at": 14665,
+        "samplesMs": 12224
+      },
+      {
+        "at": 14778,
+        "samplesMs": 12288
+      },
+      {
+        "at": 14842,
+        "samplesMs": 12352
+      },
+      {
+        "at": 14923,
+        "samplesMs": 12416
+      },
+      {
+        "at": 14938,
+        "samplesMs": 12480
+      },
+      {
+        "at": 15019,
+        "samplesMs": 12544
+      },
+      {
+        "at": 15101,
+        "samplesMs": 12608
+      },
+      {
+        "at": 15101,
+        "samplesMs": 12672
+      },
+      {
+        "at": 15182,
+        "samplesMs": 12736
+      },
+      {
+        "at": 15182,
+        "samplesMs": 12800
+      },
+      {
+        "at": 15260,
+        "samplesMs": 12864
+      },
+      {
+        "at": 15342,
+        "samplesMs": 12928
+      },
+      {
+        "at": 15342,
+        "samplesMs": 12992
+      },
+      {
+        "at": 15405,
+        "samplesMs": 13056
+      },
+      {
+        "at": 15488,
+        "samplesMs": 13120
+      },
+      {
+        "at": 15502,
+        "samplesMs": 13184
+      },
+      {
+        "at": 15567,
+        "samplesMs": 13248
+      },
+      {
+        "at": 15583,
+        "samplesMs": 13312
+      },
+      {
+        "at": 15647,
+        "samplesMs": 13376
+      },
+      {
+        "at": 15729,
+        "samplesMs": 13440
+      },
+      {
+        "at": 15761,
+        "samplesMs": 13504
+      },
+      {
+        "at": 15841,
+        "samplesMs": 13568
+      },
+      {
+        "at": 15921,
+        "samplesMs": 13632
+      },
+      {
+        "at": 15968,
+        "samplesMs": 13696
+      },
+      {
+        "at": 16001,
+        "samplesMs": 13760
+      },
+      {
+        "at": 16112,
+        "samplesMs": 13824
+      },
+      {
+        "at": 16145,
+        "samplesMs": 13888
+      },
+      {
+        "at": 16193,
+        "samplesMs": 13952
+      },
+      {
+        "at": 16290,
+        "samplesMs": 14016
+      },
+      {
+        "at": 16484,
+        "samplesMs": 14080
+      },
+      {
+        "at": 16563,
+        "samplesMs": 14144
+      },
+      {
+        "at": 16674,
+        "samplesMs": 14208
+      },
+      {
+        "at": 16674,
+        "samplesMs": 14272
+      },
+      {
+        "at": 16738,
+        "samplesMs": 14336
+      },
+      {
+        "at": 16738,
+        "samplesMs": 14400
+      },
+      {
+        "at": 16868,
+        "samplesMs": 14464
+      },
+      {
+        "at": 16901,
+        "samplesMs": 14528
+      },
+      {
+        "at": 16981,
+        "samplesMs": 14592
+      },
+      {
+        "at": 16997,
+        "samplesMs": 14656
+      },
+      {
+        "at": 17061,
+        "samplesMs": 14720
+      },
+      {
+        "at": 17142,
+        "samplesMs": 14784
+      },
+      {
+        "at": 17158,
+        "samplesMs": 14848
+      },
+      {
+        "at": 17222,
+        "samplesMs": 14912
+      },
+      {
+        "at": 17271,
+        "samplesMs": 14976
+      },
+      {
+        "at": 17304,
+        "samplesMs": 15040
+      },
+      {
+        "at": 17352,
+        "samplesMs": 15104
+      },
+      {
+        "at": 17465,
+        "samplesMs": 15168
+      },
+      {
+        "at": 17481,
+        "samplesMs": 15232
+      },
+      {
+        "at": 17577,
+        "samplesMs": 15296
+      },
+      {
+        "at": 17609,
+        "samplesMs": 15360
+      },
+      {
+        "at": 17691,
+        "samplesMs": 15424
+      },
+      {
+        "at": 17769,
+        "samplesMs": 15488
+      },
+      {
+        "at": 17820,
+        "samplesMs": 15552
+      },
+      {
+        "at": 17868,
+        "samplesMs": 15616
+      },
+      {
+        "at": 17930,
+        "samplesMs": 15680
+      },
+      {
+        "at": 17994,
+        "samplesMs": 15744
+      },
+      {
+        "at": 18074,
+        "samplesMs": 15808
+      },
+      {
+        "at": 18123,
+        "samplesMs": 15872
+      },
+      {
+        "at": 18203,
+        "samplesMs": 15936
+      },
+      {
+        "at": 18315,
+        "samplesMs": 16000
+      },
+      {
+        "at": 18523,
+        "samplesMs": 16064
+      },
+      {
+        "at": 18588,
+        "samplesMs": 16128
+      },
+      {
+        "at": 18689,
+        "samplesMs": 16192
+      },
+      {
+        "at": 18733,
+        "samplesMs": 16256
+      },
+      {
+        "at": 18748,
+        "samplesMs": 16320
+      },
+      {
+        "at": 18766,
+        "samplesMs": 16384
+      },
+      {
+        "at": 18943,
+        "samplesMs": 16448
+      },
+      {
+        "at": 18943,
+        "samplesMs": 16512
+      },
+      {
+        "at": 18944,
+        "samplesMs": 16576
+      },
+      {
+        "at": 18974,
+        "samplesMs": 16640
+      },
+      {
+        "at": 19022,
+        "samplesMs": 16704
+      },
+      {
+        "at": 19086,
+        "samplesMs": 16768
+      },
+      {
+        "at": 19167,
+        "samplesMs": 16832
+      },
+      {
+        "at": 19247,
+        "samplesMs": 16896
+      },
+      {
+        "at": 19247,
+        "samplesMs": 16960
+      },
+      {
+        "at": 19327,
+        "samplesMs": 17024
+      },
+      {
+        "at": 19407,
+        "samplesMs": 17088
+      },
+      {
+        "at": 19424,
+        "samplesMs": 17152
+      },
+      {
+        "at": 19503,
+        "samplesMs": 17216
+      },
+      {
+        "at": 19519,
+        "samplesMs": 17280
+      },
+      {
+        "at": 19615,
+        "samplesMs": 17344
+      },
+      {
+        "at": 19664,
+        "samplesMs": 17408
+      },
+      {
+        "at": 19711,
+        "samplesMs": 17472
+      },
+      {
+        "at": 19810,
+        "samplesMs": 17536
+      },
+      {
+        "at": 19824,
+        "samplesMs": 17600
+      },
+      {
+        "at": 19921,
+        "samplesMs": 17664
+      },
+      {
+        "at": 20002,
+        "samplesMs": 17728
+      },
+      {
+        "at": 20032,
+        "samplesMs": 17792
+      },
+      {
+        "at": 20144,
+        "samplesMs": 17856
+      },
+      {
+        "at": 20160,
+        "samplesMs": 17920
+      },
+      {
+        "at": 20225,
+        "samplesMs": 17984
+      },
+      {
+        "at": 20531,
+        "samplesMs": 18048
+      },
+      {
+        "at": 20562,
+        "samplesMs": 18112
+      },
+      {
+        "at": 20594,
+        "samplesMs": 18176
+      },
+      {
+        "at": 20674,
+        "samplesMs": 18240
+      },
+      {
+        "at": 20754,
+        "samplesMs": 18304
+      },
+      {
+        "at": 20770,
+        "samplesMs": 18368
+      },
+      {
+        "at": 20834,
+        "samplesMs": 18432
+      },
+      {
+        "at": 20915,
+        "samplesMs": 18496
+      },
+      {
+        "at": 20932,
+        "samplesMs": 18560
+      },
+      {
+        "at": 20996,
+        "samplesMs": 18624
+      },
+      {
+        "at": 21092,
+        "samplesMs": 18688
+      },
+      {
+        "at": 21092,
+        "samplesMs": 18752
+      },
+      {
+        "at": 21158,
+        "samplesMs": 18816
+      },
+      {
+        "at": 21158,
+        "samplesMs": 18880
+      },
+      {
+        "at": 21236,
+        "samplesMs": 18944
+      },
+      {
+        "at": 21316,
+        "samplesMs": 19008
+      },
+      {
+        "at": 21333,
+        "samplesMs": 19072
+      },
+      {
+        "at": 21412,
+        "samplesMs": 19136
+      },
+      {
+        "at": 21445,
+        "samplesMs": 19200
+      },
+      {
+        "at": 21509,
+        "samplesMs": 19264
+      },
+      {
+        "at": 21606,
+        "samplesMs": 19328
+      },
+      {
+        "at": 21623,
+        "samplesMs": 19392
+      },
+      {
+        "at": 21719,
+        "samplesMs": 19456
+      },
+      {
+        "at": 21783,
+        "samplesMs": 19520
+      },
+      {
+        "at": 21847,
+        "samplesMs": 19584
+      },
+      {
+        "at": 21927,
+        "samplesMs": 19648
+      },
+      {
+        "at": 21960,
+        "samplesMs": 19712
+      },
+      {
+        "at": 22073,
+        "samplesMs": 19776
+      },
+      {
+        "at": 22090,
+        "samplesMs": 19840
+      },
+      {
+        "at": 22169,
+        "samplesMs": 19904
+      },
+      {
+        "at": 22218,
+        "samplesMs": 19968
+      },
+      {
+        "at": 22574,
+        "samplesMs": 20032
+      },
+      {
+        "at": 22606,
+        "samplesMs": 20096
+      },
+      {
+        "at": 22653,
+        "samplesMs": 20160
+      },
+      {
+        "at": 22765,
+        "samplesMs": 20224
+      },
+      {
+        "at": 22814,
+        "samplesMs": 20288
+      },
+      {
+        "at": 22814,
+        "samplesMs": 20352
+      },
+      {
+        "at": 22927,
+        "samplesMs": 20416
+      },
+      {
+        "at": 22943,
+        "samplesMs": 20480
+      },
+      {
+        "at": 23007,
+        "samplesMs": 20544
+      },
+      {
+        "at": 23056,
+        "samplesMs": 20608
+      },
+      {
+        "at": 23056,
+        "samplesMs": 20672
+      },
+      {
+        "at": 23135,
+        "samplesMs": 20736
+      },
+      {
+        "at": 23222,
+        "samplesMs": 20800
+      },
+      {
+        "at": 23222,
+        "samplesMs": 20864
+      },
+      {
+        "at": 23296,
+        "samplesMs": 20928
+      },
+      {
+        "at": 23377,
+        "samplesMs": 20992
+      },
+      {
+        "at": 23377,
+        "samplesMs": 21056
+      },
+      {
+        "at": 23457,
+        "samplesMs": 21120
+      },
+      {
+        "at": 23457,
+        "samplesMs": 21184
+      },
+      {
+        "at": 23521,
+        "samplesMs": 21248
+      },
+      {
+        "at": 23618,
+        "samplesMs": 21312
+      },
+      {
+        "at": 23650,
+        "samplesMs": 21376
+      },
+      {
+        "at": 23698,
+        "samplesMs": 21440
+      },
+      {
+        "at": 23763,
+        "samplesMs": 21504
+      },
+      {
+        "at": 23860,
+        "samplesMs": 21568
+      },
+      {
+        "at": 23908,
+        "samplesMs": 21632
+      },
+      {
+        "at": 23989,
+        "samplesMs": 21696
+      },
+      {
+        "at": 24005,
+        "samplesMs": 21760
+      },
+      {
+        "at": 24069,
+        "samplesMs": 21824
+      },
+      {
+        "at": 24150,
+        "samplesMs": 21888
+      },
+      {
+        "at": 24214,
+        "samplesMs": 21952
+      },
+      {
+        "at": 24310,
+        "samplesMs": 22016
+      },
+      {
+        "at": 24647,
+        "samplesMs": 22080
+      },
+      {
+        "at": 24680,
+        "samplesMs": 22144
+      },
+      {
+        "at": 24807,
+        "samplesMs": 22208
+      },
+      {
+        "at": 24839,
+        "samplesMs": 22272
+      },
+      {
+        "at": 24887,
+        "samplesMs": 22336
+      },
+      {
+        "at": 24903,
+        "samplesMs": 22400
+      },
+      {
+        "at": 24967,
+        "samplesMs": 22464
+      },
+      {
+        "at": 25063,
+        "samplesMs": 22528
+      },
+      {
+        "at": 25063,
+        "samplesMs": 22592
+      },
+      {
+        "at": 25129,
+        "samplesMs": 22656
+      },
+      {
+        "at": 25192,
+        "samplesMs": 22720
+      },
+      {
+        "at": 25208,
+        "samplesMs": 22784
+      },
+      {
+        "at": 25284,
+        "samplesMs": 22848
+      },
+      {
+        "at": 25353,
+        "samplesMs": 22912
+      },
+      {
+        "at": 25372,
+        "samplesMs": 22976
+      },
+      {
+        "at": 25434,
+        "samplesMs": 23040
+      },
+      {
+        "at": 25514,
+        "samplesMs": 23104
+      },
+      {
+        "at": 25514,
+        "samplesMs": 23168
+      },
+      {
+        "at": 25596,
+        "samplesMs": 23232
+      },
+      {
+        "at": 25674,
+        "samplesMs": 23296
+      },
+      {
+        "at": 25674,
+        "samplesMs": 23360
+      },
+      {
+        "at": 25738,
+        "samplesMs": 23424
+      },
+      {
+        "at": 25835,
+        "samplesMs": 23488
+      },
+      {
+        "at": 25835,
+        "samplesMs": 23552
+      },
+      {
+        "at": 25899,
+        "samplesMs": 23616
+      },
+      {
+        "at": 25947,
+        "samplesMs": 23680
+      },
+      {
+        "at": 26013,
+        "samplesMs": 23744
+      },
+      {
+        "at": 26092,
+        "samplesMs": 23808
+      },
+      {
+        "at": 26125,
+        "samplesMs": 23872
+      },
+      {
+        "at": 26222,
+        "samplesMs": 23936
+      },
+      {
+        "at": 26287,
+        "samplesMs": 24000
+      },
+      {
+        "at": 26512,
+        "samplesMs": 24064
+      },
+      {
+        "at": 26591,
+        "samplesMs": 24128
+      },
+      {
+        "at": 26591,
+        "samplesMs": 24192
+      },
+      {
+        "at": 26688,
+        "samplesMs": 24256
+      },
+      {
+        "at": 26735,
+        "samplesMs": 24320
+      },
+      {
+        "at": 26784,
+        "samplesMs": 24384
+      },
+      {
+        "at": 26881,
+        "samplesMs": 24448
+      },
+      {
+        "at": 26913,
+        "samplesMs": 24512
+      },
+      {
+        "at": 26945,
+        "samplesMs": 24576
+      },
+      {
+        "at": 26994,
+        "samplesMs": 24640
+      },
+      {
+        "at": 27010,
+        "samplesMs": 24704
+      },
+      {
+        "at": 27058,
+        "samplesMs": 24768
+      },
+      {
+        "at": 27149,
+        "samplesMs": 24832
+      },
+      {
+        "at": 27216,
+        "samplesMs": 24896
+      },
+      {
+        "at": 27247,
+        "samplesMs": 24960
+      },
+      {
+        "at": 27295,
+        "samplesMs": 25024
+      },
+      {
+        "at": 27360,
+        "samplesMs": 25088
+      },
+      {
+        "at": 27440,
+        "samplesMs": 25152
+      },
+      {
+        "at": 27504,
+        "samplesMs": 25216
+      },
+      {
+        "at": 27522,
+        "samplesMs": 25280
+      },
+      {
+        "at": 27632,
+        "samplesMs": 25344
+      },
+      {
+        "at": 27666,
+        "samplesMs": 25408
+      },
+      {
+        "at": 27734,
+        "samplesMs": 25472
+      },
+      {
+        "at": 27797,
+        "samplesMs": 25536
+      },
+      {
+        "at": 27857,
+        "samplesMs": 25600
+      },
+      {
+        "at": 27921,
+        "samplesMs": 25664
+      },
+      {
+        "at": 28020,
+        "samplesMs": 25728
+      },
+      {
+        "at": 28034,
+        "samplesMs": 25792
+      },
+      {
+        "at": 28146,
+        "samplesMs": 25856
+      },
+      {
+        "at": 28163,
+        "samplesMs": 25920
+      },
+      {
+        "at": 28227,
+        "samplesMs": 25984
+      },
+      {
+        "at": 28500,
+        "samplesMs": 26048
+      },
+      {
+        "at": 28566,
+        "samplesMs": 26112
+      },
+      {
+        "at": 28695,
+        "samplesMs": 26176
+      },
+      {
+        "at": 28713,
+        "samplesMs": 26240
+      },
+      {
+        "at": 28773,
+        "samplesMs": 26304
+      },
+      {
+        "at": 28774,
+        "samplesMs": 26368
+      },
+      {
+        "at": 28869,
+        "samplesMs": 26432
+      },
+      {
+        "at": 28917,
+        "samplesMs": 26496
+      },
+      {
+        "at": 28933,
+        "samplesMs": 26560
+      },
+      {
+        "at": 29014,
+        "samplesMs": 26624
+      },
+      {
+        "at": 29014,
+        "samplesMs": 26688
+      },
+      {
+        "at": 29094,
+        "samplesMs": 26752
+      },
+      {
+        "at": 29175,
+        "samplesMs": 26816
+      },
+      {
+        "at": 29175,
+        "samplesMs": 26880
+      },
+      {
+        "at": 29254,
+        "samplesMs": 26944
+      },
+      {
+        "at": 29319,
+        "samplesMs": 27008
+      },
+      {
+        "at": 29336,
+        "samplesMs": 27072
+      },
+      {
+        "at": 29402,
+        "samplesMs": 27136
+      },
+      {
+        "at": 29463,
+        "samplesMs": 27200
+      },
+      {
+        "at": 29512,
+        "samplesMs": 27264
+      },
+      {
+        "at": 29593,
+        "samplesMs": 27328
+      },
+      {
+        "at": 29641,
+        "samplesMs": 27392
+      },
+      {
+        "at": 29736,
+        "samplesMs": 27456
+      },
+      {
+        "at": 29769,
+        "samplesMs": 27520
+      },
+      {
+        "at": 29833,
+        "samplesMs": 27584
+      },
+      {
+        "at": 29944,
+        "samplesMs": 27648
+      },
+      {
+        "at": 29993,
+        "samplesMs": 27712
+      },
+      {
+        "at": 30058,
+        "samplesMs": 27776
+      },
+      {
+        "at": 30109,
+        "samplesMs": 27840
+      },
+      {
+        "at": 30187,
+        "samplesMs": 27904
+      },
+      {
+        "at": 30330,
+        "samplesMs": 27968
+      },
+      {
+        "at": 30555,
+        "samplesMs": 28032
+      },
+      {
+        "at": 30586,
+        "samplesMs": 28096
+      },
+      {
+        "at": 30603,
+        "samplesMs": 28160
+      },
+      {
+        "at": 30619,
+        "samplesMs": 28224
+      },
+      {
+        "at": 30782,
+        "samplesMs": 28288
+      },
+      {
+        "at": 30813,
+        "samplesMs": 28352
+      },
+      {
+        "at": 30876,
+        "samplesMs": 28416
+      },
+      {
+        "at": 30909,
+        "samplesMs": 28480
+      },
+      {
+        "at": 30957,
+        "samplesMs": 28544
+      },
+      {
+        "at": 31037,
+        "samplesMs": 28608
+      },
+      {
+        "at": 31054,
+        "samplesMs": 28672
+      },
+      {
+        "at": 31119,
+        "samplesMs": 28736
+      },
+      {
+        "at": 31119,
+        "samplesMs": 28800
+      },
+      {
+        "at": 31185,
+        "samplesMs": 28864
+      },
+      {
+        "at": 31263,
+        "samplesMs": 28928
+      },
+      {
+        "at": 31279,
+        "samplesMs": 28992
+      },
+      {
+        "at": 31360,
+        "samplesMs": 29056
+      },
+      {
+        "at": 31424,
+        "samplesMs": 29120
+      },
+      {
+        "at": 31424,
+        "samplesMs": 29184
+      },
+      {
+        "at": 31537,
+        "samplesMs": 29248
+      },
+      {
+        "at": 31585,
+        "samplesMs": 29312
+      },
+      {
+        "at": 31632,
+        "samplesMs": 29376
+      },
+      {
+        "at": 31682,
+        "samplesMs": 29440
+      },
+      {
+        "at": 31777,
+        "samplesMs": 29504
+      },
+      {
+        "at": 31826,
+        "samplesMs": 29568
+      },
+      {
+        "at": 31874,
+        "samplesMs": 29632
+      },
+      {
+        "at": 31938,
+        "samplesMs": 29696
+      },
+      {
+        "at": 32019,
+        "samplesMs": 29760
+      },
+      {
+        "at": 32083,
+        "samplesMs": 29824
+      },
+      {
+        "at": 32197,
+        "samplesMs": 29888
+      },
+      {
+        "at": 32197,
+        "samplesMs": 29952
+      },
+      {
+        "at": 32693,
+        "samplesMs": 30016
+      },
+      {
+        "at": 32724,
+        "samplesMs": 30080
+      },
+      {
+        "at": 32773,
+        "samplesMs": 30144
+      },
+      {
+        "at": 32887,
+        "samplesMs": 30208
+      },
+      {
+        "at": 32903,
+        "samplesMs": 30272
+      },
+      {
+        "at": 32954,
+        "samplesMs": 30336
+      },
+      {
+        "at": 32968,
+        "samplesMs": 30400
+      },
+      {
+        "at": 33048,
+        "samplesMs": 30464
+      },
+      {
+        "at": 33112,
+        "samplesMs": 30528
+      },
+      {
+        "at": 33127,
+        "samplesMs": 30592
+      },
+      {
+        "at": 33200,
+        "samplesMs": 30656
+      },
+      {
+        "at": 33289,
+        "samplesMs": 30720
+      },
+      {
+        "at": 33289,
+        "samplesMs": 30784
+      },
+      {
+        "at": 33346,
+        "samplesMs": 30848
+      },
+      {
+        "at": 33428,
+        "samplesMs": 30912
+      },
+      {
+        "at": 33428,
+        "samplesMs": 30976
+      },
+      {
+        "at": 33507,
+        "samplesMs": 31040
+      },
+      {
+        "at": 33572,
+        "samplesMs": 31104
+      },
+      {
+        "at": 33572,
+        "samplesMs": 31168
+      },
+      {
+        "at": 33653,
+        "samplesMs": 31232
+      },
+      {
+        "at": 33735,
+        "samplesMs": 31296
+      },
+      {
+        "at": 33735,
+        "samplesMs": 31360
+      },
+      {
+        "at": 33813,
+        "samplesMs": 31424
+      },
+      {
+        "at": 33894,
+        "samplesMs": 31488
+      },
+      {
+        "at": 33894,
+        "samplesMs": 31552
+      },
+      {
+        "at": 33972,
+        "samplesMs": 31616
+      },
+      {
+        "at": 33972,
+        "samplesMs": 31680
+      },
+      {
+        "at": 34052,
+        "samplesMs": 31744
+      },
+      {
+        "at": 34133,
+        "samplesMs": 31808
+      },
+      {
+        "at": 34133,
+        "samplesMs": 31872
+      },
+      {
+        "at": 34212,
+        "samplesMs": 31936
+      },
+      {
+        "at": 34309,
+        "samplesMs": 32000
+      },
+      {
+        "at": 34470,
+        "samplesMs": 32064
+      },
+      {
+        "at": 34486,
+        "samplesMs": 32128
+      },
+      {
+        "at": 34518,
+        "samplesMs": 32192
+      },
+      {
+        "at": 34646,
+        "samplesMs": 32256
+      },
+      {
+        "at": 34696,
+        "samplesMs": 32320
+      },
+      {
+        "at": 34728,
+        "samplesMs": 32384
+      },
+      {
+        "at": 34825,
+        "samplesMs": 32448
+      },
+      {
+        "at": 34873,
+        "samplesMs": 32512
+      },
+      {
+        "at": 34905,
+        "samplesMs": 32576
+      },
+      {
+        "at": 34921,
+        "samplesMs": 32640
+      },
+      {
+        "at": 34985,
+        "samplesMs": 32704
+      },
+      {
+        "at": 35104,
+        "samplesMs": 32768
+      },
+      {
+        "at": 35105,
+        "samplesMs": 32832
+      },
+      {
+        "at": 35161,
+        "samplesMs": 32896
+      },
+      {
+        "at": 35210,
+        "samplesMs": 32960
+      },
+      {
+        "at": 35263,
+        "samplesMs": 33024
+      },
+      {
+        "at": 35370,
+        "samplesMs": 33088
+      },
+      {
+        "at": 35401,
+        "samplesMs": 33152
+      },
+      {
+        "at": 35466,
+        "samplesMs": 33216
+      },
+      {
+        "at": 35529,
+        "samplesMs": 33280
+      },
+      {
+        "at": 35610,
+        "samplesMs": 33344
+      },
+      {
+        "at": 35690,
+        "samplesMs": 33408
+      },
+      {
+        "at": 35738,
+        "samplesMs": 33472
+      },
+      {
+        "at": 35819,
+        "samplesMs": 33536
+      },
+      {
+        "at": 35835,
+        "samplesMs": 33600
+      },
+      {
+        "at": 35931,
+        "samplesMs": 33664
+      },
+      {
+        "at": 36011,
+        "samplesMs": 33728
+      },
+      {
+        "at": 36044,
+        "samplesMs": 33792
+      },
+      {
+        "at": 36124,
+        "samplesMs": 33856
+      },
+      {
+        "at": 36204,
+        "samplesMs": 33920
+      },
+      {
+        "at": 36350,
+        "samplesMs": 33984
+      },
+      {
+        "at": 36558,
+        "samplesMs": 34048
+      },
+      {
+        "at": 36606,
+        "samplesMs": 34112
+      },
+      {
+        "at": 36621,
+        "samplesMs": 34176
+      },
+      {
+        "at": 36687,
+        "samplesMs": 34240
+      },
+      {
+        "at": 36767,
+        "samplesMs": 34304
+      },
+      {
+        "at": 36785,
+        "samplesMs": 34368
+      },
+      {
+        "at": 36847,
+        "samplesMs": 34432
+      },
+      {
+        "at": 36927,
+        "samplesMs": 34496
+      },
+      {
+        "at": 36943,
+        "samplesMs": 34560
+      },
+      {
+        "at": 37007,
+        "samplesMs": 34624
+      },
+      {
+        "at": 37087,
+        "samplesMs": 34688
+      },
+      {
+        "at": 37087,
+        "samplesMs": 34752
+      },
+      {
+        "at": 37174,
+        "samplesMs": 34816
+      },
+      {
+        "at": 37175,
+        "samplesMs": 34880
+      },
+      {
+        "at": 37239,
+        "samplesMs": 34944
+      },
+      {
+        "at": 37319,
+        "samplesMs": 35008
+      },
+      {
+        "at": 37319,
+        "samplesMs": 35072
+      },
+      {
+        "at": 37400,
+        "samplesMs": 35136
+      },
+      {
+        "at": 37465,
+        "samplesMs": 35200
+      },
+      {
+        "at": 37545,
+        "samplesMs": 35264
+      },
+      {
+        "at": 37593,
+        "samplesMs": 35328
+      },
+      {
+        "at": 37674,
+        "samplesMs": 35392
+      },
+      {
+        "at": 37722,
+        "samplesMs": 35456
+      },
+      {
+        "at": 37771,
+        "samplesMs": 35520
+      },
+      {
+        "at": 37852,
+        "samplesMs": 35584
+      },
+      {
+        "at": 37914,
+        "samplesMs": 35648
+      },
+      {
+        "at": 37964,
+        "samplesMs": 35712
+      },
+      {
+        "at": 38059,
+        "samplesMs": 35776
+      },
+      {
+        "at": 38092,
+        "samplesMs": 35840
+      },
+      {
+        "at": 38173,
+        "samplesMs": 35904
+      },
+      {
+        "at": 38511,
+        "samplesMs": 35968
+      },
+      {
+        "at": 38543,
+        "samplesMs": 36032
+      },
+      {
+        "at": 38543,
+        "samplesMs": 36096
+      },
+      {
+        "at": 38575,
+        "samplesMs": 36160
+      },
+      {
+        "at": 38671,
+        "samplesMs": 36224
+      },
+      {
+        "at": 38735,
+        "samplesMs": 36288
+      },
+      {
+        "at": 38751,
+        "samplesMs": 36352
+      },
+      {
+        "at": 38866,
+        "samplesMs": 36416
+      },
+      {
+        "at": 38913,
+        "samplesMs": 36480
+      },
+      {
+        "at": 38975,
+        "samplesMs": 36544
+      },
+      {
+        "at": 39055,
+        "samplesMs": 36608
+      },
+      {
+        "at": 39055,
+        "samplesMs": 36672
+      },
+      {
+        "at": 39136,
+        "samplesMs": 36736
+      },
+      {
+        "at": 39215,
+        "samplesMs": 36800
+      },
+      {
+        "at": 39215,
+        "samplesMs": 36864
+      },
+      {
+        "at": 39280,
+        "samplesMs": 36928
+      },
+      {
+        "at": 39296,
+        "samplesMs": 36992
+      },
+      {
+        "at": 39361,
+        "samplesMs": 37056
+      },
+      {
+        "at": 39456,
+        "samplesMs": 37120
+      },
+      {
+        "at": 39456,
+        "samplesMs": 37184
+      },
+      {
+        "at": 39536,
+        "samplesMs": 37248
+      },
+      {
+        "at": 39600,
+        "samplesMs": 37312
+      },
+      {
+        "at": 39680,
+        "samplesMs": 37376
+      },
+      {
+        "at": 39680,
+        "samplesMs": 37440
+      },
+      {
+        "at": 39761,
+        "samplesMs": 37504
+      },
+      {
+        "at": 39826,
+        "samplesMs": 37568
+      },
+      {
+        "at": 39874,
+        "samplesMs": 37632
+      },
+      {
+        "at": 39954,
+        "samplesMs": 37696
+      },
+      {
+        "at": 40019,
+        "samplesMs": 37760
+      },
+      {
+        "at": 40083,
+        "samplesMs": 37824
+      },
+      {
+        "at": 40179,
+        "samplesMs": 37888
+      },
+      {
+        "at": 40196,
+        "samplesMs": 37952
+      },
+      {
+        "at": 40568,
+        "samplesMs": 38016
+      },
+      {
+        "at": 40568,
+        "samplesMs": 38080
+      },
+      {
+        "at": 40598,
+        "samplesMs": 38144
+      },
+      {
+        "at": 40694,
+        "samplesMs": 38208
+      },
+      {
+        "at": 40710,
+        "samplesMs": 38272
+      },
+      {
+        "at": 40773,
+        "samplesMs": 38336
+      },
+      {
+        "at": 40824,
+        "samplesMs": 38400
+      },
+      {
+        "at": 40886,
+        "samplesMs": 38464
+      },
+      {
+        "at": 40934,
+        "samplesMs": 38528
+      },
+      {
+        "at": 41013,
+        "samplesMs": 38592
+      },
+      {
+        "at": 41030,
+        "samplesMs": 38656
+      },
+      {
+        "at": 41094,
+        "samplesMs": 38720
+      },
+      {
+        "at": 41110,
+        "samplesMs": 38784
+      },
+      {
+        "at": 41176,
+        "samplesMs": 38848
+      },
+      {
+        "at": 41176,
+        "samplesMs": 38912
+      },
+      {
+        "at": 41256,
+        "samplesMs": 38976
+      },
+      {
+        "at": 41337,
+        "samplesMs": 39040
+      },
+      {
+        "at": 41415,
+        "samplesMs": 39104
+      },
+      {
+        "at": 41447,
+        "samplesMs": 39168
+      },
+      {
+        "at": 41494,
+        "samplesMs": 39232
+      },
+      {
+        "at": 41575,
+        "samplesMs": 39296
+      },
+      {
+        "at": 41591,
+        "samplesMs": 39360
+      },
+      {
+        "at": 41687,
+        "samplesMs": 39424
+      },
+      {
+        "at": 41769,
+        "samplesMs": 39488
+      },
+      {
+        "at": 41816,
+        "samplesMs": 39552
+      },
+      {
+        "at": 41912,
+        "samplesMs": 39616
+      },
+      {
+        "at": 41928,
+        "samplesMs": 39680
+      },
+      {
+        "at": 42008,
+        "samplesMs": 39744
+      },
+      {
+        "at": 42088,
+        "samplesMs": 39808
+      },
+      {
+        "at": 42136,
+        "samplesMs": 39872
+      },
+      {
+        "at": 42201,
+        "samplesMs": 39936
+      },
+      {
+        "at": 42298,
+        "samplesMs": 40000
+      },
+      {
+        "at": 42604,
+        "samplesMs": 40064
+      },
+      {
+        "at": 42666,
+        "samplesMs": 40128
+      },
+      {
+        "at": 42684,
+        "samplesMs": 40192
+      },
+      {
+        "at": 42781,
+        "samplesMs": 40256
+      },
+      {
+        "at": 42844,
+        "samplesMs": 40320
+      },
+      {
+        "at": 42924,
+        "samplesMs": 40384
+      },
+      {
+        "at": 42939,
+        "samplesMs": 40448
+      },
+      {
+        "at": 43003,
+        "samplesMs": 40512
+      },
+      {
+        "at": 43084,
+        "samplesMs": 40576
+      },
+      {
+        "at": 43102,
+        "samplesMs": 40640
+      },
+      {
+        "at": 43167,
+        "samplesMs": 40704
+      },
+      {
+        "at": 43167,
+        "samplesMs": 40768
+      },
+      {
+        "at": 43241,
+        "samplesMs": 40832
+      },
+      {
+        "at": 43327,
+        "samplesMs": 40896
+      },
+      {
+        "at": 43327,
+        "samplesMs": 40960
+      },
+      {
+        "at": 43406,
+        "samplesMs": 41024
+      },
+      {
+        "at": 43406,
+        "samplesMs": 41088
+      },
+      {
+        "at": 43487,
+        "samplesMs": 41152
+      },
+      {
+        "at": 43553,
+        "samplesMs": 41216
+      },
+      {
+        "at": 43568,
+        "samplesMs": 41280
+      },
+      {
+        "at": 43650,
+        "samplesMs": 41344
+      },
+      {
+        "at": 43714,
+        "samplesMs": 41408
+      },
+      {
+        "at": 43730,
+        "samplesMs": 41472
+      },
+      {
+        "at": 43794,
+        "samplesMs": 41536
+      },
+      {
+        "at": 43842,
+        "samplesMs": 41600
+      },
+      {
+        "at": 43937,
+        "samplesMs": 41664
+      },
+      {
+        "at": 44002,
+        "samplesMs": 41728
+      },
+      {
+        "at": 44035,
+        "samplesMs": 41792
+      },
+      {
+        "at": 44130,
+        "samplesMs": 41856
+      },
+      {
+        "at": 44162,
+        "samplesMs": 41920
+      },
+      {
+        "at": 44308,
+        "samplesMs": 41984
+      },
+      {
+        "at": 44549,
+        "samplesMs": 42048
+      },
+      {
+        "at": 44581,
+        "samplesMs": 42112
+      },
+      {
+        "at": 44597,
+        "samplesMs": 42176
+      },
+      {
+        "at": 44695,
+        "samplesMs": 42240
+      },
+      {
+        "at": 44695,
+        "samplesMs": 42304
+      },
+      {
+        "at": 44759,
+        "samplesMs": 42368
+      },
+      {
+        "at": 44823,
+        "samplesMs": 42432
+      },
+      {
+        "at": 44918,
+        "samplesMs": 42496
+      },
+      {
+        "at": 44935,
+        "samplesMs": 42560
+      },
+      {
+        "at": 44985,
+        "samplesMs": 42624
+      },
+      {
+        "at": 44985,
+        "samplesMs": 42688
+      },
+      {
+        "at": 45063,
+        "samplesMs": 42752
+      },
+      {
+        "at": 45159,
+        "samplesMs": 42816
+      },
+      {
+        "at": 45159,
+        "samplesMs": 42880
+      },
+      {
+        "at": 45208,
+        "samplesMs": 42944
+      },
+      {
+        "at": 45304,
+        "samplesMs": 43008
+      },
+      {
+        "at": 45304,
+        "samplesMs": 43072
+      },
+      {
+        "at": 45403,
+        "samplesMs": 43136
+      },
+      {
+        "at": 45434,
+        "samplesMs": 43200
+      },
+      {
+        "at": 45545,
+        "samplesMs": 43264
+      },
+      {
+        "at": 45610,
+        "samplesMs": 43328
+      },
+      {
+        "at": 45675,
+        "samplesMs": 43392
+      },
+      {
+        "at": 45706,
+        "samplesMs": 43456
+      },
+      {
+        "at": 45770,
+        "samplesMs": 43520
+      },
+      {
+        "at": 45835,
+        "samplesMs": 43584
+      },
+      {
+        "at": 45963,
+        "samplesMs": 43648
+      },
+      {
+        "at": 45983,
+        "samplesMs": 43712
+      },
+      {
+        "at": 46059,
+        "samplesMs": 43776
+      },
+      {
+        "at": 46092,
+        "samplesMs": 43840
+      },
+      {
+        "at": 46157,
+        "samplesMs": 43904
+      },
+      {
+        "at": 46526,
+        "samplesMs": 43968
+      },
+      {
+        "at": 46526,
+        "samplesMs": 44032
+      },
+      {
+        "at": 46559,
+        "samplesMs": 44096
+      },
+      {
+        "at": 46574,
+        "samplesMs": 44160
+      },
+      {
+        "at": 46671,
+        "samplesMs": 44224
+      },
+      {
+        "at": 46750,
+        "samplesMs": 44288
+      },
+      {
+        "at": 46766,
+        "samplesMs": 44352
+      },
+      {
+        "at": 46879,
+        "samplesMs": 44416
+      },
+      {
+        "at": 46910,
+        "samplesMs": 44480
+      },
+      {
+        "at": 46927,
+        "samplesMs": 44544
+      },
+      {
+        "at": 47006,
+        "samplesMs": 44608
+      },
+      {
+        "at": 47022,
+        "samplesMs": 44672
+      },
+      {
+        "at": 47070,
+        "samplesMs": 44736
+      },
+      {
+        "at": 47102,
+        "samplesMs": 44800
+      },
+      {
+        "at": 47154,
+        "samplesMs": 44864
+      },
+      {
+        "at": 47231,
+        "samplesMs": 44928
+      },
+      {
+        "at": 47312,
+        "samplesMs": 44992
+      },
+      {
+        "at": 47329,
+        "samplesMs": 45056
+      },
+      {
+        "at": 47393,
+        "samplesMs": 45120
+      },
+      {
+        "at": 47473,
+        "samplesMs": 45184
+      },
+      {
+        "at": 47521,
+        "samplesMs": 45248
+      },
+      {
+        "at": 47570,
+        "samplesMs": 45312
+      },
+      {
+        "at": 47650,
+        "samplesMs": 45376
+      },
+      {
+        "at": 47701,
+        "samplesMs": 45440
+      },
+      {
+        "at": 47796,
+        "samplesMs": 45504
+      },
+      {
+        "at": 47844,
+        "samplesMs": 45568
+      },
+      {
+        "at": 47892,
+        "samplesMs": 45632
+      },
+      {
+        "at": 47971,
+        "samplesMs": 45696
+      },
+      {
+        "at": 48004,
+        "samplesMs": 45760
+      },
+      {
+        "at": 48116,
+        "samplesMs": 45824
+      },
+      {
+        "at": 48164,
+        "samplesMs": 45888
+      },
+      {
+        "at": 48229,
+        "samplesMs": 45952
+      },
+      {
+        "at": 48502,
+        "samplesMs": 46016
+      },
+      {
+        "at": 48534,
+        "samplesMs": 46080
+      },
+      {
+        "at": 48583,
+        "samplesMs": 46144
+      },
+      {
+        "at": 48729,
+        "samplesMs": 46208
+      },
+      {
+        "at": 48744,
+        "samplesMs": 46272
+      },
+      {
+        "at": 48777,
+        "samplesMs": 46336
+      },
+      {
+        "at": 48857,
+        "samplesMs": 46400
+      },
+      {
+        "at": 48920,
+        "samplesMs": 46464
+      },
+      {
+        "at": 48953,
+        "samplesMs": 46528
+      },
+      {
+        "at": 48968,
+        "samplesMs": 46592
+      },
+      {
+        "at": 49033,
+        "samplesMs": 46656
+      },
+      {
+        "at": 49097,
+        "samplesMs": 46720
+      },
+      {
+        "at": 49180,
+        "samplesMs": 46784
+      },
+      {
+        "at": 49180,
+        "samplesMs": 46848
+      },
+      {
+        "at": 49241,
+        "samplesMs": 46912
+      },
+      {
+        "at": 49257,
+        "samplesMs": 46976
+      },
+      {
+        "at": 49337,
+        "samplesMs": 47040
+      },
+      {
+        "at": 49418,
+        "samplesMs": 47104
+      },
+      {
+        "at": 49483,
+        "samplesMs": 47168
+      },
+      {
+        "at": 49498,
+        "samplesMs": 47232
+      },
+      {
+        "at": 49564,
+        "samplesMs": 47296
+      },
+      {
+        "at": 49611,
+        "samplesMs": 47360
+      },
+      {
+        "at": 49676,
+        "samplesMs": 47424
+      },
+      {
+        "at": 49776,
+        "samplesMs": 47488
+      },
+      {
+        "at": 49821,
+        "samplesMs": 47552
+      },
+      {
+        "at": 49917,
+        "samplesMs": 47616
+      },
+      {
+        "at": 49966,
+        "samplesMs": 47680
+      },
+      {
+        "at": 50045,
+        "samplesMs": 47744
+      },
+      {
+        "at": 50110,
+        "samplesMs": 47808
+      },
+      {
+        "at": 50110,
+        "samplesMs": 47872
+      },
+      {
+        "at": 50333,
+        "samplesMs": 47936
+      },
+      {
+        "at": 50333,
+        "samplesMs": 48000
+      },
+      {
+        "at": 50606,
+        "samplesMs": 48064
+      },
+      {
+        "at": 50671,
+        "samplesMs": 48128
+      },
+      {
+        "at": 50767,
+        "samplesMs": 48192
+      },
+      {
+        "at": 50799,
+        "samplesMs": 48256
+      },
+      {
+        "at": 50846,
+        "samplesMs": 48320
+      },
+      {
+        "at": 50878,
+        "samplesMs": 48384
+      },
+      {
+        "at": 50959,
+        "samplesMs": 48448
+      },
+      {
+        "at": 51008,
+        "samplesMs": 48512
+      },
+      {
+        "at": 51089,
+        "samplesMs": 48576
+      },
+      {
+        "at": 51089,
+        "samplesMs": 48640
+      },
+      {
+        "at": 51169,
+        "samplesMs": 48704
+      },
+      {
+        "at": 51169,
+        "samplesMs": 48768
+      },
+      {
+        "at": 51251,
+        "samplesMs": 48832
+      },
+      {
+        "at": 51316,
+        "samplesMs": 48896
+      },
+      {
+        "at": 51332,
+        "samplesMs": 48960
+      },
+      {
+        "at": 51412,
+        "samplesMs": 49024
+      },
+      {
+        "at": 51476,
+        "samplesMs": 49088
+      },
+      {
+        "at": 51491,
+        "samplesMs": 49152
+      },
+      {
+        "at": 51555,
+        "samplesMs": 49216
+      },
+      {
+        "at": 51571,
+        "samplesMs": 49280
+      },
+      {
+        "at": 51652,
+        "samplesMs": 49344
+      },
+      {
+        "at": 51716,
+        "samplesMs": 49408
+      },
+      {
+        "at": 51734,
+        "samplesMs": 49472
+      },
+      {
+        "at": 51797,
+        "samplesMs": 49536
+      },
+      {
+        "at": 51892,
+        "samplesMs": 49600
+      },
+      {
+        "at": 51956,
+        "samplesMs": 49664
+      },
+      {
+        "at": 52004,
+        "samplesMs": 49728
+      },
+      {
+        "at": 52052,
+        "samplesMs": 49792
+      },
+      {
+        "at": 52148,
+        "samplesMs": 49856
+      },
+      {
+        "at": 52180,
+        "samplesMs": 49920
+      },
+      {
+        "at": 52309,
+        "samplesMs": 49984
+      },
+      {
+        "at": 52470,
+        "samplesMs": 50048
+      },
+      {
+        "at": 52549,
+        "samplesMs": 50112
+      },
+      {
+        "at": 52631,
+        "samplesMs": 50176
+      },
+      {
+        "at": 52646,
+        "samplesMs": 50240
+      },
+      {
+        "at": 52711,
+        "samplesMs": 50304
+      },
+      {
+        "at": 52727,
+        "samplesMs": 50368
+      },
+      {
+        "at": 52808,
+        "samplesMs": 50432
+      },
+      {
+        "at": 52857,
+        "samplesMs": 50496
+      },
+      {
+        "at": 52890,
+        "samplesMs": 50560
+      },
+      {
+        "at": 52937,
+        "samplesMs": 50624
+      },
+      {
+        "at": 53033,
+        "samplesMs": 50688
+      },
+      {
+        "at": 53034,
+        "samplesMs": 50752
+      },
+      {
+        "at": 53113,
+        "samplesMs": 50816
+      },
+      {
+        "at": 53113,
+        "samplesMs": 50880
+      },
+      {
+        "at": 53209,
+        "samplesMs": 50944
+      },
+      {
+        "at": 53289,
+        "samplesMs": 51008
+      },
+      {
+        "at": 53320,
+        "samplesMs": 51072
+      },
+      {
+        "at": 53402,
+        "samplesMs": 51136
+      },
+      {
+        "at": 53432,
+        "samplesMs": 51200
+      },
+      {
+        "at": 53512,
+        "samplesMs": 51264
+      },
+      {
+        "at": 53624,
+        "samplesMs": 51328
+      },
+      {
+        "at": 53674,
+        "samplesMs": 51392
+      },
+      {
+        "at": 53736,
+        "samplesMs": 51456
+      },
+      {
+        "at": 53769,
+        "samplesMs": 51520
+      },
+      {
+        "at": 53849,
+        "samplesMs": 51584
+      },
+      {
+        "at": 53929,
+        "samplesMs": 51648
+      },
+      {
+        "at": 53962,
+        "samplesMs": 51712
+      },
+      {
+        "at": 54042,
+        "samplesMs": 51776
+      },
+      {
+        "at": 54091,
+        "samplesMs": 51840
+      },
+      {
+        "at": 54155,
+        "samplesMs": 51904
+      },
+      {
+        "at": 54305,
+        "samplesMs": 51968
+      },
+      {
+        "at": 54525,
+        "samplesMs": 52032
+      },
+      {
+        "at": 54588,
+        "samplesMs": 52096
+      },
+      {
+        "at": 54604,
+        "samplesMs": 52160
+      },
+      {
+        "at": 54702,
+        "samplesMs": 52224
+      },
+      {
+        "at": 54750,
+        "samplesMs": 52288
+      },
+      {
+        "at": 54766,
+        "samplesMs": 52352
+      },
+      {
+        "at": 54894,
+        "samplesMs": 52416
+      },
+      {
+        "at": 54894,
+        "samplesMs": 52480
+      },
+      {
+        "at": 54943,
+        "samplesMs": 52544
+      },
+      {
+        "at": 55006,
+        "samplesMs": 52608
+      },
+      {
+        "at": 55039,
+        "samplesMs": 52672
+      },
+      {
+        "at": 55090,
+        "samplesMs": 52736
+      },
+      {
+        "at": 55103,
+        "samplesMs": 52800
+      },
+      {
+        "at": 55182,
+        "samplesMs": 52864
+      },
+      {
+        "at": 55264,
+        "samplesMs": 52928
+      },
+      {
+        "at": 55264,
+        "samplesMs": 52992
+      },
+      {
+        "at": 55344,
+        "samplesMs": 53056
+      },
+      {
+        "at": 55361,
+        "samplesMs": 53120
+      },
+      {
+        "at": 55506,
+        "samplesMs": 53184
+      },
+      {
+        "at": 55522,
+        "samplesMs": 53248
+      },
+      {
+        "at": 55588,
+        "samplesMs": 53312
+      },
+      {
+        "at": 55652,
+        "samplesMs": 53376
+      },
+      {
+        "at": 55684,
+        "samplesMs": 53440
+      },
+      {
+        "at": 55765,
+        "samplesMs": 53504
+      },
+      {
+        "at": 55860,
+        "samplesMs": 53568
+      },
+      {
+        "at": 55876,
+        "samplesMs": 53632
+      },
+      {
+        "at": 55989,
+        "samplesMs": 53696
+      },
+      {
+        "at": 55989,
+        "samplesMs": 53760
+      },
+      {
+        "at": 56085,
+        "samplesMs": 53824
+      },
+      {
+        "at": 56166,
+        "samplesMs": 53888
+      },
+      {
+        "at": 56198,
+        "samplesMs": 53952
+      },
+      {
+        "at": 56585,
+        "samplesMs": 54016
+      },
+      {
+        "at": 56600,
+        "samplesMs": 54080
+      },
+      {
+        "at": 56616,
+        "samplesMs": 54144
+      },
+      {
+        "at": 56729,
+        "samplesMs": 54208
+      },
+      {
+        "at": 56729,
+        "samplesMs": 54272
+      },
+      {
+        "at": 56825,
+        "samplesMs": 54336
+      },
+      {
+        "at": 56842,
+        "samplesMs": 54400
+      },
+      {
+        "at": 56953,
+        "samplesMs": 54464
+      },
+      {
+        "at": 57002,
+        "samplesMs": 54528
+      },
+      {
+        "at": 57002,
+        "samplesMs": 54592
+      },
+      {
+        "at": 57065,
+        "samplesMs": 54656
+      },
+      {
+        "at": 57129,
+        "samplesMs": 54720
+      },
+      {
+        "at": 57129,
+        "samplesMs": 54784
+      },
+      {
+        "at": 57212,
+        "samplesMs": 54848
+      },
+      {
+        "at": 57289,
+        "samplesMs": 54912
+      },
+      {
+        "at": 57289,
+        "samplesMs": 54976
+      },
+      {
+        "at": 57371,
+        "samplesMs": 55040
+      },
+      {
+        "at": 57371,
+        "samplesMs": 55104
+      },
+      {
+        "at": 57531,
+        "samplesMs": 55168
+      },
+      {
+        "at": 57531,
+        "samplesMs": 55232
+      },
+      {
+        "at": 57596,
+        "samplesMs": 55296
+      },
+      {
+        "at": 57611,
+        "samplesMs": 55360
+      },
+      {
+        "at": 57691,
+        "samplesMs": 55424
+      },
+      {
+        "at": 57787,
+        "samplesMs": 55488
+      },
+      {
+        "at": 57787,
+        "samplesMs": 55552
+      },
+      {
+        "at": 57899,
+        "samplesMs": 55616
+      },
+      {
+        "at": 57915,
+        "samplesMs": 55680
+      },
+      {
+        "at": 57979,
+        "samplesMs": 55744
+      },
+      {
+        "at": 58099,
+        "samplesMs": 55808
+      },
+      {
+        "at": 58124,
+        "samplesMs": 55872
+      },
+      {
+        "at": 58204,
+        "samplesMs": 55936
+      },
+      {
+        "at": 58334,
+        "samplesMs": 56000
+      },
+      {
+        "at": 58638,
+        "samplesMs": 56064
+      },
+      {
+        "at": 58718,
+        "samplesMs": 56128
+      },
+      {
+        "at": 58797,
+        "samplesMs": 56192
+      },
+      {
+        "at": 58813,
+        "samplesMs": 56256
+      },
+      {
+        "at": 58877,
+        "samplesMs": 56320
+      },
+      {
+        "at": 58942,
+        "samplesMs": 56384
+      },
+      {
+        "at": 58959,
+        "samplesMs": 56448
+      },
+      {
+        "at": 59022,
+        "samplesMs": 56512
+      },
+      {
+        "at": 59118,
+        "samplesMs": 56576
+      },
+      {
+        "at": 59118,
+        "samplesMs": 56640
+      },
+      {
+        "at": 59166,
+        "samplesMs": 56704
+      },
+      {
+        "at": 59182,
+        "samplesMs": 56768
+      },
+      {
+        "at": 59247,
+        "samplesMs": 56832
+      },
+      {
+        "at": 59328,
+        "samplesMs": 56896
+      },
+      {
+        "at": 59328,
+        "samplesMs": 56960
+      },
+      {
+        "at": 59409,
+        "samplesMs": 57024
+      },
+      {
+        "at": 59489,
+        "samplesMs": 57088
+      },
+      {
+        "at": 59489,
+        "samplesMs": 57152
+      },
+      {
+        "at": 59569,
+        "samplesMs": 57216
+      },
+      {
+        "at": 59569,
+        "samplesMs": 57280
+      },
+      {
+        "at": 59649,
+        "samplesMs": 57344
+      },
+      {
+        "at": 59731,
+        "samplesMs": 57408
+      },
+      {
+        "at": 59731,
+        "samplesMs": 57472
+      },
+      {
+        "at": 59810,
+        "samplesMs": 57536
+      },
+      {
+        "at": 59890,
+        "samplesMs": 57600
+      },
+      {
+        "at": 59955,
+        "samplesMs": 57664
+      }
+    ]
+  },
+  "opus": {
+    "exit": 0,
+    "decodedFrames": 2501,
+    "nonMonotonic": false,
+    "decodeErrors": []
+  }
+}
