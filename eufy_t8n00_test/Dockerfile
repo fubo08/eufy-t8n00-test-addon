@@ -20,7 +20,7 @@ WORKDIR /integration
 RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk/tar.gz/d280f8f707fc32b893f9d3527b8c729d7d627027 | tar -xz --strip-components=1
 RUN python -m pip install --no-cache-dir -r requirements_common.txt -r requirements_dev.txt pytest
 RUN set +e; python -m pytest tests/test_translations.py -q --junitxml=/translation-before.xml; code=$?; set -e; test "$code" = 1; python -c "import xml.etree.ElementTree as E;r=E.parse('/translation-before.xml').getroot().find('testsuite');assert r.attrib['failures']=='1' and r.attrib['errors']=='0',r.attrib;assert any('pl.json' in (f.text or '') for f in r.iter('failure'))"
-RUN curl -fsSL https://raw.githubusercontent.com/fubo08/ha-eufy-sdk/5b723495764dc8a491df2dc7cacae399673eb4ba/custom_components/eufy_sdk/translations/pl.json -o custom_components/eufy_sdk/translations/pl.json
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk/tar.gz/6b2d8e05c6deaaac25ea187193b01898bb2107c3 | tar -xz --strip-components=1
 RUN python -m ruff check . && python -m ruff format --check . && python -m pytest tests/ -q --junitxml=/integration-results.xml
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2
 RUN apk add --no-cache jq
