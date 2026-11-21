@@ -35,7 +35,7 @@ try{
   const video=units(await fs.readFile(videoFile)),audio=aacUnits(await fs.readFile(audioFile));
   if(video.length!==135)throw Error('unexpected video access-unit count '+video.length);
   const results=[];
-  for(const bufferMs of [0,640]){
+  for(const bufferMs of [0,Number(process.env.SYNC_BUFFER_MS??640)]){
     const timers=[],feeds=new Set(),handles=new Set(),reports=[];let begun=false,g2;
     const config=loadConfig({EUFY_EMAIL:'synthetic@example.invalid',EUFY_PASSWORD:'synthetic',BRIDGE_AUDIO_BUFFER_MS:String(bufferMs),STREAM_INSTANT_START:'0',STREAM_OPEN_ATTEMPTS:'1'});
     Object.assign(config.cfg,{selfHost:'127.0.0.1',go2rtcRtspPort:await freePort(),go2rtcApiPort:await freePort(),go2rtcWebrtcPort:await freePort(),go2rtcConfig:path.join(dir,'go2rtc.yaml')});
@@ -64,7 +64,7 @@ try{
     }finally{for(const t of timers)clearTimeout(t);for(const f of feeds)f.destroy();for(const h of handles)h.stop();g2?.kill();server.closeAllConnections();await new Promise(r=>server.close(r));server=null;}
   }
   const result={scope:'Synthetic HEVC flash and AAC beep through production HTTP, generated go2rtc sources and RTSP Opus; not physical NVR synchronization or listening evidence',results,additionalAudioOffsetMs:results[1].beepMinusFlashMs-results[0].beepMinusFlashMs};
-  await fs.writeFile(path.join(root,'audio-sync-comparison-20261121.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));
+  await fs.writeFile(path.join(root,'audio-sync-comparison-384-20261121.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }finally{
   for(const p of children)p.kill();if(server){server.closeAllConnections();server.close();}
   const resolved=await fs.realpath(dir);if(path.dirname(resolved)!==root||!path.basename(resolved).startsWith('audio-sync-tmp-'))throw Error('unsafe cleanup path');await fs.rm(resolved,{recursive:true,force:true});

@@ -10,5 +10,5 @@ export EUFY_COUNTRY="$(jq -r '.country' /data/options.json)"
 export EUFY_SESSION=/data/.eufy-session.json
 export GO2RTC_CONFIG=/data/go2rtc.yaml
 export BRIDGE_APP_DIR="/profiles/$profile"
-case "$profile" in pacing78|combinedPacing78) export BRIDGE_AUDIO_BUFFER_MS=640 ;; *) export BRIDGE_AUDIO_BUFFER_MS=0 ;; esac
+case "$profile" in pacing78|combinedPacing78) export BRIDGE_AUDIO_BUFFER_MS="$(jq -r '.audio_buffer_ms // 384' /data/options.json)" ;; *) export BRIDGE_AUDIO_BUFFER_MS=0 ;; esac
 exec node server.mjs

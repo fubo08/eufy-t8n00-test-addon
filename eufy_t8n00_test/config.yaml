@@ -22,6 +22,7 @@ ports_description:
   8554/tcp: RTSP
 options:
   qualification_profile: combined78
+  audio_buffer_ms: 384
   qualification_sdk: beta35
   transcode_h264: []
   transcode_width: 1920
@@ -68,6 +69,7 @@ options:
   solix_retry_max_ms: 3600000
 schema:
   qualification_profile: list(combined78|pacing78|combinedPacing78)
+  audio_buffer_ms: int(0,1000)
   qualification_sdk: list(beta35|beta63)
   transcode_h264:
     - str

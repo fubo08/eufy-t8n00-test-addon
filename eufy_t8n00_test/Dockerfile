@@ -28,7 +28,7 @@ RUN cmp /profiles/pacing78/src/adts-pacer.mjs /profiles/combinedPacing78/src/adt
 RUN rm -rf /app && ln -s /profiles/combined78 /app
 WORKDIR /app
 COPY sync-probe.mjs /qualification/sync-probe.mjs
-RUN SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc node /qualification/sync-probe.mjs /profiles/pacing78
+RUN SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc SYNC_BUFFER_MS=384 node /qualification/sync-probe.mjs /profiles/pacing78
 COPY run.sh /run.sh
 RUN chmod +x /run.sh && sh -n /run.sh
 CMD ["/run.sh"]
