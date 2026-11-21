@@ -38,7 +38,7 @@ COPY sync-probe.mjs /qualification/sync-probe.mjs
 RUN SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc SYNC_BUFFER_MS=384 node /qualification/sync-probe.mjs /profiles/pacing78
 COPY ffmpeg-pacing-probe.mjs /qualification/ffmpeg-pacing-probe.mjs
 COPY audio-arrivals.json /qualification/audio-arrivals.json
-RUN set +e; PACING_BEFORE=1 SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc node /qualification/ffmpeg-pacing-probe.mjs /profiles/realtime78 > /audio-ffmpeg-before.log 2>&1; code=$?; set -e; test "$code" = 1; grep -q 'audio reserve did not absorb' /audio-ffmpeg-before.log
+RUN set +e; SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc node /qualification/ffmpeg-pacing-probe.mjs /profiles/combined78 > /audio-ffmpeg-before.log 2>&1; code=$?; set -e; test "$code" = 1; grep -q 'audio reserve did not absorb' /audio-ffmpeg-before.log
 RUN SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc node /qualification/ffmpeg-pacing-probe.mjs /profiles/realtime78
 COPY run.sh /run.sh
 RUN chmod +x /run.sh && sh -n /run.sh

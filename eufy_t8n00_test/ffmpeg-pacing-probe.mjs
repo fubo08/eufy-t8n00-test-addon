@@ -55,12 +55,9 @@ try{
     server=http.createServer((req,res)=>void handler(req,res));await new Promise(r=>server.listen(0,'127.0.0.1',r));config.cfg.port=server.address().port;
     await writeGo2rtcConfig(config.cfg,[{sn:'SYNTHETIC',model:'T8E00',stream:'/stream/SYNTHETIC'}]);
     let yaml=await fs.readFile(config.cfg.go2rtcConfig,'utf8');yaml=yaml.replaceAll('listen: ":','listen: "127.0.0.1:').replace('ffmpeg:\n','ffmpeg:\n  bin: '+JSON.stringify(ffmpeg.replaceAll('\\','/'))+'\n');await fs.writeFile(config.cfg.go2rtcConfig,yaml);
-    yaml=yaml.replace('asetpts=N/SR/TB,adelay=384:all=1,arealtime,atrim=start=0.384,asetpts=N/SR/TB','asetpts=N/SR/TB').replace('asetpts=N/SR/TB,arealtime','asetpts=N/SR/TB');
+    // Compare the actual generated candidate against its unpaced form. Never inject the fix here.
+    if(!candidate)yaml=yaml.replace('asetpts=N/SR/TB,adelay=384:all=1,arealtime,atrim=start=0.384,asetpts=N/SR/TB','asetpts=N/SR/TB').replace('asetpts=N/SR/TB,arealtime','asetpts=N/SR/TB');
     await fs.writeFile(config.cfg.go2rtcConfig,yaml);
-    if(candidate&&!process.env.PACING_BEFORE){
-      yaml=yaml.replace('-af asetpts=N/SR/TB','-af asetpts=N/SR/TB,adelay=384:all=1,arealtime,atrim=start=0.384,asetpts=N/SR/TB');
-      await fs.writeFile(config.cfg.go2rtcConfig,yaml);
-    }
     let g2log='';g2=start(go2rtc,['-config',config.cfg.go2rtcConfig]);g2.stdout.on('data',d=>g2log+=d);g2.stderr.on('data',d=>g2log+=d);
     try{
       let ready=false;for(let n=0;n<50;n++){try{const q=await fetch(`http://127.0.0.1:${config.cfg.go2rtcApiPort}/api/streams`);if(q.ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,50));}if(!ready)throw Error('go2rtc did not start: '+g2log.slice(-1000));
