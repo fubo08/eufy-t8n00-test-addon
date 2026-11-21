@@ -1,0 +1,55 @@
+{
+  "profile": "registry05",
+  "artifact": "e777f1aac7bb85b1a4687dba37667a1ec95b8e2a",
+  "source": "4105a0f40888aed79c1001a5bf61264035f45600",
+  "sdk": "0.5.0",
+  "started": "2026-11-21T14:14:12.467Z",
+  "cases": [
+    {
+      "kind": "registry-recovery-hold",
+      "model": "T8E00",
+      "view": 0,
+      "exit": 0,
+      "elapsedSeconds": 58.557,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 1104
+      },
+      "video": {
+        "frames": 1105,
+        "backwardsPts": 1,
+        "maxPtsGap": 0.6594219999999993,
+        "ptsSpan": 55.081811
+      },
+      "audio": {
+        "frames": 2750,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.03999999999999915,
+        "ptsSpan": 55
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 11\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    }
+  ],
+  "auth": "ok",
+  "release": [
+    {
+      "seconds": 10,
+      "streaming": 0
+    },
+    {
+      "seconds": 20,
+      "streaming": 0
+    },
+    {
+      "seconds": 30,
+      "streaming": 0
+    }
+  ],
+  "status": "complete",
+  "finished": "2026-11-21T14:15:41.979Z"
+}

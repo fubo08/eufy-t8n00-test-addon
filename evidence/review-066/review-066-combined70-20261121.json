@@ -1,0 +1,166 @@
+{
+  "profile": "combined70",
+  "artifact": "e777f1aac7bb85b1a4687dba37667a1ec95b8e2a",
+  "source": "a72e983ac429a7e1e8c4e22ed2a7648b0646d54e",
+  "sdk": "0.6.0-beta.70",
+  "started": "2026-11-21T14:16:22.756Z",
+  "cases": [
+    {
+      "kind": "single",
+      "model": "T8E00",
+      "view": 0,
+      "output": "1080p",
+      "exit": 0,
+      "elapsedSeconds": 19.937,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 301
+      },
+      "video": {
+        "frames": 301,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.17993300000000012,
+        "ptsSpan": 15.002256
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.02000000000000135,
+        "ptsSpan": 15
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 3\r"
+      ]
+    },
+    {
+      "kind": "single",
+      "model": "T8E00",
+      "view": 1,
+      "output": "1080p",
+      "exit": 0,
+      "elapsedSeconds": 19.821,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 299
+      },
+      "video": {
+        "frames": 299,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.2088669999999997,
+        "ptsSpan": 15.030344
+      },
+      "audio": {
+        "frames": 750,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.040000000000000924,
+        "ptsSpan": 15
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 6\r",
+        "[hevc @ [decoder]] Could not find ref with POC 9\r"
+      ]
+    },
+    {
+      "kind": "single",
+      "model": "T8P00",
+      "view": 0,
+      "output": "1080p",
+      "exit": 0,
+      "elapsedSeconds": 21.032,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 286
+      },
+      "video": {
+        "frames": 286,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.3237439999999998,
+        "ptsSpan": 15.009189
+      },
+      "audio": {
+        "frames": 750,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.040000000000000036,
+        "ptsSpan": 15
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 3\r",
+        "[hevc @ [decoder]] Could not find ref with POC 27\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    },
+    {
+      "kind": "parallel",
+      "model": "T8E00",
+      "view": 0,
+      "exit": 3199971767,
+      "elapsedSeconds": 20.25,
+      "geometry": {},
+      "video": {
+        "frames": 0,
+        "backwardsPts": 0,
+        "maxPtsGap": null,
+        "ptsSpan": null
+      },
+      "audio": {
+        "frames": 0,
+        "backwardsPts": 0,
+        "maxPtsGap": null,
+        "ptsSpan": null
+      },
+      "errors": [
+        "[in#0 @ [decoder]] Error opening input: Invalid data found when processing input\r",
+        "Error opening input file rtsp://[host]:8554/[source]?video&audio=opus.\r",
+        "Error opening input files: Invalid data found when processing input\r"
+      ]
+    },
+    {
+      "kind": "parallel",
+      "model": "T8E00",
+      "view": 1,
+      "exit": 0,
+      "elapsedSeconds": 24.741,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 402
+      },
+      "video": {
+        "frames": 402,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.22553399999999968,
+        "ptsSpan": 20.075278
+      },
+      "audio": {
+        "frames": 1000,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.040000000000000924,
+        "ptsSpan": 20
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 5\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    }
+  ],
+  "auth": "ok",
+  "release": [
+    {
+      "seconds": 10,
+      "streaming": 0
+    },
+    {
+      "seconds": 20,
+      "streaming": 0
+    },
+    {
+      "seconds": 30,
+      "streaming": 0
+    }
+  ],
+  "status": "complete",
+  "finished": "2026-11-21T14:18:46.443Z"
+}

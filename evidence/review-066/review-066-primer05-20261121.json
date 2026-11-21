@@ -1,0 +1,171 @@
+{
+  "profile": "primer05",
+  "artifact": "e777f1aac7bb85b1a4687dba37667a1ec95b8e2a",
+  "source": "89d371442fa82c2d5736792e97dc53e7a76c14ea",
+  "sdk": "0.5.0",
+  "started": "2026-11-21T14:08:42.532Z",
+  "cases": [
+    {
+      "kind": "audio-first",
+      "model": "T8E00",
+      "view": 0,
+      "status": 200,
+      "headersMs": 2735.35,
+      "firstByteMs": 2737.82,
+      "bytes": 12676,
+      "formats": [
+        {
+          "rateIndex": 8,
+          "channels": 1
+        }
+      ],
+      "frames": 66
+    },
+    {
+      "kind": "audio-first",
+      "model": "T8E00",
+      "view": 1,
+      "status": 200,
+      "headersMs": 2744.52,
+      "firstByteMs": 2744.63,
+      "bytes": 12056,
+      "formats": [
+        {
+          "rateIndex": 8,
+          "channels": 1
+        }
+      ],
+      "frames": 63
+    },
+    {
+      "kind": "audio-first",
+      "model": "T8P00",
+      "view": 0,
+      "status": 200,
+      "headersMs": 2946.74,
+      "firstByteMs": 2946.88,
+      "bytes": 12417,
+      "formats": [
+        {
+          "rateIndex": 8,
+          "channels": 1
+        }
+      ],
+      "frames": 65
+    },
+    {
+      "kind": "audio-repeat",
+      "model": "T8E00",
+      "view": 0,
+      "status": 200,
+      "headersMs": 13.94,
+      "firstByteMs": 14.09,
+      "bytes": 3981,
+      "formats": [
+        {
+          "rateIndex": 8,
+          "channels": 1
+        }
+      ],
+      "frames": 66
+    },
+    {
+      "kind": "audio-repeat",
+      "model": "T8E00",
+      "view": 1,
+      "status": 200,
+      "headersMs": 2630.42,
+      "firstByteMs": 2630.57,
+      "bytes": 12317,
+      "formats": [
+        {
+          "rateIndex": 8,
+          "channels": 1
+        }
+      ],
+      "frames": 64
+    },
+    {
+      "kind": "parallel",
+      "model": "T8E00",
+      "view": 0,
+      "exit": 0,
+      "elapsedSeconds": 19.267,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 323
+      },
+      "video": {
+        "frames": 323,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.20829999999999949,
+        "ptsSpan": 15.100811
+      },
+      "audio": {
+        "frames": 750,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.040000000000000036,
+        "ptsSpan": 15
+      },
+      "errors": []
+    },
+    {
+      "kind": "parallel",
+      "model": "T8E00",
+      "view": 1,
+      "exit": 0,
+      "elapsedSeconds": 21.025,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 300
+      },
+      "video": {
+        "frames": 300,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.20914399999999997,
+        "ptsSpan": 15.020989
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.02000000000000135,
+        "ptsSpan": 15
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 6\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    },
+    {
+      "kind": "microphone-off-request",
+      "commandAnswered": false,
+      "reportedBefore": true,
+      "reportedAfter": true,
+      "error": "rtc: set-param is not routable over the RTC control channel (only set-payload or set-json)"
+    }
+  ],
+  "auth": "ok",
+  "microphoneRestored": {
+    "commandAnswered": false,
+    "reported": true,
+    "expected": true
+  },
+  "status": "failed",
+  "errorType": "Error",
+  "error": "microphone restoration unconfirmed",
+  "microphoneEmergencyRestore": {
+    "commandAnswered": false,
+    "reported": true,
+    "expected": true
+  },
+  "finished": "2026-11-21T14:10:50.461Z",
+  "interpretation": {
+    "microphoneOff": "not exercised: SDK rejected set-param routing; readback remained true",
+    "releaseAfterFailure": {
+      "streaming": 0
+    },
+    "restoration": "no successful state-changing command; original true readback unchanged"
+  }
+}

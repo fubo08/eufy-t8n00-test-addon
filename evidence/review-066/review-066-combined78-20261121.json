@@ -1,0 +1,158 @@
+{
+  "profile": "combined78",
+  "artifact": "e777f1aac7bb85b1a4687dba37667a1ec95b8e2a",
+  "source": "a72e983ac429a7e1e8c4e22ed2a7648b0646d54e",
+  "sdk": "0.6.0-beta.78",
+  "started": "2026-11-21T14:19:11.016Z",
+  "cases": [
+    {
+      "kind": "single",
+      "model": "T8E00",
+      "view": 0,
+      "output": "1080p",
+      "exit": 0,
+      "elapsedSeconds": 19.379,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 316
+      },
+      "video": {
+        "frames": 316,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.3641669999999999,
+        "ptsSpan": 15.019378
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.02000000000000135,
+        "ptsSpan": 15
+      },
+      "errors": []
+    },
+    {
+      "kind": "single",
+      "model": "T8E00",
+      "view": 1,
+      "output": "1080p",
+      "exit": 0,
+      "elapsedSeconds": 20.325,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 302
+      },
+      "video": {
+        "frames": 302,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.20688899999999943,
+        "ptsSpan": 15.022956
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.02000000000000135,
+        "ptsSpan": 15
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 4\r"
+      ]
+    },
+    {
+      "kind": "single",
+      "model": "T8P00",
+      "view": 0,
+      "output": "1080p",
+      "exit": 0,
+      "elapsedSeconds": 20.902,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 157
+      },
+      "video": {
+        "frames": 157,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.28690000000000015,
+        "ptsSpan": 15.056478
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.02000000000000135,
+        "ptsSpan": 15
+      },
+      "errors": []
+    },
+    {
+      "kind": "parallel",
+      "model": "T8E00",
+      "view": 0,
+      "exit": 0,
+      "elapsedSeconds": 24.35,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 406
+      },
+      "video": {
+        "frames": 406,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.3551890000000011,
+        "ptsSpan": 20.130378
+      },
+      "audio": {
+        "frames": 1001,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.020000000000003126,
+        "ptsSpan": 20
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    },
+    {
+      "kind": "parallel",
+      "model": "T8E00",
+      "view": 1,
+      "exit": 3199971767,
+      "elapsedSeconds": 20.245,
+      "geometry": {},
+      "video": {
+        "frames": 0,
+        "backwardsPts": 0,
+        "maxPtsGap": null,
+        "ptsSpan": null
+      },
+      "audio": {
+        "frames": 0,
+        "backwardsPts": 0,
+        "maxPtsGap": null,
+        "ptsSpan": null
+      },
+      "errors": [
+        "[in#0 @ [decoder]] Error opening input: Invalid data found when processing input\r",
+        "Error opening input file rtsp://[host]:8554/[source]?video&audio=opus.\r",
+        "Error opening input files: Invalid data found when processing input\r"
+      ]
+    }
+  ],
+  "auth": "ok",
+  "release": [
+    {
+      "seconds": 10,
+      "streaming": 0
+    },
+    {
+      "seconds": 20,
+      "streaming": 0
+    },
+    {
+      "seconds": 30,
+      "streaming": 0
+    }
+  ],
+  "status": "complete",
+  "finished": "2026-11-21T14:21:33.816Z"
+}
