@@ -14,10 +14,17 @@ RUN mkdir /sdk70 && cp -a node_modules/@mega-yfue/eufy-sdk/. /sdk70/
 RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test
 RUN find src test -name '*.mjs' -exec node --check {} \;
 RUN rm -rf node_modules
+FROM python:3.14-slim AS integration
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
+WORKDIR /integration
+RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk/tar.gz/d280f8f707fc32b893f9d3527b8c729d7d627027 | tar -xz --strip-components=1
+RUN python -m pip install --no-cache-dir -r requirements_common.txt -r requirements_dev.txt pytest
+RUN python -m ruff check . && python -m ruff format --check . && python -m pytest tests/ -q --junitxml=/integration-results.xml
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2
 RUN apk add --no-cache jq
 COPY --from=qualification /qualification /profiles
 COPY --from=qualification /sdk70 /sdk70
+COPY --from=integration /integration-results.xml /qualification/integration-results.xml
 WORKDIR /profiles/primer05
 RUN npm ci --omit=dev --no-audit --no-fund
 WORKDIR /profiles/registry05
