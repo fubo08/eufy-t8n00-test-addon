@@ -15,7 +15,7 @@ RUN npm ci --ignore-scripts && npm run lint
 RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test && rm -rf node_modules
 
 WORKDIR /qualification/realtime78
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/50830ea39d51f8d22b880ef8256031e7529c2f55 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/de45753f2456fad95207b59498db36ef2f6bf160 | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm run lint
 RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test && rm -rf node_modules
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2
