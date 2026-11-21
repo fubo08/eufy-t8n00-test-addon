@@ -1,0 +1,13 @@
+{
+  "artifact": "e777f1aac7bb85b1a4687dba37667a1ec95b8e2a",
+  "profile": "combined78",
+  "model": "T8E00",
+  "view": 1,
+  "exit": 0,
+  "audioCodec": "opus",
+  "samples": 769920,
+  "meanDb": -58.3,
+  "maxDb": -40.5,
+  "scope": "RTSP decoded audio energy; not a listening or lip-sync test",
+  "finished": "2026-11-21T14:38:01.056Z"
+}

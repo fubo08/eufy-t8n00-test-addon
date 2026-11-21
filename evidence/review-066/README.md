@@ -23,4 +23,16 @@ I used the same physical S4 and E40 on my T8N00 NVR. The `single` cases request 
 
 The guard restored the normal bridge after these four phases. Any later chosen HA deployment is a separate action and is not part of this hardware comparison.
 
+## Subsequent HA deployment
+
+After this comparison I deployed integration fork 0.7.1b1 at `6b2d8e05c6deaaac25ea187193b01898bb2107c3`, byte-compared all 47 package files against that immutable source, restarted HA and saved Full HD through the integration's normal options flow. I kept the user-selected combined78 bridge active with boot auto and watchdog enabled. This runtime otherwise matches upstream integration dev d280; its only differences are the Polish locale repair and version identifier. Exact-commit integration checks passed on both Linux architectures: https://github.com/fubo08/eufy-t8n00-test-addon/actions/runs/44913272808
+
+My existing native HA S4 view-1 player and existing dashboard popup showed advancing, unpaused 1920x1080 video, readyState 4 and no player error. No dashboard edit or entity-ID replacement was required. All 383 prior registry IDs remain; 92 additional entries were registered. The popup starts muted and already offers a mute/unmute control.
+
+A separate S4 view-1 RTSP Opus check decoded 769920 samples, mean -58.3 dB and peak -40.5 dB, establishing nonzero audio energy rather than only an audio icon. This is not an audible listening or lip-sync test. My isolated qualification profiles used one S4 and one E40; the HA-player test used the other physical S4. I closed my clients afterward and observed auth ok with zero streaming sessions.
+
+Marketplace installation refused a fork overwrite of a directory owned by the official repository; its uninstall dialog also required deleting the existing HA config entry. I cancelled and, with explicit user approval, updated only the package files through MCP, preserving the HA entry and Marketplace ownership. Future Marketplace updates can overwrite this manual test stand. I did not remove or recreate devices or entries.
+
+These results do not resolve the intermittent simultaneous-start failures above or validate every existing device control.
+
 Created with Codex.

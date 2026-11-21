@@ -1,0 +1,50 @@
+{
+  "integration": {
+    "version": "0.7.1b1",
+    "source": "6b2d8e05c6deaaac25ea187193b01898bb2107c3",
+    "filesCompared": 47,
+    "mismatches": 0,
+    "live_output_resolution": "1080p",
+    "loaded": true
+  },
+  "bridge": {
+    "version": "0.3.66",
+    "artifact": "e777f1aac7bb85b1a4687dba37667a1ec95b8e2a",
+    "profile": "combined78",
+    "sdk": "0.6.0-beta.78",
+    "boot": "auto",
+    "watchdog": true
+  },
+  "entityRegistry": {
+    "before": 383,
+    "after": 475,
+    "missingPrevious": 0
+  },
+  "nativeHaPlayer": {
+    "model": "T8E00",
+    "view": 1,
+    "width": 1920,
+    "height": 1080,
+    "readyState": 4,
+    "paused": false,
+    "error": null,
+    "advancingPlaybackTime": true
+  },
+  "existingDashboardPopup": {
+    "model": "T8E00",
+    "view": 1,
+    "width": 1920,
+    "height": 1080,
+    "readyState": 4,
+    "paused": false,
+    "error": null,
+    "muted": true
+  },
+  "listeningTest": "not performed in this run",
+  "remaining": "intermittent initial simultaneous S4 startup failures retained; successful repeat does not erase them",
+  "endHealth": {
+    "auth": "ok",
+    "streaming": 0
+  },
+  "date": "2026-11-21"
+}
