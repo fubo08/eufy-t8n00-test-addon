@@ -1,58 +1,34 @@
 FROM node:24-bookworm-slim AS qualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
-WORKDIR /qualification/primer05
-RUN curl -fsSL https://codeload.github.com/Bielecki-UK/ha-eufy-sdk-bridge/tar.gz/89d371442fa82c2d5736792e97dc53e7a76c14ea | tar -xz --strip-components=1
-RUN npm ci --ignore-scripts && npm run lint && npm test && rm -rf node_modules
-WORKDIR /qualification/registry05
-RUN curl -fsSL https://codeload.github.com/Couponslegrand/ha-eufy-sdk-bridge/tar.gz/4105a0f40888aed79c1001a5bf61264035f45600 | tar -xz --strip-components=1
-RUN npm ci --ignore-scripts && npm run lint && npm test && rm -rf node_modules
-WORKDIR /qualification/combined78
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/a72e983ac429a7e1e8c4e22ed2a7648b0646d54e | tar -xz --strip-components=1
-RUN npm ci --ignore-scripts && npm run lint
-RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.70 node-datachannel@0.33.6 && npm test
-RUN mkdir /sdk70 && cp -a node_modules/@mega-yfue/eufy-sdk/. /sdk70/
-RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test
-RUN find src test -name '*.mjs' -exec node --check {} \;
-RUN rm -rf node_modules
-WORKDIR /qualification/optical78
+WORKDIR /qualification/pacing78
 RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/384eafba82e236fc8f2c49366e672632d305a4bf | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts
-RUN curl -fsSL https://raw.githubusercontent.com/fubo08/ha-eufy-sdk-bridge/33d98dbc8824e5299c7dc11d23856534b9856664/test/optical-views.test.mjs -o test/optical-views.test.mjs
-RUN set +e; node --test --test-reporter=tap --test-name-pattern='screen.take and|last-screen rejects' test/optical-views.test.mjs > /bridge-screen-before.tap 2>&1; code=$?; set -e; test "$code" = 1; grep -q '# fail 2' /bridge-screen-before.tap
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/012eacce0534570af25fcfa938ab482704fa4868 | tar -xz --strip-components=1
+RUN curl -fsSL https://raw.githubusercontent.com/fubo08/ha-eufy-sdk-bridge/c915b1af2966e3ff4e5fe8ec4e956bd59b6f07ac/test/audio-route.test.mjs -o test/audio-route.test.mjs
+RUN set +e; node --test --test-reporter=tap --test-name-pattern='opt-in audio reserve' test/audio-route.test.mjs > /audio-pacing-before.tap 2>&1; code=$?; set -e; test "$code" = 1; grep -q 'configured startup reserve' /audio-pacing-before.tap
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/c915b1af2966e3ff4e5fe8ec4e956bd59b6f07ac | tar -xz --strip-components=1
 RUN npm run lint && npm test
 RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test
 RUN rm -rf node_modules
-FROM python:3.14-slim AS integration
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
-WORKDIR /integration
-RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk/tar.gz/d280f8f707fc32b893f9d3527b8c729d7d627027 | tar -xz --strip-components=1
-RUN python -m pip install --no-cache-dir -r requirements_common.txt -r requirements_dev.txt pytest
-RUN curl -fsSL https://raw.githubusercontent.com/fubo08/ha-eufy-sdk/76c7e0e/tests/test_last_screen.py -o tests/test_last_screen.py
-RUN set +e; python -m pytest tests/test_last_screen.py -k OpticalLastScreenTests -q --junitxml=/screen-before.xml; code=$?; set -e; test "$code" = 1; python -c "import xml.etree.ElementTree as E;r=E.parse('/screen-before.xml').getroot().find('testsuite');assert r.attrib['failures']=='1' and r.attrib['errors']=='0',r.attrib"
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk/tar.gz/35fa42a96ba5a4329eb7c8b1d5dbc02e90076638 | tar -xz --strip-components=1
-RUN python -m ruff check . && python -m ruff format --check . && python -m pytest tests/ --ignore=tests/test_translations.py -q --junitxml=/integration-results.xml
-RUN set +e; python -m pytest tests/test_translations.py -q --junitxml=/translation-known.xml; code=$?; set -e; test "$code" = 1; python -c "import xml.etree.ElementTree as E;r=E.parse('/translation-known.xml').getroot().find('testsuite');assert r.attrib['failures']=='1' and r.attrib['errors']=='0',r.attrib;assert any('pl.json' in (f.text or '') for f in r.iter('failure'))"
+WORKDIR /qualification/combinedPacing78
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/4f4ee644679e5b073c35cd5cd0dd1d4b2d476623 | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts && npm run lint
+RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test && rm -rf node_modules
+
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2
 RUN apk add --no-cache jq
 COPY --from=qualification /qualification /profiles
-COPY --from=qualification /sdk70 /sdk70
-COPY --from=integration /integration-results.xml /qualification/integration-results.xml
-WORKDIR /profiles/primer05
-RUN npm ci --omit=dev --no-audit --no-fund
-WORKDIR /profiles/registry05
-RUN npm ci --omit=dev --no-audit --no-fund
 WORKDIR /profiles/combined78
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/a72e983ac429a7e1e8c4e22ed2a7648b0646d54e | tar -xz --strip-components=1
 RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
-RUN cp -a /profiles/combined78 /profiles/combined70 && rm -rf /profiles/combined70/node_modules/@mega-yfue/eufy-sdk && cp -a /sdk70 /profiles/combined70/node_modules/@mega-yfue/eufy-sdk
-RUN cp -a /profiles/combined78 /profiles/audio78
-COPY audio-timing-diagnostic.mjs /profiles/audio78/audio-timing-diagnostic.mjs
-RUN node --input-type=module -e 'import fs from "node:fs"; const file="/profiles/audio78/node_modules/@mega-yfue/eufy-sdk/dist/index.js";let s=fs.readFileSync(file,"utf8");const target="const audio = { codec, data: body.subarray(AUDIO_HEADER_LEN) };";if(s.split(target).length!==2)throw Error("RTC audio probe anchor changed");s=s.replace(target,"globalThis.__nvrAudioTiming?.(body);\n      "+target);fs.writeFileSync(file,s);'
-RUN node --check /profiles/audio78/audio-timing-diagnostic.mjs && node --check /profiles/audio78/node_modules/@mega-yfue/eufy-sdk/dist/index.js
-WORKDIR /profiles/optical78
+WORKDIR /profiles/pacing78
 RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
+WORKDIR /profiles/combinedPacing78
+RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
+RUN cmp /profiles/pacing78/src/adts-pacer.mjs /profiles/combinedPacing78/src/adts-pacer.mjs && for f in streams.mjs go2rtc-config.mjs src/live-feed.mjs src/live-still.mjs src/camera-views.mjs; do cmp "/profiles/combined78/$f" "/profiles/combinedPacing78/$f"; done
 RUN rm -rf /app && ln -s /profiles/combined78 /app
 WORKDIR /app
+COPY sync-probe.mjs /qualification/sync-probe.mjs
+RUN SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc node /qualification/sync-probe.mjs /profiles/pacing78
 COPY run.sh /run.sh
 RUN chmod +x /run.sh && sh -n /run.sh
 CMD ["/run.sh"]
