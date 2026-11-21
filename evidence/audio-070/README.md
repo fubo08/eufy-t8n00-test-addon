@@ -33,6 +33,6 @@ I tested the S4 secondary optic twice, with a bridge restart between runs. Each 
 
 These are different live intervals, not identical NVR packet replays. The first candidate still had one 284 ms output gap; I did not erase it. Decoded output arrival times are measured in the receiving process and can include receiver/network scheduling. Raw AAC remains bursty by design because I changed only the Opus loopback.
 
-The JSON files contain model, timing and decoder counters, not encoded media, camera images, serial numbers, addresses or credentials. Existing video DTS warnings from the null-muxer diagnostic are retained. I have not demonstrated physical AV synchronization, long-duration stability, concurrent-camera behavior, or an independently extracted upstream implementation. The iPhone/iPad hearing comparison is pending.
+The JSON files contain model, timing and decoder counters, not encoded media, camera images, serial numbers, addresses or credentials. Existing video DTS warnings from the null-muxer diagnostic are retained. I have not demonstrated physical AV synchronization, long-duration stability, concurrent-camera behavior, or an independently extracted upstream implementation. My first iPhone/iPad listening feedback, while realtime78 was confirmed active at 18:35 Europe/Berlin, is: stuttering is reduced, but remains audible. This is a partial improvement, not a resolved issue. No physical synchronization conclusion was reported.
 
 Created with Codex
