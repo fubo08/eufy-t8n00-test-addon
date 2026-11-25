@@ -54,7 +54,7 @@ WORKDIR /app
 COPY registry-recovery.mjs /qualification/registry-recovery.mjs
 RUN node --check /qualification/registry-recovery.mjs
 WORKDIR /sdks/baseline
-RUN npm rebuild node-datachannel && node -e "require('node-datachannel')"
+RUN npm ci --omit=dev --ignore-scripts && node -e "require('node-datachannel')"
 WORKDIR /app
 COPY native-rtc-probe.mjs /qualification/native-rtc-probe.mjs
 RUN node --check /qualification/native-rtc-probe.mjs
