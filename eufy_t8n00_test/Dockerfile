@@ -53,6 +53,9 @@ RUN rm -rf /app && ln -s /profiles/combined78 /app
 WORKDIR /app
 COPY registry-recovery.mjs /qualification/registry-recovery.mjs
 RUN node --check /qualification/registry-recovery.mjs
+WORKDIR /sdks/baseline
+RUN npm rebuild node-datachannel && node -e "require('node-datachannel')"
+WORKDIR /app
 COPY native-rtc-probe.mjs /qualification/native-rtc-probe.mjs
 RUN node --check /qualification/native-rtc-probe.mjs
 COPY run.sh /run.sh

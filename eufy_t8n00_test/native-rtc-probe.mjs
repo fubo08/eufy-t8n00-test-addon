@@ -8,11 +8,17 @@ const revisions={baseline:'91be47bc68fbf424121629172676a2662a339f0d',candidate:'
 const report={mode,source:revisions[mode],started:new Date().toISOString(),runs:[],scope:'Public SDK contract and bounded live packet/video decoder observations; no audio decode, hearing, physical lens identity or AV synchronization claim'};
 const output=`/data/native-rtc-${mode}-20261125.json`;
 let client;const held=new Set(),children=new Set();
+const safeError=e=>String(e?.message??e).replace(/https?:\/\/\S+/g,'[endpoint]').replace(/\bT[A-Z0-9]{12,}\b/g,'[device]').replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g,'[address]').slice(0,350);
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 function save(){fs.writeFileSync(output,JSON.stringify(report,null,2),{mode:0o600});}
 const deadline=setTimeout(()=>{report.status='deadline';save();for(const h of held)h.stop();for(const p of children)p.kill('SIGKILL');process.exit(1);},160000);
 try{
   const sdk=await import(`/sdks/${mode}/dist/index.js`);
+  if(mode==='baseline'){
+    const {createRequire}=await import('node:module');
+    const require=createRequire('/sdks/baseline/package.json');
+    try{require('node-datachannel');report.nativeDependencyLoaded=true;}catch(error){report.nativeDependencyLoaded=false;report.nativeDependencyError=safeError(error);}
+  }
   const saved=JSON.parse(fs.readFileSync('/data/.eufy-session.json','utf8'));
   report.cachedSessionAccepted=sdk.isSessionValid(saved);
   report.cachedAccountIdPresent=typeof saved.accountUserId==='string'&&saved.accountUserId.length>0;
@@ -38,7 +44,7 @@ try{
       const gaps=[];let resolveReady;
       const ready=new Promise(r=>{resolveReady=r;});
       const h=await camera.live();held.add(h);
-      const onError=()=>{run.streamError=true;resolveReady(false);};h.on('error',onError);
+      const onError=error=>{run.streamError=true;run.streamErrorMessage=safeError(error);resolveReady(false);};h.on('error',onError);
       h.on('video',frame=>{
         run.videoPackets++;run.firstVideoMs??=Math.round(performance.now()-start);resolveReady(true);
         if(!decoder&&['h264','h265'].includes(frame.codec)){
@@ -73,6 +79,7 @@ try{
 }catch(error){
   report.status='failed';
   report.errorType=error?.constructor?.name??'Error';
+  report.errorMessage=safeError(error);
   const safe=['cached_session_not_restored','expected_one_nvr','expected_s4_and_e40'];
   if(safe.includes(error.message))report.reason=error.message;
 }finally{
