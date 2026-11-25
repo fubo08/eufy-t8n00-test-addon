@@ -1,45 +1,58 @@
 FROM node:24-bookworm-slim AS qualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
-WORKDIR /qualification/pacing78
-RUN curl -fsSL https://codeload.github.com/mega-yfue/ha-eufy-sdk-bridge/tar.gz/384eafba82e236fc8f2c49366e672632d305a4bf | tar -xz --strip-components=1
-RUN npm ci --ignore-scripts
-RUN curl -fsSL https://raw.githubusercontent.com/fubo08/ha-eufy-sdk-bridge/c915b1af2966e3ff4e5fe8ec4e956bd59b6f07ac/test/audio-route.test.mjs -o test/audio-route.test.mjs
-RUN set +e; node --test --test-reporter=tap --test-name-pattern='opt-in audio reserve' test/audio-route.test.mjs > /audio-pacing-before.tap 2>&1; code=$?; set -e; test "$code" = 1; grep -q 'configured startup reserve' /audio-pacing-before.tap
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/c915b1af2966e3ff4e5fe8ec4e956bd59b6f07ac | tar -xz --strip-components=1
-RUN npm run lint && npm test
+WORKDIR /qualification/fullhd05
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/1fa5d2605ba2a87c5ab5f807b993968448db4434 | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts && npm run lint && npm test
+RUN node --test --test-reporter=tap test/fullhd-sdk.test.mjs > /fullhd-stable.tap && grep -q '# skipped 3' /fullhd-stable.tap
+RUN cp -a /qualification/fullhd05 /qualification/fullhd78
+WORKDIR /qualification/fullhd78
 RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test
-RUN rm -rf node_modules
-WORKDIR /qualification/combinedPacing78
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/4f4ee644679e5b073c35cd5cd0dd1d4b2d476623 | tar -xz --strip-components=1
-RUN npm ci --ignore-scripts && npm run lint
-RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test && rm -rf node_modules
+RUN node --test --test-reporter=tap test/fullhd-sdk.test.mjs > /fullhd-beta.tap && grep -q '# pass 3' /fullhd-beta.tap && grep -q '# skipped 0' /fullhd-beta.tap
+RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.84 node-datachannel@0.33.6 && npm test
+RUN node --test --test-reporter=tap test/fullhd-sdk.test.mjs > /fullhd-beta84.tap && grep -q '# pass 3' /fullhd-beta84.tap && grep -q '# skipped 0' /fullhd-beta84.tap
+WORKDIR /qualification/registry05
+RUN curl -fsSL https://codeload.github.com/Couponslegrand/ha-eufy-sdk-bridge/tar.gz/f00bcf74c0f3736e38841a69796afbe06f99688e | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts && npm run lint && npm test
+RUN find /qualification -path '*/node_modules' -prune -o -name '*.mjs' -exec node --check {} \;
+RUN rm -rf /qualification/fullhd05/node_modules /qualification/fullhd78/node_modules /qualification/registry05/node_modules
 
-WORKDIR /qualification/realtime78
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/2a4ad8057b09a69b6aec48638cc1dcb11745cc4d | tar -xz --strip-components=1
-RUN npm ci --ignore-scripts && npm run lint
-RUN npm install --ignore-scripts --no-save --package-lock=false @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6 && npm test && rm -rf node_modules
+FROM python:3.14-slim AS integration
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
+WORKDIR /integration
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk/tar.gz/592851b32160fc50b18e165954b920af1718f2d6 | tar -xz --strip-components=1
+RUN python -m pip install --no-cache-dir -r requirements_common.txt -r requirements_dev.txt pytest
+RUN python -m ruff check . && python -m ruff format --check . && python -m pytest tests/ -q --junitxml=/integration-results.xml
+
+FROM node:24-bookworm-slim AS sdk
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
+WORKDIR /sdks/baseline
+RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/91be47bc68fbf424121629172676a2662a339f0d | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts && npm run verify && npm prune --omit=dev --ignore-scripts
+WORKDIR /sdks/candidate
+RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/3ac9b7411f6b5eb94be5cef5a1cf3ee825ee1eb6 | tar -xz --strip-components=1
+RUN npm ci --ignore-scripts && npm run verify && npm prune --omit=dev --ignore-scripts
+
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2
 RUN apk add --no-cache jq
 COPY --from=qualification /qualification /profiles
+COPY --from=qualification /fullhd-stable.tap /qualification/fullhd-stable.tap
+COPY --from=qualification /fullhd-beta.tap /qualification/fullhd-beta.tap
+COPY --from=qualification /fullhd-beta84.tap /qualification/fullhd-beta84.tap
+COPY --from=integration /integration-results.xml /qualification/integration-results.xml
+COPY --from=sdk /sdks /sdks
 WORKDIR /profiles/combined78
 RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/a72e983ac429a7e1e8c4e22ed2a7648b0646d54e | tar -xz --strip-components=1
 RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
-WORKDIR /profiles/pacing78
+WORKDIR /profiles/fullhd05
+RUN npm ci --omit=dev --no-audit --no-fund
+WORKDIR /profiles/fullhd78
 RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
-WORKDIR /profiles/combinedPacing78
-RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
-RUN cmp /profiles/pacing78/src/adts-pacer.mjs /profiles/combinedPacing78/src/adts-pacer.mjs && for f in streams.mjs go2rtc-config.mjs src/live-feed.mjs src/live-still.mjs src/camera-views.mjs; do cmp "/profiles/combined78/$f" "/profiles/combinedPacing78/$f"; done
-WORKDIR /profiles/realtime78
-RUN npm install --omit=dev --no-save --package-lock=false --no-audit --no-fund @mega-yfue/eufy-sdk@0.6.0-beta.78 node-datachannel@0.33.6
-RUN for f in streams.mjs src/live-feed.mjs src/live-still.mjs src/camera-views.mjs src/live-audio.mjs src/http-routes.mjs; do cmp "/profiles/combined78/$f" "/profiles/realtime78/$f"; done
+WORKDIR /profiles/registry05
+RUN npm ci --omit=dev --no-audit --no-fund
 RUN rm -rf /app && ln -s /profiles/combined78 /app
 WORKDIR /app
-COPY sync-probe.mjs /qualification/sync-probe.mjs
-RUN SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc SYNC_BUFFER_MS=384 node /qualification/sync-probe.mjs /profiles/pacing78
-COPY ffmpeg-pacing-probe.mjs /qualification/ffmpeg-pacing-probe.mjs
-COPY audio-arrivals.json /qualification/audio-arrivals.json
-RUN set +e; SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc node /qualification/ffmpeg-pacing-probe.mjs /profiles/combined78 > /audio-ffmpeg-before.log 2>&1; code=$?; set -e; test "$code" = 1; grep -q 'audio reserve did not absorb' /audio-ffmpeg-before.log
-RUN SYNC_FFMPEG=ffmpeg SYNC_GO2RTC=go2rtc node /qualification/ffmpeg-pacing-probe.mjs /profiles/realtime78
+COPY native-rtc-probe.mjs /qualification/native-rtc-probe.mjs
+RUN node --check /qualification/native-rtc-probe.mjs
 COPY run.sh /run.sh
 RUN chmod +x /run.sh && sh -n /run.sh
 CMD ["/run.sh"]
