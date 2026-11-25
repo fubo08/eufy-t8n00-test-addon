@@ -1,0 +1,57 @@
+{
+  "mode": "baseline",
+  "source": "91be47bc68fbf424121629172676a2662a339f0d",
+  "started": "2026-11-25T20:36:19.209Z",
+  "runs": [
+    {
+      "model": "T8E00",
+      "viewsMethod": true,
+      "outputResolutionsMethod": true,
+      "views": [
+        0,
+        1
+      ],
+      "outputs": [
+        "1080p"
+      ],
+      "videoPackets": 0,
+      "audioPackets": 0,
+      "audioCodecs": [],
+      "decodedVideoFrames": 0,
+      "decodedGeometry": [],
+      "firstVideoMs": null,
+      "firstAudioMs": null,
+      "streamError": true,
+      "firstVideoTimeout": true,
+      "maxAudioArrivalGapMs": 0,
+      "completed": "2026-11-25T20:36:21.123Z"
+    },
+    {
+      "model": "T8P00",
+      "viewsMethod": true,
+      "outputResolutionsMethod": true,
+      "views": [
+        0
+      ],
+      "outputs": [
+        "1080p"
+      ],
+      "videoPackets": 0,
+      "audioPackets": 0,
+      "audioCodecs": [],
+      "decodedVideoFrames": 0,
+      "decodedGeometry": [],
+      "firstVideoMs": null,
+      "firstAudioMs": null,
+      "streamError": true,
+      "firstVideoTimeout": true,
+      "maxAudioArrivalGapMs": 0,
+      "completed": "2026-11-25T20:36:32.026Z"
+    }
+  ],
+  "scope": "Public SDK contract and bounded live packet/video decoder observations; no audio decode, hearing, physical lens identity or AV synchronization claim",
+  "cachedSessionAccepted": true,
+  "cachedAccountIdPresent": true,
+  "status": "media_failed",
+  "finished": "2026-11-25T20:36:42.029Z"
+}

@@ -1,0 +1,175 @@
+{
+  "profile": "registry05",
+  "artifact": "206ba8866d762e100c422a1640a2bb53dbe81aa1",
+  "source": "f00bcf74c0f3736e38841a69796afbe06f99688e",
+  "sdk": "0.5.0",
+  "started": "2026-11-25T20:31:46.963Z",
+  "cases": [
+    {
+      "kind": "single",
+      "model": "T8E00",
+      "view": 0,
+      "output": "native",
+      "exit": 0,
+      "elapsedSeconds": 18.668,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "2688x1520": 307
+      },
+      "video": {
+        "frames": 307,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.40933300000000017,
+        "ptsSpan": 15.292489
+      },
+      "audio": {
+        "frames": 749,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.05999999999999872,
+        "ptsSpan": 15
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 13\r"
+      ]
+    },
+    {
+      "kind": "single",
+      "model": "T8E00",
+      "view": 1,
+      "output": "native",
+      "exit": 0,
+      "elapsedSeconds": 20.201,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 32,
+        "2688x1520": 266
+      },
+      "video": {
+        "frames": 298,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.27304499999999976,
+        "ptsSpan": 15.057611
+      },
+      "audio": {
+        "frames": 748,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.06000000000000005,
+        "ptsSpan": 15
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 7\r",
+        "[hevc @ [decoder]] Could not find ref with POC 4\r",
+        "[hevc @ [decoder]] Could not find ref with POC 32\r",
+        "[hevc @ [decoder]] Could not find ref with POC 25\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    },
+    {
+      "kind": "single",
+      "model": "T8P00",
+      "view": 0,
+      "output": "native",
+      "exit": 0,
+      "elapsedSeconds": 20.039,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "2560x1440": 326,
+        "1920x1080": 3
+      },
+      "video": {
+        "frames": 329,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.14648900000000076,
+        "ptsSpan": 15.112011
+      },
+      "audio": {
+        "frames": 751,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.02000000000000135,
+        "ptsSpan": 15
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    },
+    {
+      "kind": "parallel",
+      "model": "T8E00",
+      "view": 0,
+      "exit": 0,
+      "elapsedSeconds": 23.454,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "2688x1520": 402
+      },
+      "video": {
+        "frames": 403,
+        "backwardsPts": 1,
+        "maxPtsGap": 0.5962329999999998,
+        "ptsSpan": 20.016733
+      },
+      "audio": {
+        "frames": 983,
+        "backwardsPts": 0,
+        "maxPtsGap": 0.08000000000000007,
+        "ptsSpan": 20
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 10\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    },
+    {
+      "kind": "parallel",
+      "model": "T8E00",
+      "view": 1,
+      "exit": 0,
+      "elapsedSeconds": 24.885,
+      "videoCodec": "hevc",
+      "audioCodec": "opus",
+      "geometry": {
+        "1920x1080": 31,
+        "2688x1520": 358
+      },
+      "video": {
+        "frames": 390,
+        "backwardsPts": 1,
+        "maxPtsGap": 0.42288899999999785,
+        "ptsSpan": 20.004122
+      },
+      "audio": {
+        "frames": 990,
+        "backwardsPts": 1,
+        "maxPtsGap": 0.5063330000000015,
+        "ptsSpan": 20
+      },
+      "errors": [
+        "[hevc @ [decoder]] Could not find ref with POC 7\r",
+        "[hevc @ [decoder]] Could not find ref with POC 18\r",
+        "[hevc @ [decoder]] Could not find ref with POC 35\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r",
+        "[hevc @ [decoder]] Could not find ref with POC 0\r"
+      ]
+    }
+  ],
+  "release": [
+    {
+      "seconds": 10,
+      "streaming": 0
+    },
+    {
+      "seconds": 20,
+      "streaming": 0
+    },
+    {
+      "seconds": 30,
+      "streaming": 0
+    }
+  ],
+  "status": "complete",
+  "finished": "2026-11-25T20:34:08.682Z"
+}

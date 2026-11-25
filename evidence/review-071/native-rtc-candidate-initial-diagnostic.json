@@ -1,0 +1,25 @@
+{
+  "mode": "candidate",
+  "source": "3ac9b7411f6b5eb94be5cef5a1cf3ee825ee1eb6",
+  "started": "2026-11-25T20:36:53.967Z",
+  "runs": [
+    {
+      "model": "T8E00",
+      "viewsMethod": false,
+      "outputResolutionsMethod": false,
+      "videoPackets": 0,
+      "audioPackets": 0,
+      "audioCodecs": [],
+      "decodedVideoFrames": 0,
+      "decodedGeometry": [],
+      "firstVideoMs": null,
+      "firstAudioMs": null
+    }
+  ],
+  "scope": "Public SDK contract and bounded live packet/video decoder observations; no audio decode, hearing, physical lens identity or AV synchronization claim",
+  "cachedSessionAccepted": true,
+  "cachedAccountIdPresent": true,
+  "status": "failed",
+  "errorType": "Error",
+  "finished": "2026-11-25T20:36:55.600Z"
+}

@@ -1,0 +1,9 @@
+{
+  "source": "f00bcf74c0f3736e38841a69796afbe06f99688e",
+  "started": 1795638886.5023928,
+  "confirmedMissing": true,
+  "recoveredAfterMs": 22048,
+  "status": "recovered",
+  "finished": 1795638908.565116,
+  "observation": "Transcribed from the own HA terminal JSON output; 1-second polling, not exact internal reconciliation latency."
+}
