@@ -1,0 +1,65 @@
+{
+  "mode": "baseline",
+  "source": "91be47bc68fbf424121629172676a2662a339f0d",
+  "started": "2026-11-25T20:55:39.179Z",
+  "runs": [
+    {
+      "model": "T8E00",
+      "viewsMethod": true,
+      "outputResolutionsMethod": true,
+      "views": [
+        0,
+        1
+      ],
+      "outputs": [
+        "1080p"
+      ],
+      "videoPackets": 310,
+      "audioPackets": 236,
+      "audioCodecs": [
+        "aac-lc"
+      ],
+      "decodedVideoFrames": 310,
+      "decodedGeometry": [
+        "1920x1080"
+      ],
+      "firstVideoMs": 1816,
+      "firstAudioMs": 1854,
+      "videoDecoderExit": 0,
+      "maxAudioArrivalGapMs": 466,
+      "completed": "2026-11-25T20:55:57.571Z"
+    },
+    {
+      "model": "T8P00",
+      "viewsMethod": true,
+      "outputResolutionsMethod": true,
+      "views": [
+        0
+      ],
+      "outputs": [
+        "1080p"
+      ],
+      "videoPackets": 306,
+      "audioPackets": 234,
+      "audioCodecs": [
+        "aac-lc"
+      ],
+      "decodedVideoFrames": 306,
+      "decodedGeometry": [
+        "1920x1080",
+        "2560x1440"
+      ],
+      "firstVideoMs": 1685,
+      "firstAudioMs": 1714,
+      "videoDecoderExit": 0,
+      "maxAudioArrivalGapMs": 146,
+      "completed": "2026-11-25T20:56:24.922Z"
+    }
+  ],
+  "scope": "Public SDK contract and bounded live packet/video decoder observations; no audio decode, hearing, physical lens identity or AV synchronization claim",
+  "nativeDependencyLoaded": true,
+  "cachedSessionAccepted": true,
+  "cachedAccountIdPresent": true,
+  "status": "video_observed",
+  "finished": "2026-11-25T20:56:34.926Z"
+}
