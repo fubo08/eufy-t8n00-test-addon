@@ -1,7 +1,7 @@
 FROM node:24-bookworm-slim AS qualification
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /qualification/fullhd05
-RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/1fa5d2605ba2a87c5ab5f807b993968448db4434 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/fubo08/ha-eufy-sdk-bridge/tar.gz/a3459db2d271736b63acb674c9fd3d51872c4379 | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm run lint && npm test
 RUN node --test --test-reporter=tap test/fullhd-sdk.test.mjs > /fullhd-stable.tap && grep -q '# skipped 3' /fullhd-stable.tap
 RUN cp -a /qualification/fullhd05 /qualification/fullhd78
@@ -51,6 +51,8 @@ WORKDIR /profiles/registry05
 RUN npm ci --omit=dev --no-audit --no-fund
 RUN rm -rf /app && ln -s /profiles/combined78 /app
 WORKDIR /app
+COPY registry-recovery.mjs /qualification/registry-recovery.mjs
+RUN node --check /qualification/registry-recovery.mjs
 COPY native-rtc-probe.mjs /qualification/native-rtc-probe.mjs
 RUN node --check /qualification/native-rtc-probe.mjs
 COPY run.sh /run.sh
