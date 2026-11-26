@@ -2,6 +2,9 @@
 import json
 import os
 from pathlib import Path
+import re
+import signal
+import subprocess
 import time
 import urllib.request
 
@@ -45,6 +48,7 @@ target = HOST if phase == "hostCold" else MAIN
 host_options = call(HOST, "info")["options"] if target == HOST else None
 report = {"phase": phase, "artifact": os.environ["QUALIFICATION_ARTIFACT"], "started": time.time()}
 path = Path(f"/tmp/eufy-review-075-{phase}.json")
+capture = None
 try:
     call(MAIN, "options", {"watchdog": False})
     call(MAIN, "stop", {})
@@ -53,11 +57,26 @@ try:
         report["idleSeconds"] = 300
     if target == HOST:
         call(HOST, "options", {"options": {key: before["options"][key] for key in ("email", "password", "country")}})
+    if phase != "warm":
+        capture = subprocess.Popen(
+            ["tcpdump", "-nn", "-l", "-i", "any", "-s", "96", "-c", "500", "udp port 5062"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        )
+        time.sleep(1)
     run(target, {"warm": "sdkWarm", "cold": "sdkCold", "hostCold": None}[phase])
 except Exception as exc:
     report["error"] = type(exc).__name__
 finally:
     try:
+        if capture:
+            if capture.poll() is None:
+                capture.send_signal(signal.SIGINT)
+            out, err = capture.communicate(timeout=5)
+            report["capture"] = {
+                "listening": "listening on any" in err,
+                "fromPort5062": sum(bool(re.search(r"\.5062 >", line)) for line in out.splitlines()),
+                "toPort5062": sum(bool(re.search(r" > \S+\.5062:", line)) for line in out.splitlines()),
+            }
         if target == HOST:
             if call(HOST, "info")["state"] == "started":
                 call(HOST, "stop", {})
