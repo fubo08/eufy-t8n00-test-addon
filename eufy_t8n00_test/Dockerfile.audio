@@ -29,7 +29,7 @@ WORKDIR /sdks/baseline
 RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/91be47bc68fbf424121629172676a2662a339f0d | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm run verify && npm prune --omit=dev --ignore-scripts
 WORKDIR /sdks/candidate
-RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/3ac9b7411f6b5eb94be5cef5a1cf3ee825ee1eb6 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/b49f9016c6b8f543e123fd670c1eb958d3b8c429 | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm run verify && npm prune --omit=dev --ignore-scripts
 
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2
@@ -56,6 +56,7 @@ RUN node --check /qualification/registry-recovery.mjs
 WORKDIR /sdks/baseline
 RUN npm ci --omit=dev --ignore-scripts && node -e "require('node-datachannel')"
 WORKDIR /app
+COPY opus-ogg.mjs /qualification/opus-ogg.mjs
 COPY native-rtc-probe.mjs /qualification/native-rtc-probe.mjs
 RUN node --check /qualification/native-rtc-probe.mjs
 COPY run.sh /run.sh
