@@ -29,7 +29,7 @@ WORKDIR /sdks/baseline
 RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/91be47bc68fbf424121629172676a2662a339f0d | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm run verify && npm prune --omit=dev --ignore-scripts
 WORKDIR /sdks/candidate
-RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/b49f9016c6b8f543e123fd670c1eb958d3b8c429 | tar -xz --strip-components=1
+RUN curl -fsSL https://codeload.github.com/mega-yfue/eufy-sdk/tar.gz/0f9330333b400eb8e5ff63a5c0096bdf134759d9 | tar -xz --strip-components=1
 RUN npm ci --ignore-scripts && npm run verify && npm prune --omit=dev --ignore-scripts
 
 FROM ghcr.io/mega-yfue/ha-eufy-sdk-bridge:0.7.2

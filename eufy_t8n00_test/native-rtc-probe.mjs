@@ -5,9 +5,11 @@ import {spawn, spawnSync} from 'node:child_process';
 import {opusOgg} from './opus-ogg.mjs';
 const mode=process.argv[2];
 if(!['baseline','candidate'].includes(mode))throw Error('explicit qualification mode required');
-const revisions={baseline:'91be47bc68fbf424121629172676a2662a339f0d',candidate:'b49f9016c6b8f543e123fd670c1eb958d3b8c429'};
-const report={mode,source:revisions[mode],started:new Date().toISOString(),runs:[],scope:'Default camera.live(), decoded video and Opus PCM; no hearing, optics, sync or concurrency verification'};
-const output=`/data/native-rtc-${mode}-20261126.json`;
+const revisions={baseline:'91be47bc68fbf424121629172676a2662a339f0d',candidate:'0f9330333b400eb8e5ff63a5c0096bdf134759d9'};
+const fresh=mode==='candidate';
+const signals=[];
+const report={fresh,signals,mode,source:revisions[mode],started:new Date().toISOString(),runs:[],scope:'Default camera.live(), decoded video and Opus PCM; no hearing, optics, sync or concurrency verification'};
+const output=`/data/native-rtc-${mode}-diagnostic.json`;
 let client;const held=new Set(),children=new Set();
 const safeError=e=>String(e?.message??e).replace(/https?:\/\/\S+/g,'[endpoint]').replace(/\bT[A-Z0-9]{12,}\b/g,'[device]').replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g,'[address]').slice(0,350);
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
@@ -23,14 +25,16 @@ try{
   const saved=JSON.parse(fs.readFileSync('/data/.eufy-session.json','utf8'));
   report.cachedSessionAccepted=sdk.isSessionValid(saved);
   report.cachedAccountIdPresent=typeof saved.accountUserId==='string'&&saved.accountUserId.length>0;
-  if(!report.cachedSessionAccepted){report.status='fresh_login_required';save();}
+  if(!fresh&&!report.cachedSessionAccepted){report.status='fresh_login_required';save();}
   else{
     const options=JSON.parse(fs.readFileSync('/data/options.json','utf8'));
-    const store=new sdk.MemorySessionStore();store.save(structuredClone(saved));
-    client=new sdk.EufyMega({email:options.email,countryCode:options.country,store,autoRealtime:false,pollMs:0,storedSnapshotCache:false,logger:{debug(){},info(){},warn(){},error(){}}});
+    const store=new sdk.MemorySessionStore();if(!fresh)store.save(structuredClone(saved));
+    client=new sdk.EufyMega({email:options.email,...(fresh?{password:options.password}:{}),countryCode:options.country,store,autoRealtime:false,pollMs:0,storedSnapshotCache:false,logger:{debug(message){if(fresh&&typeof message==='string'&&message.startsWith('[rtc-signal] ')&&signals.length<160)signals.push(safeError(message));},info(){},warn(){},error(){}}});
     client.on('error',()=>{});
     const login=await client.login();
-    if(login.status!==sdk.LoginStatus.Ok||login.session?.raw?.restored!==true)throw Error('cached_session_not_restored');
+    report.loginStatus=login.status;
+    report.loginRestored=login.session?.raw?.restored===true;
+    if(login.status!==sdk.LoginStatus.Ok||report.loginRestored===fresh)throw Error(fresh?'fresh_login_failed':'cached_session_not_restored');
     const inventory=await client.getDevices();
     const hubs=inventory.filter(d=>d.model==='T8N00');
     if(hubs.length!==1)throw Error('expected_one_nvr');
