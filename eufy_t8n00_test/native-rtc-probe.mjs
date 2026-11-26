@@ -4,11 +4,12 @@ import fs from 'node:fs';
 import {spawn, spawnSync} from 'node:child_process';
 import {opusOgg} from './opus-ogg.mjs';
 const mode=process.argv[2];
+const phase=process.argv[3]??'previous';
 if(!['baseline','candidate'].includes(mode))throw Error('explicit qualification mode required');
-const revisions={baseline:'91be47bc68fbf424121629172676a2662a339f0d',candidate:'0f9330333b400eb8e5ff63a5c0096bdf134759d9'};
+const revisions={baseline:'91be47bc68fbf424121629172676a2662a339f0d',candidate:'f677256f085f53a5b4da7f5d54d2ef0e8872ad7a'};
 const fresh=mode==='candidate';
 const signals=[];
-const report={fresh,signals,mode,source:revisions[mode],started:new Date().toISOString(),runs:[],scope:'Default camera.live(), decoded video and Opus PCM; no hearing, optics, sync or concurrency verification'};
+const report={phase,fresh,signals,mode,source:revisions[mode],started:new Date().toISOString(),runs:[],scope:'Default camera.live(), decoded video and Opus PCM; no hearing, optics, sync or concurrency verification'};
 const output=`/data/native-rtc-${mode}-diagnostic.json`;
 let client;const held=new Set(),children=new Set();
 const safeError=e=>String(e?.message??e).replace(/https?:\/\/\S+/g,'[endpoint]').replace(/\bT[A-Z0-9]{12,}\b/g,'[device]').replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g,'[address]').slice(0,350);
@@ -22,9 +23,9 @@ try{
     const require=createRequire('/sdks/baseline/package.json');
     try{require('node-datachannel');report.nativeDependencyLoaded=true;}catch(error){report.nativeDependencyLoaded=false;report.nativeDependencyError=safeError(error);}
   }
-  const saved=JSON.parse(fs.readFileSync('/data/.eufy-session.json','utf8'));
-  report.cachedSessionAccepted=sdk.isSessionValid(saved);
-  report.cachedAccountIdPresent=typeof saved.accountUserId==='string'&&saved.accountUserId.length>0;
+  const saved=fresh?null:JSON.parse(fs.readFileSync('/data/.eufy-session.json','utf8'));
+  report.cachedSessionAccepted=saved!==null&&sdk.isSessionValid(saved);
+  report.cachedAccountIdPresent=typeof saved?.accountUserId==='string'&&saved.accountUserId.length>0;
   if(!fresh&&!report.cachedSessionAccepted){report.status='fresh_login_required';save();}
   else{
     const options=JSON.parse(fs.readFileSync('/data/options.json','utf8'));
@@ -39,11 +40,12 @@ try{
     const hubs=inventory.filter(d=>d.model==='T8N00');
     if(hubs.length!==1)throw Error('expected_one_nvr');
     const attached=inventory.filter(d=>d.stationSn===hubs[0].sn).sort((a,b)=>a.sn.localeCompare(b.sn));
-    const targets=['T8E00','T8P00'].map(model=>attached.find(d=>d.model===model));
-    if(targets.some(d=>!d))throw Error('expected_s4_and_e40');
+    const models=phase==='warm'?['T8P00','T8P00']:phase==='cold'||phase==='hostCold'?['T8P00']:['T8E00','T8P00'];
+    const targets=models.map(model=>attached.find(d=>d.model===model));
+    if(targets.some(d=>!d))throw Error('camera_missing');
     for(const target of targets){
       const camera=(await client.getDevice(target.sn)).camera();
-      const run={model:target.model,viewsMethod:typeof camera?.views==='function',outputResolutionsMethod:typeof camera?.outputResolutions==='function',views:camera?.views?.(),outputs:camera?.outputResolutions?.(),videoPackets:0,audioPackets:0,audioCodecs:[],decodedVideoFrames:0,decodedGeometry:[],firstVideoMs:null,firstAudioMs:null};
+      const run={attempt:report.runs.length+1,signalIndex:signals.length,model:target.model,viewsMethod:typeof camera?.views==='function',outputResolutionsMethod:typeof camera?.outputResolutions==='function',views:camera?.views?.(),outputs:camera?.outputResolutions?.(),videoPackets:0,audioPackets:0,audioCodecs:[],decodedVideoFrames:0,decodedGeometry:[],firstVideoMs:null,firstAudioMs:null};
       report.runs.push(run);save();
       const start=performance.now();let decoder,log='',finished=false,lastAudio;
       const gaps=[], opus=[];let resolveReady;
@@ -51,6 +53,10 @@ try{
       let h;
       try{h=await camera.live();}catch(error){
         run.openError=safeError(error);run.completed=new Date().toISOString();save();
+        if(phase==='warm'&&run.attempt===1){
+          const limit=Date.now()+35000;
+          while(!signals.some(line=>line.includes('heard REG 200'))&&Date.now()<limit)await pause(500);
+        }
         await pause(10000);continue;
       }
       held.add(h);

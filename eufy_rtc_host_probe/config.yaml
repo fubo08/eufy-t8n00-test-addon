@@ -1,0 +1,17 @@
+name: Eufy RTC Host Network Probe
+version: "0.3.75"
+slug: eufy_rtc_host_probe
+description: Short manual RTC diagnostic with host networking
+arch: [amd64, aarch64]
+startup: once
+boot: manual_only
+init: false
+host_network: true
+options:
+  email: ""
+  password: ""
+  country: DE
+schema:
+  email: str
+  password: password
+  country: str
