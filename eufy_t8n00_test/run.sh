@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 profile="$(jq -r '.qualification_profile // "combined78"' /data/options.json)"
-case "$profile" in combined78|fullhd05|fullhd78|registry05|sdkBaseline|sdk685|sdkWarm|sdkCold) ;; *) echo 'Unsupported audio qualification profile' >&2; exit 1 ;; esac
-case "$profile" in sdkBaseline) exec node /qualification/native-rtc-probe.mjs baseline ;; sdk685) exec node /qualification/native-rtc-probe.mjs candidate ;; sdkWarm) exec node /qualification/native-rtc-probe.mjs candidate warm ;; sdkCold) exec node /qualification/native-rtc-probe.mjs candidate cold ;; esac
+case "$profile" in combined78|fullhd05|fullhd78|registry05|sdkBaseline|sdk685|sdkWarm|sdkCold|sdkPersistCold|sdkPersistRestored|sdkPersistPair) ;; *) echo 'Unsupported audio qualification profile' >&2; exit 1 ;; esac
+case "$profile" in sdkBaseline) exec node /qualification/native-rtc-probe.mjs baseline ;; sdk685) exec node /qualification/native-rtc-probe.mjs candidate ;; sdkWarm) exec node /qualification/native-rtc-probe.mjs candidate warm ;; sdkCold) exec node /qualification/native-rtc-probe.mjs candidate cold ;; sdkPersistCold) exec node /qualification/native-rtc-probe.mjs candidate persistCold ;; sdkPersistRestored) exec node /qualification/native-rtc-probe.mjs candidate persistRestored ;; sdkPersistPair) exec node /qualification/native-rtc-probe.mjs candidate persistPair ;; esac
 cd "/profiles/$profile"
 node -e 'console.log("Qualification profile",process.argv[1],"SDK",require("./node_modules/@mega-yfue/eufy-sdk/package.json").version,"datachannel",require("./node_modules/node-datachannel/package.json").version)' "$profile"
 export EUFY_EMAIL="$(jq -r '.email' /data/options.json)"
