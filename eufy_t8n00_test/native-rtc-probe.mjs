@@ -28,6 +28,7 @@ try{
   const saved=fresh?null:JSON.parse(fs.readFileSync(persisted?sessionFile:'/data/.eufy-session.json','utf8'));
   report.cachedSessionAccepted=saved!==null&&sdk.isSessionValid(saved);
   report.cachedAccountIdPresent=typeof saved?.accountUserId==='string'&&saved.accountUserId.length>0;
+  if(persisted)report.cachedRtcTokenCount=Object.keys(saved?.rtc??{}).length;
   if(!fresh&&!report.cachedSessionAccepted){report.status='fresh_login_required';save();}
   else{
     const options=JSON.parse(fs.readFileSync('/data/options.json','utf8'));
@@ -60,6 +61,12 @@ try{
         run.openError=safeError(error);run.completed=new Date().toISOString();save();
         if(phase==='warm'&&run.attempt===1){
           const limit=Date.now()+35000;
+          while(!signals.some(line=>line.includes('heard REG 200'))&&Date.now()<limit)await pause(500);
+        }
+        if(phase==='persistCold'){
+          // Preserve the caller's observed timeout but give background registration
+          // a chance to persist the RTC token before the restored-process trial.
+          const limit=Date.now()+55000;
           while(!signals.some(line=>line.includes('heard REG 200'))&&Date.now()<limit)await pause(500);
         }
         return;
@@ -115,6 +122,9 @@ try{
   clearTimeout(deadline);for(const h of held)h.stop();for(const p of children)p.kill('SIGKILL');
   if(client)await client.disconnect().catch(()=>{});
   report.sessionFileExists=persisted&&fs.existsSync(sessionFile);
+  if(report.sessionFileExists){
+    try{report.savedRtcTokenCount=Object.keys(JSON.parse(fs.readFileSync(sessionFile,'utf8')).rtc??{}).length;}catch{}
+  }
   report.finished=new Date().toISOString();save();console.log('[native-rtc-qualification] '+JSON.stringify(report));
 }
 process.exit(0);
